@@ -1,0 +1,25 @@
+spring:
+  mvc:
+    hiddenmethod:
+      filter:
+        enabled: true
+  profiles:
+    active: dev
+    include: secret
+  datasource:
+    driver-class-name: org.mariadb.jdbc.Driver
+    url: jdbc:mariadb://127.0.0.1:3306/ot__dev?useUnicode=true&characterEncoding=utf8&autoReconnect=true&serverTimezone=Asia/Seoul
+  jpa:
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: true
+        use_sql_comments: true
+logging:
+  level:
+    root: INFO
+    com.example.ot: DEBUG
+    org.hibernate.orm.jdbc.bind: TRACE
+    org.hibernate.orm.jdbc.extract: TRACE
