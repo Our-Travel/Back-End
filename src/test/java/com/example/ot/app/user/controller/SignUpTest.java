@@ -54,4 +54,54 @@ public class SignUpTest {
                 .andExpect(status().is2xxSuccessful());
     }
 
+    @Test
+    @DisplayName("POST 회원가입에서 값 누락하면 400")
+    void t2() throws Exception {
+        // When
+        ResultActions resultActions = mvc
+                .perform(
+                        post("/api/user/signup")
+                                .content("""
+                                        {
+                                            "email": "",
+                                            "password": "1234",
+                                            "nickName": "user1",
+                                            "regionLevel1": "서울시",
+                                            "regionLevel2": "관악구"
+                                        }
+                                        """.stripIndent())
+                                .contentType(new MediaType(MediaType.APPLICATION_JSON, StandardCharsets.UTF_8))
+                )
+                .andDo(print());
+
+        // Then
+        resultActions
+                .andExpect(handler().handlerType(SignUpController.class))
+                .andExpect(handler().methodName("signUp"))
+                .andExpect(status().is4xxClientError());
+
+        // When
+        resultActions = mvc
+                .perform(
+                        post("/api/user/signup")
+                                .content("""
+                                        {
+                                            "email": "user1@naver.com",
+                                            "password": "1234",
+                                            "nickName": "",
+                                            "regionLevel1": "서울시",
+                                            "regionLevel2": "관악구"
+                                        }
+                                        """.stripIndent())
+                                .contentType(new MediaType(MediaType.APPLICATION_JSON, StandardCharsets.UTF_8))
+                )
+                .andDo(print());
+
+        // Then
+        resultActions
+                .andExpect(handler().handlerType(SignUpController.class))
+                .andExpect(handler().methodName("signUp"))
+                .andExpect(status().is4xxClientError());
+    }
+
 }
