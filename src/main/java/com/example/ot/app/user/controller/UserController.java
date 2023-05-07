@@ -1,7 +1,6 @@
 package com.example.ot.app.user.controller;
 
 import com.example.ot.app.base.dto.RsData;
-import com.example.ot.app.base.security.jwt.JwtProvider;
 import com.example.ot.app.user.dto.UserDTO;
 import com.example.ot.app.user.entity.User;
 import com.example.ot.app.user.service.UserService;
@@ -23,7 +22,6 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
 
     private final UserService userService;
-    private final JwtProvider jwtProvider;
 
     // 회원가입
     @PostMapping("/signup")
@@ -82,7 +80,17 @@ public class UserController {
     // 로그인
     @PostMapping("/signin")
     public ResponseEntity<RsData> signIn(@Valid @RequestBody UserDTO.SignInDto signInDto){
-        return null;
+        User user = userService.findByEmail(signInDto.getEmail()).orElse(null);
+
+        String accessToken = userService.genAccessToken(user);
+
+        return Util.spring.responseEntityOf(
+                RsData.of(
+                        "S-1",
+                        "로그인 성공, Access Token을 발급합니다."
+                ),
+                Util.spring.httpHeadersOf("Authentication", accessToken)
+        );
     }
 
 }

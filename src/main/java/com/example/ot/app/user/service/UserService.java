@@ -1,6 +1,7 @@
 package com.example.ot.app.user.service;
 
 import com.example.ot.app.base.dto.RsData;
+import com.example.ot.app.base.security.jwt.JwtProvider;
 import com.example.ot.app.user.dto.UserDTO;
 import com.example.ot.app.user.entity.User;
 import com.example.ot.app.user.repository.UserRepository;
@@ -9,6 +10,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Optional;
 
 
 @Slf4j
@@ -19,6 +22,7 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final JwtProvider jwtProvider;
 
     // 회원가입 생성.
     @Transactional
@@ -56,5 +60,13 @@ public class UserService {
         if(checkEmail(signUpDto.getEmail()).isFail());
         if(checkNickName(signUpDto.getNickName()).isFail());
         return RsData.of("S-1", "중복 없음.");
+    }
+
+    public Optional<User> findByEmail(String email) {
+        return userRepository.findByEmail(email);
+    }
+
+    public String genAccessToken(User user) {
+        return jwtProvider.generateAccessToken(user.getAccessTokenClaims(), 60 * 60 * 24 * 90);
     }
 }
