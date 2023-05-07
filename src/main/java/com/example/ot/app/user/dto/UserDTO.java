@@ -12,7 +12,7 @@ public class UserDTO {
     @Getter
     @AllArgsConstructor
     @NoArgsConstructor
-    public static class SignUpUserDto {
+    public static class SignUpDto {
         @NotBlank(message = "email 을(를) 입력해주세요.")
         @Email
         private String email;

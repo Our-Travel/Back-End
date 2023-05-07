@@ -50,7 +50,7 @@ public class SignUpTest {
 
         // Then
         resultActions
-                .andExpect(handler().handlerType(SignUpController.class))
+                .andExpect(handler().handlerType(UserController.class))
                 .andExpect(handler().methodName("signUp"))
                 .andExpect(status().is2xxSuccessful());
     }
@@ -77,7 +77,7 @@ public class SignUpTest {
 
         // Then
         resultActions
-                .andExpect(handler().handlerType(SignUpController.class))
+                .andExpect(handler().handlerType(UserController.class))
                 .andExpect(handler().methodName("signUp"))
                 .andExpect(status().is4xxClientError());
 
@@ -100,7 +100,7 @@ public class SignUpTest {
 
         // Then
         resultActions
-                .andExpect(handler().handlerType(SignUpController.class))
+                .andExpect(handler().handlerType(UserController.class))
                 .andExpect(handler().methodName("signUp"))
                 .andExpect(status().is4xxClientError());
     }

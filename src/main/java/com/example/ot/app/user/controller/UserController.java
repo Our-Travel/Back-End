@@ -12,7 +12,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "normal signup", description = "일반 회원 가입 api")
@@ -20,26 +19,26 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/user")
-public class SignUpController {
+public class UserController {
 
     private final UserService userService;
 
     // 회원가입
     @PostMapping("/signup")
-    public ResponseEntity<RsData> signUp(@Valid @RequestBody UserDTO.SignUpUserDto signUpUserDto){
-        log.info("email : {} " , signUpUserDto.getEmail());
-        log.info("password : {} " , signUpUserDto.getPassword());
-        log.info("nickName : {} " , signUpUserDto.getNickName());
-        log.info("regionLevel1 : {} " , signUpUserDto.getRegionLevel1());
-        log.info("regionLevel2 : {} " , signUpUserDto.getRegionLevel2());
+    public ResponseEntity<RsData> signUp(@Valid @RequestBody UserDTO.SignUpDto signUpDto){
+        log.info("email : {} " , signUpDto.getEmail());
+        log.info("password : {} " , signUpDto.getPassword());
+        log.info("nickName : {} " , signUpDto.getNickName());
+        log.info("regionLevel1 : {} " , signUpDto.getRegionLevel1());
+        log.info("regionLevel2 : {} " , signUpDto.getRegionLevel2());
 
-        RsData<User> check = userService.check(signUpUserDto);
+        RsData<User> check = userService.check(signUpDto);
 
         // 중복된 것이 있을 경우.
         if(check.isFail()){
             return Util.spring.responseEntityOf(check);
         }
-        userService.create(signUpUserDto);
+        userService.create(signUpDto);
         return Util.spring.responseEntityOf(
                 RsData.of(
                         "S-1",

@@ -22,13 +22,13 @@ public class UserService {
 
     // 회원가입 생성.
     @Transactional
-    public void create(UserDTO.SignUpUserDto signUpUserDto){
+    public void create(UserDTO.SignUpDto signUpDto){
         User user = User.builder()
-                .email(signUpUserDto.getEmail())
-                .password(passwordEncoder.encode(signUpUserDto.getPassword()))
-                .nickName(signUpUserDto.getNickName())
-                .regionLevel1(signUpUserDto.getRegionLevel1())
-                .regionLevel2(signUpUserDto.getRegionLevel2())
+                .email(signUpDto.getEmail())
+                .password(passwordEncoder.encode(signUpDto.getPassword()))
+                .nickName(signUpDto.getNickName())
+                .regionLevel1(signUpDto.getRegionLevel1())
+                .regionLevel2(signUpDto.getRegionLevel2())
                 .build();
         
         userRepository.save(user);
@@ -52,9 +52,9 @@ public class UserService {
     }
 
     // 닉네임 이메일 동시체크
-    public RsData<User> check(UserDTO.SignUpUserDto signUpUserDto) {
-        if(checkEmail(signUpUserDto.getEmail()).isFail());
-        if(checkNickName(signUpUserDto.getNickName()).isFail());
+    public RsData<User> check(UserDTO.SignUpDto signUpDto) {
+        if(checkEmail(signUpDto.getEmail()).isFail());
+        if(checkNickName(signUpDto.getNickName()).isFail());
         return RsData.of("S-1", "중복 없음.");
     }
 }
