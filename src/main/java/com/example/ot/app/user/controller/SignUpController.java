@@ -6,10 +6,12 @@ import com.example.ot.app.user.service.UserService;
 import com.example.ot.util.Util;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "normal signup", description = "일반 회원 가입 api")
@@ -21,6 +23,7 @@ public class SignUpController {
 
     private final UserService userService;
 
+    // 회원가입
     @PostMapping("/signup")
     public ResponseEntity<RsData> signUp(@Valid @RequestBody UserDTO.SignUpUserDto signUpUserDto){
         log.info("email : {} " , signUpUserDto.getEmail());
@@ -34,6 +37,25 @@ public class SignUpController {
                 RsData.of(
                         "S-1",
                         "회원가입 완료"
+                )
+        );
+    }
+
+    // 이메일 중복확인
+    @GetMapping("/check-email/{email}")
+    public ResponseEntity<RsData> checkEmail(@PathVariable String email){
+        if(userService.checkEmail(email)){
+            return Util.spring.responseEntityOf(
+                    RsData.of(
+                            "F-1",
+                            "중복된 이메일입니다."
+                    )
+            );
+        }
+        return Util.spring.responseEntityOf(
+                RsData.of(
+                        "S-1",
+                        "%s는 사용가능한 이메일입니다.".formatted(email)
                 )
         );
     }

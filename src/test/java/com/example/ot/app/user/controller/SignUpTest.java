@@ -109,12 +109,12 @@ public class SignUpTest {
     @DisplayName("GET 이메일 중복 체크 성공")
     void t3() throws Exception {
         // Given
-        String email = "user3@example.com";
+        String email = "user4@example.com";
 
         // When
         ResultActions resultActions = mvc
                 .perform(
-                        get("/api/user/checkEmail/{Email}", email)
+                        get("/api/user/check-email/{email}", email)
                 )
                 .andDo(print());
 
@@ -132,7 +132,7 @@ public class SignUpTest {
         // When
         ResultActions resultActions = mvc
                 .perform(
-                        get("/api/user/checkEmail/{Email}", email)
+                        get("/api/user/check-email/{email}", email)
                 )
                 .andDo(print());
 
@@ -140,5 +140,4 @@ public class SignUpTest {
         resultActions
                 .andExpect(status().is4xxClientError());
     }
-
 }
