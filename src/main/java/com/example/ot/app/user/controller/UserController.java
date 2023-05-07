@@ -77,4 +77,10 @@ public class UserController {
         );
     }
 
+    // 로그인
+    @PostMapping("/signin")
+    public ResponseEntity<RsData> signIn(@Valid @RequestBody UserDTO.SignInDto signInDto){
+
+    }
+
 }

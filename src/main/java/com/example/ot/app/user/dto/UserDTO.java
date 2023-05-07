@@ -26,4 +26,13 @@ public class UserDTO {
         private String regionLevel2;
     }
 
+    @Getter
+    public static class SignInDto{
+        @NotBlank(message = "email 을(를) 입력해주세요.")
+        @Email
+        private String email;
+        @NotBlank(message = "password 을(를) 입력해주세요.")
+        private String password;
+    }
+
 }
