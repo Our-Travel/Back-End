@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.nio.charset.StandardCharsets;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.handler;
@@ -28,7 +29,7 @@ public class SignUpTest {
     private MockMvc mvc;
 
     @Test
-    @DisplayName("POST 회원가입")
+    @DisplayName("POST 회원가입 성공")
     void t1() throws Exception {
         // When
         ResultActions resultActions = mvc
@@ -55,7 +56,7 @@ public class SignUpTest {
     }
 
     @Test
-    @DisplayName("POST 회원가입에서 값 누락하면 400")
+    @DisplayName("POST 회원가입에서 값 누락하여 실패")
     void t2() throws Exception {
         // When
         ResultActions resultActions = mvc
@@ -101,6 +102,42 @@ public class SignUpTest {
         resultActions
                 .andExpect(handler().handlerType(SignUpController.class))
                 .andExpect(handler().methodName("signUp"))
+                .andExpect(status().is4xxClientError());
+    }
+
+    @Test
+    @DisplayName("GET 이메일 중복 체크 성공")
+    void t3() throws Exception {
+        // Given
+        String email = "user3@naver.com";
+
+        // When
+        ResultActions resultActions = mvc
+                .perform(
+                        get("/api/user/checkEmail/{Email}", email)
+                )
+                .andDo(print());
+
+        // Then
+        resultActions
+                .andExpect(status().is2xxSuccessful());
+    }
+
+    @Test
+    @DisplayName("GET 이메일 중복체크에서 중복되어서 실패")
+    void t4() throws Exception {
+        // Given
+        String email = "user1@naver.com";
+
+        // When
+        ResultActions resultActions = mvc
+                .perform(
+                        get("/api/user/checkEmail/{Email}", email)
+                )
+                .andDo(print());
+
+        // Then
+        resultActions
                 .andExpect(status().is4xxClientError());
     }
 
