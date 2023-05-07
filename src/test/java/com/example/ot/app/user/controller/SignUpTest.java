@@ -140,4 +140,40 @@ public class SignUpTest {
         resultActions
                 .andExpect(status().is4xxClientError());
     }
+
+    @Test
+    @DisplayName("GET 닉네임 중복 체크 성공")
+    void t5() throws Exception {
+        // Given
+        String nickName = "user3";
+
+        // When
+        ResultActions resultActions = mvc
+                .perform(
+                        get("/api/user/check-nickName/{nickName}", nickName)
+                )
+                .andDo(print());
+
+        // Then
+        resultActions
+                .andExpect(status().is2xxSuccessful());
+    }
+
+    @Test
+    @DisplayName("GET 닉네임 중복체크에서 중복되어서 실패")
+    void t6() throws Exception {
+        // Given
+        String nickName = "user1";
+
+        // When
+        ResultActions resultActions = mvc
+                .perform(
+                        get("/api/user/check-nickName/{nickName}", nickName)
+                )
+                .andDo(print());
+
+        // Then
+        resultActions
+                .andExpect(status().is4xxClientError());
+    }
 }
