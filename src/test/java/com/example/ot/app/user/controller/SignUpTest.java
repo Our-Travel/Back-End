@@ -37,7 +37,7 @@ public class SignUpTest {
                         post("/api/user/signup")
                                 .content("""
                                         {
-                                            "email": "user3@naver.com",
+                                            "email": "user3@example.com",
                                             "password": "1234",
                                             "nickName": "user3",
                                             "regionLevel1": "서울시",
@@ -109,7 +109,7 @@ public class SignUpTest {
     @DisplayName("GET 이메일 중복 체크 성공")
     void t3() throws Exception {
         // Given
-        String email = "user3@naver.com";
+        String email = "user3@example.com";
 
         // When
         ResultActions resultActions = mvc
@@ -127,7 +127,7 @@ public class SignUpTest {
     @DisplayName("GET 이메일 중복체크에서 중복되어서 실패")
     void t4() throws Exception {
         // Given
-        String email = "user1@naver.com";
+        String email = "user1@example.com";
 
         // When
         ResultActions resultActions = mvc
