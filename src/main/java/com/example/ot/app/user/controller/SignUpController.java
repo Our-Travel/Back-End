@@ -41,7 +41,7 @@ public class SignUpController {
         );
     }
 
-    // 이메일 중복확인
+    // 이메일 중복체크
     @GetMapping("/check-email/{email}")
     public ResponseEntity<RsData> checkEmail(@PathVariable String email){
         if(userService.checkEmail(email)){
@@ -56,6 +56,25 @@ public class SignUpController {
                 RsData.of(
                         "S-1",
                         "%s는 사용가능한 이메일입니다.".formatted(email)
+                )
+        );
+    }
+
+    // 닉네임 중복체크
+    @GetMapping("/check-nickName/{nickName}")
+    public ResponseEntity<RsData> checkNickName(@PathVariable String nickName){
+        if(userService.checkNickName(nickName)){
+            return Util.spring.responseEntityOf(
+                    RsData.of(
+                            "F-1",
+                            "중복된 닉네임입니다."
+                    )
+            );
+        }
+        return Util.spring.responseEntityOf(
+                RsData.of(
+                        "S-1",
+                        "%s는 사용가능한 닉네임입니다.".formatted(nickName)
                 )
         );
     }

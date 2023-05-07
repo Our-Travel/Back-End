@@ -35,8 +35,13 @@ public class UserService {
         userRepository.save(user);
     }
 
-    // 이메일 중복기능.
+    // 이메일 중복체크.
     public boolean checkEmail(String email){
         return userRepository.existsByEmail(email);
+    }
+
+    // 닉네임 중복체크.
+    public boolean checkNickName(String nickName) {
+        return userRepository.existsByNickName(nickName);
     }
 }
