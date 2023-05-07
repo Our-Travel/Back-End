@@ -50,7 +50,8 @@ public class SignUpTest {
         // Then
         resultActions
                 .andExpect(handler().handlerType(SignUpController.class))
-                .andExpect(handler().methodName("signUp"));
+                .andExpect(handler().methodName("signUp"))
+                .andExpect(status().is2xxSuccessful());
     }
 
 }

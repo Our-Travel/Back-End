@@ -5,14 +5,12 @@ import com.example.ot.app.user.dto.UserDTO;
 import com.example.ot.app.user.service.UserService;
 import com.example.ot.util.Util;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "normal signup", description = "일반 회원 가입 api")
 @Slf4j
@@ -24,7 +22,7 @@ public class SignUpController {
     private final UserService userService;
 
     @PostMapping("/signup")
-    public ResponseEntity<RsData> signUp(@RequestBody UserDTO userDTO){
+    public ResponseEntity<RsData> signUp(@Valid @RequestBody UserDTO userDTO){
         log.info("email : {} " , userDTO.getEmail());
         log.info("password : {} " , userDTO.getPassword());
         log.info("nickName : {} " , userDTO.getNickName());
