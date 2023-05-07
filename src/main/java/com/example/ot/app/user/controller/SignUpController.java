@@ -2,6 +2,7 @@ package com.example.ot.app.user.controller;
 
 import com.example.ot.app.base.dto.RsData;
 import com.example.ot.app.user.dto.UserDTO;
+import com.example.ot.app.user.entity.User;
 import com.example.ot.app.user.service.UserService;
 import com.example.ot.util.Util;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -32,7 +33,12 @@ public class SignUpController {
         log.info("regionLevel1 : {} " , signUpUserDto.getRegionLevel1());
         log.info("regionLevel2 : {} " , signUpUserDto.getRegionLevel2());
 
-        userService.check(signUpUserDto);
+        RsData<User> check = userService.check(signUpUserDto);
+
+        // 중복된 것이 있을 경우.
+        if(check.isFail()){
+            return Util.spring.responseEntityOf(check);
+        }
         userService.create(signUpUserDto);
         return Util.spring.responseEntityOf(
                 RsData.of(
@@ -44,14 +50,10 @@ public class SignUpController {
 
     // 이메일 중복체크
     @GetMapping("/check-email/{email}")
-    public ResponseEntity<RsData> checkEmail(@PathVariable String email){
-        if(userService.checkEmail(email)){
-            return Util.spring.responseEntityOf(
-                    RsData.of(
-                            "F-1",
-                            "중복된 이메일입니다."
-                    )
-            );
+    public ResponseEntity<RsData> checkEmail(@PathVariable @NotBlank(message = "이메일을 입력해주세요.") String email){
+        RsData<User> checkEmail = userService.checkEmail(email);
+        if(checkEmail.isFail()){
+            return Util.spring.responseEntityOf(checkEmail);
         }
         return Util.spring.responseEntityOf(
                 RsData.of(
@@ -63,14 +65,10 @@ public class SignUpController {
 
     // 닉네임 중복체크
     @GetMapping("/check-nickName/{nickName}")
-    public ResponseEntity<RsData> checkNickName(@PathVariable String nickName){
-        if(userService.checkNickName(nickName)){
-            return Util.spring.responseEntityOf(
-                    RsData.of(
-                            "F-1",
-                            "중복된 닉네임입니다."
-                    )
-            );
+    public ResponseEntity<RsData> checkNickName(@PathVariable @NotBlank(message = "닉네임을 입력해주세요.") String nickName){
+        RsData<User> checkNickName = userService.checkNickName(nickName);
+        if(checkNickName.isFail()){
+            return Util.spring.responseEntityOf(checkNickName);
         }
         return Util.spring.responseEntityOf(
                 RsData.of(
