@@ -3,9 +3,11 @@ package com.example.ot.app.user.dto;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter
+@AllArgsConstructor
 public class UserDTO {
     @NotBlank(message = "email 을(를) 입력해주세요.")
     @Email
