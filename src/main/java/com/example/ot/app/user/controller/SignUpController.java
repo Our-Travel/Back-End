@@ -22,14 +22,14 @@ public class SignUpController {
     private final UserService userService;
 
     @PostMapping("/signup")
-    public ResponseEntity<RsData> signUp(@Valid @RequestBody UserDTO userDTO){
-        log.info("email : {} " , userDTO.getEmail());
-        log.info("password : {} " , userDTO.getPassword());
-        log.info("nickName : {} " , userDTO.getNickName());
-        log.info("regionLevel1 : {} " , userDTO.getRegionLevel1());
-        log.info("regionLevel2 : {} " , userDTO.getRegionLevel2());
+    public ResponseEntity<RsData> signUp(@Valid @RequestBody UserDTO.SignUpUserDto signUpUserDto){
+        log.info("email : {} " , signUpUserDto.getEmail());
+        log.info("password : {} " , signUpUserDto.getPassword());
+        log.info("nickName : {} " , signUpUserDto.getNickName());
+        log.info("regionLevel1 : {} " , signUpUserDto.getRegionLevel1());
+        log.info("regionLevel2 : {} " , signUpUserDto.getRegionLevel2());
 
-        userService.create(userDTO);
+        userService.create(signUpUserDto);
         return Util.spring.responseEntityOf(
                 RsData.of(
                         "S-1",

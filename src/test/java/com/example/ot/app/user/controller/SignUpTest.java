@@ -36,9 +36,9 @@ public class SignUpTest {
                         post("/api/user/signup")
                                 .content("""
                                         {
-                                            "email": "user1@naver.com",
+                                            "email": "user3@naver.com",
                                             "password": "1234",
-                                            "nickName": "user1",
+                                            "nickName": "user3",
                                             "regionLevel1": "서울시",
                                             "regionLevel2": "관악구"
                                         }

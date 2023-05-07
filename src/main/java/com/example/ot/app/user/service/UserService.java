@@ -17,14 +17,14 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public void create(UserDTO userDTO){
+    public void create(UserDTO.SignUpUserDto signUpUserDto){
         log.info("회원가입 완료");
         User user = User.builder()
-                .email(userDTO.getEmail())
-                .password(passwordEncoder.encode(userDTO.getPassword()))
-                .nickName(userDTO.getNickName())
-                .regionLevel1(userDTO.getRegionLevel1())
-                .regionLevel2(userDTO.getRegionLevel2())
+                .email(signUpUserDto.getEmail())
+                .password(passwordEncoder.encode(signUpUserDto.getPassword()))
+                .nickName(signUpUserDto.getNickName())
+                .regionLevel1(signUpUserDto.getRegionLevel1())
+                .regionLevel2(signUpUserDto.getRegionLevel2())
                 .build();
 
         log.info("회원가입 완료");
