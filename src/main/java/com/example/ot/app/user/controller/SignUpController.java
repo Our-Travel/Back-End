@@ -32,6 +32,7 @@ public class SignUpController {
         log.info("regionLevel1 : {} " , signUpUserDto.getRegionLevel1());
         log.info("regionLevel2 : {} " , signUpUserDto.getRegionLevel2());
 
+        userService.check(signUpUserDto);
         userService.create(signUpUserDto);
         return Util.spring.responseEntityOf(
                 RsData.of(

@@ -22,7 +22,6 @@ public class UserService {
     // 회원가입 생성.
     @Transactional
     public void create(UserDTO.SignUpUserDto signUpUserDto){
-        log.info("회원가입 완료");
         User user = User.builder()
                 .email(signUpUserDto.getEmail())
                 .password(passwordEncoder.encode(signUpUserDto.getPassword()))
@@ -30,9 +29,9 @@ public class UserService {
                 .regionLevel1(signUpUserDto.getRegionLevel1())
                 .regionLevel2(signUpUserDto.getRegionLevel2())
                 .build();
-
-        log.info("회원가입 완료");
+        
         userRepository.save(user);
+        log.info("회원가입 완료");
     }
 
     // 이메일 중복체크.
@@ -43,5 +42,8 @@ public class UserService {
     // 닉네임 중복체크.
     public boolean checkNickName(String nickName) {
         return userRepository.existsByNickName(nickName);
+    }
+
+    public void check(UserDTO.SignUpUserDto signUpUserDto) {
     }
 }
