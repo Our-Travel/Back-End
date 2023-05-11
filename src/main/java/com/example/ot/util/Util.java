@@ -23,7 +23,7 @@ public class Util {
             try {
                 return getObjectMapper().writeValueAsString(map);
             } catch (JsonProcessingException e) {
-                e.printStackTrace();
+                e.printStackTrace(); // 오류 메시지 출력
                 return null;
             }
         }

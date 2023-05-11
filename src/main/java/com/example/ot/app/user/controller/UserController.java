@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "normal signup", description = "일반 회원 가입 api")
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
 
     private final UserService userService;
+    private final PasswordEncoder passwordEncoder;
 
     // 회원가입
     @PostMapping("/signup")
@@ -81,6 +83,16 @@ public class UserController {
     @PostMapping("/signin")
     public ResponseEntity<RsData> signIn(@Valid @RequestBody UserDTO.SignInDto signInDto){
         User user = userService.findByEmail(signInDto.getEmail()).orElse(null);
+
+        if(user == null){
+            return Util.spring.responseEntityOf(RsData.of("F-1", "일치하는 회원이 존재하지 않습니다."));
+        }
+
+        if (passwordEncoder.matches(signInDto.getPassword(), user.getPassword()) == false) {
+            return Util.spring.responseEntityOf(RsData.of("F-1", "비밀번호가 일치하지 않습니다."));
+        }
+
+        log.debug("Util.json.toStr(user.getAccessTokenClaims()) : " + Util.json.toStr(user.getAccessTokenClaims()));
 
         String accessToken = userService.genAccessToken(user);
 

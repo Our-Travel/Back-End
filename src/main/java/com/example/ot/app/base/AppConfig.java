@@ -18,6 +18,8 @@ public class AppConfig {
         AppConfig.context = context;
     }
 
+    // access토큰 시간 관련 오류 해결.
+    // LocalDateTime 직렬화 역직렬화 오류 해결.
     @Bean
     public ObjectMapper objectMapper() {
         return new ObjectMapper().registerModule(new JavaTimeModule());
