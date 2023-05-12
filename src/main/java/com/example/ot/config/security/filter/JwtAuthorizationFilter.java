@@ -1,7 +1,7 @@
-package com.example.ot.app.base.security.filter;
+package com.example.ot.config.security.filter;
 
-import com.example.ot.app.base.security.entity.MemberContext;
-import com.example.ot.app.base.security.jwt.JwtProvider;
+import com.example.ot.config.security.entity.MemberContext;
+import com.example.ot.config.security.jwt.JwtProvider;
 import com.example.ot.app.member.entity.Member;
 import com.example.ot.app.member.service.MemberService;
 import jakarta.servlet.FilterChain;

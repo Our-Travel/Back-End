@@ -1,4 +1,4 @@
-package com.example.ot.app.base.security.entity;
+package com.example.ot.config.security.entity;
 
 import com.example.ot.app.member.entity.Member;
 import com.fasterxml.jackson.annotation.JsonIncludeProperties;

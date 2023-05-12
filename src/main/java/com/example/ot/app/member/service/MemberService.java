@@ -1,7 +1,7 @@
 package com.example.ot.app.member.service;
 
 import com.example.ot.app.base.dto.RsData;
-import com.example.ot.app.base.security.jwt.JwtProvider;
+import com.example.ot.config.security.jwt.JwtProvider;
 import com.example.ot.app.member.dto.MemberDTO;
 import com.example.ot.app.member.entity.Member;
 import com.example.ot.app.member.repository.MemberRepository;

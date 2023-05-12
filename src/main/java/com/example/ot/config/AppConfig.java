@@ -1,4 +1,4 @@
-package com.example.ot.app.base;
+package com.example.ot.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;

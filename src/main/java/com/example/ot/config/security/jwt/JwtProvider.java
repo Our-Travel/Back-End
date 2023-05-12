@@ -1,4 +1,4 @@
-package com.example.ot.app.base.security.jwt;
+package com.example.ot.config.security.jwt;
 
 import com.example.ot.util.Util;
 import io.jsonwebtoken.Jwts;
