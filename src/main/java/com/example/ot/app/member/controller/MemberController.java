@@ -1,9 +1,9 @@
-package com.example.ot.app.user.controller;
+package com.example.ot.app.member.controller;
 
 import com.example.ot.app.base.dto.RsData;
-import com.example.ot.app.user.dto.UserDTO;
-import com.example.ot.app.user.entity.User;
-import com.example.ot.app.user.service.UserService;
+import com.example.ot.app.member.dto.MemberDTO;
+import com.example.ot.app.member.entity.Member;
+import com.example.ot.app.member.service.MemberService;
 import com.example.ot.util.Util;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -19,28 +19,28 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/user")
-public class UserController {
+@RequestMapping("/api/members")
+public class MemberController {
 
-    private final UserService userService;
+    private final MemberService memberService;
     private final PasswordEncoder passwordEncoder;
 
     // 회원가입
     @PostMapping("/signup")
-    public ResponseEntity<RsData> signUp(@Valid @RequestBody UserDTO.SignUpDto signUpDto){
-        log.info("email : {} " , signUpDto.getEmail());
+    public ResponseEntity<RsData> signUp(@Valid @RequestBody MemberDTO.SignUpDto signUpDto){
+        log.info("username : {} " , signUpDto.getUsername());
         log.info("password : {} " , signUpDto.getPassword());
         log.info("nickName : {} " , signUpDto.getNickName());
         log.info("regionLevel1 : {} " , signUpDto.getRegionLevel1());
         log.info("regionLevel2 : {} " , signUpDto.getRegionLevel2());
 
-        RsData<User> check = userService.check(signUpDto);
+        RsData<Member> check = memberService.check(signUpDto);
 
         // 중복된 것이 있을 경우.
         if(check.isFail()){
             return Util.spring.responseEntityOf(check);
         }
-        userService.create(signUpDto);
+        memberService.create(signUpDto);
         return Util.spring.responseEntityOf(
                 RsData.of(
                         "S-1",
@@ -49,17 +49,17 @@ public class UserController {
         );
     }
 
-    // 이메일 중복체크
-    @GetMapping("/check-email/{email}")
-    public ResponseEntity<RsData> checkEmail(@PathVariable @NotBlank(message = "이메일을 입력해주세요.") String email){
-        RsData<User> checkEmail = userService.checkEmail(email);
-        if(checkEmail.isFail()){
-            return Util.spring.responseEntityOf(checkEmail);
+    // 아이디 중복체크
+    @GetMapping("/check-username/{username}")
+    public ResponseEntity<RsData> checkUsername(@PathVariable @NotBlank(message = "아이디를 입력해주세요.") String username){
+        RsData<Member> checkUsername = memberService.checkUsername(username);
+        if(checkUsername.isFail()){
+            return Util.spring.responseEntityOf(checkUsername);
         }
         return Util.spring.responseEntityOf(
                 RsData.of(
                         "S-1",
-                        "%s는 사용가능한 이메일입니다.".formatted(email)
+                        "%s는 사용가능한 이메일입니다.".formatted(username)
                 )
         );
     }
@@ -67,7 +67,7 @@ public class UserController {
     // 닉네임 중복체크
     @GetMapping("/check-nickName/{nickName}")
     public ResponseEntity<RsData> checkNickName(@PathVariable @NotBlank(message = "닉네임을 입력해주세요.") String nickName){
-        RsData<User> checkNickName = userService.checkNickName(nickName);
+        RsData<Member> checkNickName = memberService.checkNickName(nickName);
         if(checkNickName.isFail()){
             return Util.spring.responseEntityOf(checkNickName);
         }
@@ -80,21 +80,21 @@ public class UserController {
     }
 
     // 로그인
-    @PostMapping("/signin")
-    public ResponseEntity<RsData> signIn(@Valid @RequestBody UserDTO.SignInDto signInDto){
-        User user = userService.findByEmail(signInDto.getEmail()).orElse(null);
+    @PostMapping("/login")
+    public ResponseEntity<RsData> signIn(@Valid @RequestBody MemberDTO.SignInDto signInDto){
+        Member member = memberService.findByUsername(signInDto.getUsername()).orElse(null);
 
-        if(user == null){
+        if(member == null){
             return Util.spring.responseEntityOf(RsData.of("F-1", "일치하는 회원이 존재하지 않습니다."));
         }
 
-        if (passwordEncoder.matches(signInDto.getPassword(), user.getPassword()) == false) {
+        if (passwordEncoder.matches(signInDto.getPassword(), member.getPassword()) == false) {
             return Util.spring.responseEntityOf(RsData.of("F-1", "비밀번호가 일치하지 않습니다."));
         }
 
-        log.debug("Util.json.toStr(user.getAccessTokenClaims()) : " + Util.json.toStr(user.getAccessTokenClaims()));
+        log.debug("Util.json.toStr(user.getAccessTokenClaims()) : " + Util.json.toStr(member.getAccessTokenClaims()));
 
-        String accessToken = userService.genAccessToken(user);
+        String accessToken = memberService.genAccessToken(member);
 
         return Util.spring.responseEntityOf(
                 RsData.of(

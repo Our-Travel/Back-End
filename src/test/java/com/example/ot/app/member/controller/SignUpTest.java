@@ -1,4 +1,4 @@
-package com.example.ot.app.user.controller;
+package com.example.ot.app.member.controller;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -34,10 +34,10 @@ public class SignUpTest {
         // When
         ResultActions resultActions = mvc
                 .perform(
-                        post("/api/user/signup")
+                        post("/api/members/signup")
                                 .content("""
                                         {
-                                            "email": "user3@example.com",
+                                            "username": "user3@example.com",
                                             "password": "1234",
                                             "nickName": "user3",
                                             "regionLevel1": "서울시",
@@ -50,7 +50,7 @@ public class SignUpTest {
 
         // Then
         resultActions
-                .andExpect(handler().handlerType(UserController.class))
+                .andExpect(handler().handlerType(MemberController.class))
                 .andExpect(handler().methodName("signUp"))
                 .andExpect(status().is2xxSuccessful());
     }
@@ -61,10 +61,10 @@ public class SignUpTest {
         // When
         ResultActions resultActions = mvc
                 .perform(
-                        post("/api/user/signup")
+                        post("/api/members/signup")
                                 .content("""
                                         {
-                                            "email": "",
+                                            "username": "",
                                             "password": "1234",
                                             "nickName": "user1",
                                             "regionLevel1": "서울시",
@@ -77,17 +77,17 @@ public class SignUpTest {
 
         // Then
         resultActions
-                .andExpect(handler().handlerType(UserController.class))
+                .andExpect(handler().handlerType(MemberController.class))
                 .andExpect(handler().methodName("signUp"))
                 .andExpect(status().is4xxClientError());
 
         // When
         resultActions = mvc
                 .perform(
-                        post("/api/user/signup")
+                        post("/api/members/signup")
                                 .content("""
                                         {
-                                            "email": "user1@naver.com",
+                                            "username": "user1@naver.com",
                                             "password": "1234",
                                             "nickName": "",
                                             "regionLevel1": "서울시",
@@ -100,21 +100,21 @@ public class SignUpTest {
 
         // Then
         resultActions
-                .andExpect(handler().handlerType(UserController.class))
+                .andExpect(handler().handlerType(MemberController.class))
                 .andExpect(handler().methodName("signUp"))
                 .andExpect(status().is4xxClientError());
     }
 
     @Test
-    @DisplayName("GET 이메일 중복 체크 성공")
+    @DisplayName("GET 아이디 중복 체크 성공")
     void t3() throws Exception {
         // Given
-        String email = "user4@example.com";
+        String username = "user4@example.com";
 
         // When
         ResultActions resultActions = mvc
                 .perform(
-                        get("/api/user/check-email/{email}", email)
+                        get("/api/members/check-username/{username}", username)
                 )
                 .andDo(print());
 
@@ -124,15 +124,15 @@ public class SignUpTest {
     }
 
     @Test
-    @DisplayName("GET 이메일 중복체크에서 중복되어서 실패")
+    @DisplayName("GET 아이디 중복체크에서 중복되어서 실패")
     void t4() throws Exception {
         // Given
-        String email = "user1@example.com";
+        String username = "user1@example.com";
 
         // When
         ResultActions resultActions = mvc
                 .perform(
-                        get("/api/user/check-email/{email}", email)
+                        get("/api/members/check-username/{username}", username)
                 )
                 .andDo(print());
 
@@ -150,7 +150,7 @@ public class SignUpTest {
         // When
         ResultActions resultActions = mvc
                 .perform(
-                        get("/api/user/check-nickName/{nickName}", nickName)
+                        get("/api/members/check-nickName/{nickName}", nickName)
                 )
                 .andDo(print());
 
@@ -168,7 +168,7 @@ public class SignUpTest {
         // When
         ResultActions resultActions = mvc
                 .perform(
-                        get("/api/user/check-nickName/{nickName}", nickName)
+                        get("/api/members/check-nickName/{nickName}", nickName)
                 )
                 .andDo(print());
 

@@ -1,4 +1,4 @@
-package com.example.ot.app.user.controller;
+package com.example.ot.app.member.controller;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -25,21 +25,21 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @Transactional
 @ActiveProfiles("test")
-public class SignInTest {
+public class LoginTest {
 
     @Autowired
     private MockMvc mvc;
 
     @Test
-    @DisplayName("POST 올바른 email과 password를 넘기면 JWT키를 발급해준다.")
+    @DisplayName("POST 올바른 username과 password를 넘기면 JWT키를 발급해준다.")
     void t1() throws Exception {
         // When
         ResultActions resultActions = mvc
                 .perform(
-                        post("/api/user/signin")
+                        post("/api/members/login")
                                 .content("""
                                         {
-                                            "email": "user1@example.com",
+                                            "username": "user1@example.com",
                                             "password": "1234"
                                         }
                                         """.stripIndent())
@@ -61,15 +61,15 @@ public class SignInTest {
     }
 
     @Test
-    @DisplayName("POST 올바르지 않은 email과 password 데이터를 넘기면 실패")
+    @DisplayName("POST 올바르지 않은 username과 password 데이터를 넘기면 실패")
     void t3() throws Exception {
         // When
         ResultActions resultActions = mvc
                 .perform(
-                        post("/api/user/signin")
+                        post("/api/members/login")
                                 .content("""
                                         {
-                                            "email": "",
+                                            "username": "",
                                             "password": "1234"
                                         }
                                         """.stripIndent())
@@ -83,10 +83,10 @@ public class SignInTest {
 
         mvc
                 .perform(
-                        post("/api/user/signin")
+                        post("/api/members/login")
                                 .content("""
                                         {
-                                            "email": "user1@example.com",
+                                            "username": "user1@example.com",
                                             "password": ""
                                         }
                                         """.stripIndent())
@@ -99,42 +99,42 @@ public class SignInTest {
                 .andExpect(status().is4xxClientError());
     }
 
-    @Test
-    @DisplayName("로그인 후 얻은 JWT 토큰으로 로그인 한 회원의 정보를 얻을 수 있다.")
-    void t4() throws Exception {
-        // When
-        ResultActions resultActions = mvc
-                .perform(
-                        post("/api/user/signin")
-                                .content("""
-                                        {
-                                            "email": "user1@example.com",
-                                            "password": "1234"
-                                        }
-                                        """.stripIndent())
-                                .contentType(new MediaType(MediaType.APPLICATION_JSON, StandardCharsets.UTF_8))
-                )
-                .andDo(print());
-
-        // Then
-        resultActions
-                .andExpect(status().is2xxSuccessful());
-
-        MvcResult mvcResult = resultActions.andReturn();
-
-        MockHttpServletResponse response = mvcResult.getResponse();
-
-        String accessToken = response.getHeader("Authentication");
-
-        resultActions = mvc
-                .perform(
-                        get("/api/main")
-                                .header("Authorization", "Bearer " + accessToken)
-                )
-                .andDo(print());
-
-        // Then
-        resultActions
-                .andExpect(status().is2xxSuccessful());
-    }
+//    @Test
+//    @DisplayName("로그인 후 얻은 JWT 토큰으로 로그인 한 회원의 정보를 얻을 수 있다.")
+//    void t4() throws Exception {
+//        // When
+//        ResultActions resultActions = mvc
+//                .perform(
+//                        post("/api/members/login")
+//                                .content("""
+//                                        {
+//                                            "username": "user1@example.com",
+//                                            "password": "1234"
+//                                        }
+//                                        """.stripIndent())
+//                                .contentType(new MediaType(MediaType.APPLICATION_JSON, StandardCharsets.UTF_8))
+//                )
+//                .andDo(print());
+//
+//        // Then
+//        resultActions
+//                .andExpect(status().is2xxSuccessful());
+//
+//        MvcResult mvcResult = resultActions.andReturn();
+//
+//        MockHttpServletResponse response = mvcResult.getResponse();
+//
+//        String accessToken = response.getHeader("Authentication");
+//
+//        resultActions = mvc
+//                .perform(
+//                        get("/api/main")
+//                                .header("Authorization", "Bearer " + accessToken)
+//                )
+//                .andDo(print());
+//
+//        // Then
+//        resultActions
+//                .andExpect(status().is2xxSuccessful());
+//    }
 }

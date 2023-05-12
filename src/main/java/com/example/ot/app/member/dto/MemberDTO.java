@@ -1,24 +1,22 @@
-package com.example.ot.app.user.dto;
+package com.example.ot.app.member.dto;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
 import lombok.*;
-import lombok.experimental.SuperBuilder;
 
 
-public class UserDTO {
+public class MemberDTO {
 
     @Getter
     @AllArgsConstructor
     @NoArgsConstructor
     public static class SignUpDto {
-        @NotBlank(message = "email 을(를) 입력해주세요.")
+        @NotBlank(message = "아이디를 입력해주세요.")
         @Email
-        private String email;
-        @NotBlank(message = "password 을(를) 입력해주세요.")
+        private String username;
+        @NotBlank(message = "비밀번호를 입력해주세요.")
         private String password;
-        @NotBlank(message = "nickName 을(를) 입력해주세요.")
+        @NotBlank(message = "닉네임을 입력해주세요.")
         private String nickName;
         @NotBlank(message = "regionLevel1 을(를) 입력해주세요.")
         private String regionLevel1;
@@ -28,10 +26,10 @@ public class UserDTO {
 
     @Getter
     public static class SignInDto{
-        @NotBlank(message = "email 을(를) 입력해주세요.")
+        @NotBlank(message = "아이디를 입력해주세요.")
         @Email
-        private String email;
-        @NotBlank(message = "password 을(를) 입력해주세요.")
+        private String username;
+        @NotBlank(message = "비밀번호를 입력해주세요.")
         private String password;
     }
 

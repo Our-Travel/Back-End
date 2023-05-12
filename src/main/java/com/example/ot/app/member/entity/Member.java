@@ -1,4 +1,4 @@
-package com.example.ot.app.user.entity;
+package com.example.ot.app.member.entity;
 
 import com.example.ot.app.base.entity.BaseTimeEntity;
 import com.example.ot.util.Util;
@@ -21,10 +21,10 @@ import java.util.Map;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-public class User extends BaseTimeEntity {
+public class Member extends BaseTimeEntity {
 
     @Column(unique = true)
-    private String email;
+    private String username;
 
     private String password;
 
@@ -48,7 +48,7 @@ public class User extends BaseTimeEntity {
                 "id", getId(),
                 "createDate", getCreatedDate(),
                 "modifyDate", getModifiedDate(),
-                "email", getEmail(),
+                "email", getUsername(),
                 "nickName", getNickName(),
                 "authorities", getAuthorities()
         );
