@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/mypage")
 public class MyPageController {
 
-    @GetMapping
+    @GetMapping("")
     public ResponseEntity<RsData> me(@AuthenticationPrincipal MemberContext memberContext) {
 
         return Util.spring.responseEntityOf(RsData.successOf(memberContext));

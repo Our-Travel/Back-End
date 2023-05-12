@@ -24,7 +24,7 @@ public class SecurityConfig {
         http
                 .authorizeRequests(
                         authorizeRequests -> authorizeRequests
-                                .requestMatchers("/api/member/login", "/api/member/signup")
+                                .requestMatchers("/api/member/**")
                                 .permitAll()
                                 .anyRequest()
                                 .authenticated() // 최소자격 : 로그인
