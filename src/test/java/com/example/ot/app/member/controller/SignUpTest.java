@@ -34,7 +34,7 @@ public class SignUpTest {
         // When
         ResultActions resultActions = mvc
                 .perform(
-                        post("/api/members/signup")
+                        post("/api/member/signup")
                                 .content("""
                                         {
                                             "username": "user3@example.com",
@@ -61,7 +61,7 @@ public class SignUpTest {
         // When
         ResultActions resultActions = mvc
                 .perform(
-                        post("/api/members/signup")
+                        post("/api/member/signup")
                                 .content("""
                                         {
                                             "username": "",
@@ -84,7 +84,7 @@ public class SignUpTest {
         // When
         resultActions = mvc
                 .perform(
-                        post("/api/members/signup")
+                        post("/api/member/signup")
                                 .content("""
                                         {
                                             "username": "user1@naver.com",
@@ -114,7 +114,7 @@ public class SignUpTest {
         // When
         ResultActions resultActions = mvc
                 .perform(
-                        get("/api/members/check-username/{username}", username)
+                        get("/api/member/check-username/{username}", username)
                 )
                 .andDo(print());
 
@@ -132,7 +132,7 @@ public class SignUpTest {
         // When
         ResultActions resultActions = mvc
                 .perform(
-                        get("/api/members/check-username/{username}", username)
+                        get("/api/member/check-username/{username}", username)
                 )
                 .andDo(print());
 
@@ -150,7 +150,7 @@ public class SignUpTest {
         // When
         ResultActions resultActions = mvc
                 .perform(
-                        get("/api/members/check-nickName/{nickName}", nickName)
+                        get("/api/member/check-nickName/{nickName}", nickName)
                 )
                 .andDo(print());
 
@@ -168,7 +168,7 @@ public class SignUpTest {
         // When
         ResultActions resultActions = mvc
                 .perform(
-                        get("/api/members/check-nickName/{nickName}", nickName)
+                        get("/api/member/check-nickName/{nickName}", nickName)
                 )
                 .andDo(print());
 

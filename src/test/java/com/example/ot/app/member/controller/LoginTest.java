@@ -36,7 +36,7 @@ public class LoginTest {
         // When
         ResultActions resultActions = mvc
                 .perform(
-                        post("/api/members/login")
+                        post("/api/member/login")
                                 .content("""
                                         {
                                             "username": "user1@example.com",
@@ -66,7 +66,7 @@ public class LoginTest {
         // When
         ResultActions resultActions = mvc
                 .perform(
-                        post("/api/members/login")
+                        post("/api/member/login")
                                 .content("""
                                         {
                                             "username": "",
@@ -83,7 +83,7 @@ public class LoginTest {
 
         mvc
                 .perform(
-                        post("/api/members/login")
+                        post("/api/member/login")
                                 .content("""
                                         {
                                             "username": "user1@example.com",
