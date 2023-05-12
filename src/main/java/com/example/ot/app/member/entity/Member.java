@@ -46,9 +46,9 @@ public class Member extends BaseTimeEntity {
     public Map<String, Object> getAccessTokenClaims() {
         return Util.mapOf(
                 "id", getId(),
-                "createDate", getCreatedDate(),
-                "modifyDate", getModifiedDate(),
-                "email", getUsername(),
+                "createdDate", getCreatedDate(),
+                "modifiedDate", getModifiedDate(),
+                "username", getUsername(),
                 "nickName", getNickName(),
                 "authorities", getAuthorities()
         );
