@@ -19,6 +19,7 @@ public class JwtProvider {
         return jwtSecretKey;
     }
 
+    // 토큰 생성
     public String generateAccessToken(Map<String, Object> claims, int seconds) {
         long now = new Date().getTime();
         Date accessTokenExpiresIn = new Date(now + 1000L * seconds);
@@ -30,6 +31,7 @@ public class JwtProvider {
                 .compact();
     }
 
+    // 토큰 검증
     public boolean verify(String token) {
         try {
             Jwts.parserBuilder()
