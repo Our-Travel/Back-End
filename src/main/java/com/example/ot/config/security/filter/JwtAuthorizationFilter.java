@@ -37,10 +37,8 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
             // 토큰이 유효한지 체크
             if (jwtProvider.verify(token)) {
                 Map<String, Object> claims = jwtProvider.getClaims(token);
-                String username = (String) claims.get("username");
-                Member member = memberService.findByUsername(username).orElseThrow(
-                        () -> new UsernameNotFoundException("'%s' Username not found.".formatted(username))
-                );
+
+                Member member = Member.fromJwtClaims(claims);
 
                 forceAuthentication(member); // member 찾았으면 인증.
             }

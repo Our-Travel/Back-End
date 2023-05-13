@@ -11,6 +11,7 @@ import lombok.experimental.SuperBuilder;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -41,6 +42,23 @@ public class Member extends BaseTimeEntity {
         authorities.add(new SimpleGrantedAuthority("MEMBER"));
 
         return authorities;
+    }
+
+    public static Member fromJwtClaims(Map<String, Object> jwtClaims) {
+        long id = (long)(int)jwtClaims.get("id");
+        LocalDateTime createdDate = Util.date.bitsToLocalDateTime((List<Integer>)jwtClaims.get("createdDate"));
+        LocalDateTime modifiedDate = Util.date.bitsToLocalDateTime((List<Integer>)jwtClaims.get("modifiedDate"));
+        String username = (String)jwtClaims.get("username");
+        String nickName = (String)jwtClaims.get("nickName");
+
+        return Member
+                .builder()
+                .id(id)
+                .createdDate(createdDate)
+                .modifiedDate(modifiedDate)
+                .username(username)
+                .nickName(nickName)
+                .build();
     }
 
     public Map<String, Object> getAccessTokenClaims() {
