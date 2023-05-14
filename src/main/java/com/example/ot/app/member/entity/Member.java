@@ -46,6 +46,11 @@ public class Member extends BaseTimeEntity {
         List<GrantedAuthority> authorities = new ArrayList<>();
         authorities.add(new SimpleGrantedAuthority("MEMBER"));
 
+        // 관리자 계정
+        if (username.equals("admin@example.com")) {
+            authorities.add(new SimpleGrantedAuthority("admin"));
+        }
+
         return authorities;
     }
 

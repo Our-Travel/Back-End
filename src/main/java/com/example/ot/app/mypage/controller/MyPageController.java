@@ -23,7 +23,6 @@ public class MyPageController {
     @Operation(summary = "마이페이지 초기화면")
     @GetMapping("")
     public ResponseEntity<RsData> me(@AuthenticationPrincipal MemberContext memberContext) {
-
         return Util.spring.responseEntityOf(RsData.successOf(memberContext));
     }
 }
