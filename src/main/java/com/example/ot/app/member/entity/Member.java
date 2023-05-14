@@ -7,6 +7,7 @@ import jakarta.persistence.Entity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -32,6 +33,10 @@ public class Member extends BaseTimeEntity {
     @Column(unique = true)
     private String nickName;
 
+    @Column(columnDefinition = "TEXT")
+    @Setter
+    private String accessToken;
+
     private String regionLevel1;
 
     private String regionLevel2;
@@ -44,28 +49,9 @@ public class Member extends BaseTimeEntity {
         return authorities;
     }
 
-    public static Member fromJwtClaims(Map<String, Object> jwtClaims) {
-        long id = (long)(int)jwtClaims.get("id");
-        LocalDateTime createdDate = Util.date.bitsToLocalDateTime((List<Integer>)jwtClaims.get("createdDate"));
-        LocalDateTime modifiedDate = Util.date.bitsToLocalDateTime((List<Integer>)jwtClaims.get("modifiedDate"));
-        String username = (String)jwtClaims.get("username");
-        String nickName = (String)jwtClaims.get("nickName");
-
-        return Member
-                .builder()
-                .id(id)
-                .createdDate(createdDate)
-                .modifiedDate(modifiedDate)
-                .username(username)
-                .nickName(nickName)
-                .build();
-    }
-
     public Map<String, Object> getAccessTokenClaims() {
         return Util.mapOf(
                 "id", getId(),
-                "createdDate", getCreatedDate(),
-                "modifiedDate", getModifiedDate(),
                 "username", getUsername(),
                 "nickName", getNickName(),
                 "authorities", getAuthorities()
