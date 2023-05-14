@@ -37,6 +37,8 @@ public class Member extends BaseTimeEntity {
     @Setter
     private String accessToken;
 
+    private String providerTypeCode;
+
     private String regionLevel1;
 
     private String regionLevel2;
