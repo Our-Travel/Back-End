@@ -5,6 +5,7 @@ import com.example.ot.app.member.dto.MemberDTO;
 import com.example.ot.app.member.entity.Member;
 import com.example.ot.app.member.service.MemberService;
 import com.example.ot.util.Util;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
@@ -15,7 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
-@Tag(name = "normal signup", description = "일반 회원 가입 api")
+@Tag(name = "로그인 및 회원가입")
 @Slf4j
 @RestController
 @RequiredArgsConstructor
@@ -25,7 +26,7 @@ public class MemberController {
     private final MemberService memberService;
     private final PasswordEncoder passwordEncoder;
 
-    // 회원가입
+    @Operation(summary = "회원가입")
     @PostMapping("/signup")
     public ResponseEntity<RsData> signUp(@Valid @RequestBody MemberDTO.SignUpDto signUpDto){
         log.info("username : {} " , signUpDto.getUsername());
@@ -49,7 +50,7 @@ public class MemberController {
         );
     }
 
-    // 아이디 중복체크
+    @Operation(summary = "아이디 중복체크")
     @GetMapping("/check-username/{username}")
     public ResponseEntity<RsData> checkUsername(@PathVariable @NotBlank(message = "아이디를 입력해주세요.") String username){
         RsData<Member> checkUsername = memberService.checkUsername(username);
@@ -64,7 +65,7 @@ public class MemberController {
         );
     }
 
-    // 닉네임 중복체크
+    @Operation(summary = "닉네임 중복체크")
     @GetMapping("/check-nickName/{nickName}")
     public ResponseEntity<RsData> checkNickName(@PathVariable @NotBlank(message = "닉네임을 입력해주세요.") String nickName){
         RsData<Member> checkNickName = memberService.checkNickName(nickName);
@@ -79,7 +80,7 @@ public class MemberController {
         );
     }
 
-    // 로그인
+    @Operation(summary = "로그인")
     @PostMapping("/login")
     public ResponseEntity<RsData> signIn(@Valid @RequestBody MemberDTO.SignInDto signInDto){
         Member member = memberService.findByUsername(signInDto.getUsername()).orElse(null);
