@@ -99,42 +99,42 @@ public class LoginTest {
                 .andExpect(status().is4xxClientError());
     }
 
-//    @Test
-//    @DisplayName("로그인 후 얻은 JWT 토큰으로 로그인 한 회원의 정보를 얻을 수 있다.")
-//    void t4() throws Exception {
-//        // When
-//        ResultActions resultActions = mvc
-//                .perform(
-//                        post("/api/members/login")
-//                                .content("""
-//                                        {
-//                                            "username": "user1@example.com",
-//                                            "password": "1234"
-//                                        }
-//                                        """.stripIndent())
-//                                .contentType(new MediaType(MediaType.APPLICATION_JSON, StandardCharsets.UTF_8))
-//                )
-//                .andDo(print());
-//
-//        // Then
-//        resultActions
-//                .andExpect(status().is2xxSuccessful());
-//
-//        MvcResult mvcResult = resultActions.andReturn();
-//
-//        MockHttpServletResponse response = mvcResult.getResponse();
-//
-//        String accessToken = response.getHeader("Authentication");
-//
-//        resultActions = mvc
-//                .perform(
-//                        get("/api/main")
-//                                .header("Authorization", "Bearer " + accessToken)
-//                )
-//                .andDo(print());
-//
-//        // Then
-//        resultActions
-//                .andExpect(status().is2xxSuccessful());
-//    }
+    @Test
+    @DisplayName("로그인 후 얻은 JWT 토큰으로 로그인 한 회원의 정보를 얻을 수 있다.")
+    void t4() throws Exception {
+        // When
+        ResultActions resultActions = mvc
+                .perform(
+                        post("/api/member/login")
+                                .content("""
+                                        {
+                                            "username": "user1@example.com",
+                                            "password": "1234"
+                                        }
+                                        """.stripIndent())
+                                .contentType(new MediaType(MediaType.APPLICATION_JSON, StandardCharsets.UTF_8))
+                )
+                .andDo(print());
+
+        // Then
+        resultActions
+                .andExpect(status().is2xxSuccessful());
+
+        MvcResult mvcResult = resultActions.andReturn();
+
+        MockHttpServletResponse response = mvcResult.getResponse();
+
+        String accessToken = response.getHeader("Authentication");
+
+        resultActions = mvc
+                .perform(
+                        get("/api/mypage")
+                                .header("Authorization", "Bearer " + accessToken)
+                )
+                .andDo(print());
+
+        // Then
+        resultActions
+                .andExpect(status().is2xxSuccessful());
+    }
 }
