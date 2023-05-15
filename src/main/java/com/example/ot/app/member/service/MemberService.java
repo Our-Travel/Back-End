@@ -25,13 +25,18 @@ public class MemberService {
     private final PasswordEncoder passwordEncoder;
     private final JwtProvider jwtProvider;
 
-    // 회원가입 생성.
     @Transactional
     public void create(MemberDTO.SignUpDto signUpDto){
+        create("OT", signUpDto);
+    }
+
+    // 회원가입 생성.
+    private void create(String providerTypeCode, MemberDTO.SignUpDto signUpDto){
         Member member = Member.builder()
                 .username(signUpDto.getUsername())
                 .password(passwordEncoder.encode(signUpDto.getPassword()))
                 .nickName(signUpDto.getNickName())
+                .providerTypeCode(providerTypeCode)
                 .regionLevel1(signUpDto.getRegionLevel1())
                 .regionLevel2(signUpDto.getRegionLevel2())
                 .build();

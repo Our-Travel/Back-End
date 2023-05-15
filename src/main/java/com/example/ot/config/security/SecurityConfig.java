@@ -38,7 +38,7 @@ public class SecurityConfig {
                         authorizeRequests -> authorizeRequests
                                 .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html")
                                 .permitAll()
-                                .requestMatchers("/api/member/**")
+                                .requestMatchers("/api/member/**", "/auth/**", "/oauth2/**")
                                 .permitAll()
                                 .anyRequest()
                                 .authenticated() // 최소자격 : 로그인
