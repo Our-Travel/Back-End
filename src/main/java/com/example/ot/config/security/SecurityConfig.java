@@ -20,6 +20,9 @@ import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
 import java.io.IOException;
 
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
@@ -27,7 +30,7 @@ import static org.springframework.security.config.http.SessionCreationPolicy.STA
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
-public class SecurityConfig {
+public class SecurityConfig implements WebMvcConfigurer {
 
     private final JwtAuthorizationFilter jwtAuthorizationFilter;
 
@@ -43,7 +46,7 @@ public class SecurityConfig {
                                 .anyRequest()
                                 .authenticated() // 최소자격 : 로그인
                 )
-                .cors().disable() // 타 도메인에서 API 호출 가능
+                .cors().and() // cors 활성화
                 .csrf().disable() // CSRF 토큰 끄기
                 .httpBasic().disable() // httpBaic 로그인 방식 끄기
                 .formLogin().disable() // 폼 로그인 방식 끄기
@@ -79,5 +82,13 @@ public class SecurityConfig {
                 });
 
         return http.build();
+    }
+
+    @Override
+    public void addCorsMappings(CorsRegistry registry) {
+        registry.addMapping("/api/**")
+                .allowedOrigins("http://localhost:3000")
+                .allowedMethods("GET", "POST", "PUT", "DELETE")
+                .allowCredentials(true);
     }
 }
