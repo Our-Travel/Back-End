@@ -1,9 +1,11 @@
 package com.example.ot.config.security.jwt;
 
+import com.example.ot.config.security.CustomOAuth2User;
 import com.example.ot.util.Util;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
@@ -26,6 +28,18 @@ public class JwtProvider {
 
         return Jwts.builder()
                 .claim("body", Util.json.toStr(claims))
+                .setExpiration(accessTokenExpiresIn)
+                .signWith(getSecretKey(), SignatureAlgorithm.HS512)
+                .compact();
+    }
+    public String generateAccessToken(Authentication authentication){
+        CustomOAuth2User customOAuth2User = (CustomOAuth2User) authentication.getPrincipal();
+        long now = new Date().getTime();
+        long seconds = 60L * 60 * 24 * 365 * 100;
+        Date accessTokenExpiresIn = new Date(now + 1000L * seconds);
+
+        return Jwts.builder()
+                .claim("body", customOAuth2User)
                 .setExpiration(accessTokenExpiresIn)
                 .signWith(getSecretKey(), SignatureAlgorithm.HS512)
                 .compact();

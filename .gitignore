@@ -40,3 +40,5 @@ out/
 application-secret.yml
 
 src/main/generated
+
+application-prod.yml
