@@ -2,6 +2,7 @@ package com.example.ot.app.member.entity;
 
 import com.example.ot.app.base.entity.BaseTimeEntity;
 import com.example.ot.util.Util;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import lombok.AllArgsConstructor;
@@ -28,6 +29,7 @@ public class Member extends BaseTimeEntity {
     @Column(unique = true)
     private String username;
 
+    @JsonIgnore
     private String password;
 
     @Column(unique = true)

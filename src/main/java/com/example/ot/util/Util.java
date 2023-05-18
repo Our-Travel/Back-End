@@ -27,6 +27,14 @@ public class Util {
 
     public static class json {
 
+        public static String toStr(Object obj) {
+            try {
+                return new ObjectMapper().writeValueAsString(obj);
+            } catch (JsonProcessingException e) {
+                return null;
+            }
+        }
+
         public static Object toStr(Map<String, Object> map) {
             try {
                 return getObjectMapper().writeValueAsString(map);

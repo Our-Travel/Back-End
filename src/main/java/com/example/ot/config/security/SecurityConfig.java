@@ -1,6 +1,7 @@
 package com.example.ot.config.security;
 
 import com.example.ot.app.base.dto.RsData;
+import com.example.ot.config.security.entryPoint.ApiAuthenticationEntryPoint;
 import com.example.ot.config.security.filter.JwtAuthorizationFilter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.ServletException;
@@ -33,10 +34,14 @@ import static org.springframework.security.config.http.SessionCreationPolicy.STA
 public class SecurityConfig implements WebMvcConfigurer {
 
     private final JwtAuthorizationFilter jwtAuthorizationFilter;
+    private final ApiAuthenticationEntryPoint authenticationEntryPoint;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http, AuthenticationConfiguration authenticationConfiguration) throws Exception {
         http
+                .exceptionHandling(exceptionHandling -> exceptionHandling
+                .authenticationEntryPoint(authenticationEntryPoint)
+        )
                 .authorizeHttpRequests(
                         authorizeRequests -> authorizeRequests
                                 .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html")
@@ -65,17 +70,6 @@ public class SecurityConfig implements WebMvcConfigurer {
                     response.setContentType("application/json; charset=UTF-8");
 
                     RsData rsData = RsData.of("F-AccessDeniedException", "권한이 없는 사용자입니다.", null);
-                    String json = new ObjectMapper().writeValueAsString(rsData);
-
-                    response.getWriter().write(json);
-                })
-                // 인증문제가 발생했을 때 이 부분을 호출한다.
-                .authenticationEntryPoint((request, response, authException) -> {
-                    response.setStatus(HttpStatus.UNAUTHORIZED.value());
-                    response.setCharacterEncoding("utf-8");
-                    response.setContentType("application/json; charset=UTF-8");
-
-                    RsData rsData = RsData.of("F-UnauthorizedException", "인증되지 않은 사용자입니다.", null);
                     String json = new ObjectMapper().writeValueAsString(rsData);
 
                     response.getWriter().write(json);
