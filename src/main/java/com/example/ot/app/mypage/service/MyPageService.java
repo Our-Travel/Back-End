@@ -1,6 +1,10 @@
 package com.example.ot.app.mypage.service;
 
 import com.example.ot.app.base.rsData.RsData;
+import com.example.ot.app.member.entity.Member;
+import com.example.ot.app.member.repository.MemberRepository;
+import com.example.ot.app.mypage.entity.ProfileImage;
+import com.example.ot.app.mypage.repository.ProfileImageRepository;
 import com.example.ot.config.AppConfig;
 import com.example.ot.util.Util;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +25,8 @@ import java.util.List;
 @RequiredArgsConstructor
 public class MyPageService {
 
+    private final ProfileImageRepository profileImageRepository;
+    private final MemberRepository memberRepository;
     private static final List<String> ALLOWED_EXTENSIONS = Arrays.asList("jpg", "jpeg", "png");
 
     // 프로필 사진 업로드 유효성 검사
@@ -73,7 +79,17 @@ public class MyPageService {
             }
             // 파일을 지정된 경로에 저장
             file.transferTo(fileDir);
-
+            // 프로필 이미지 저장
+            ProfileImage profileImage = ProfileImage.builder()
+                    .size(file.getSize())
+                    .storedFilePath(uploadPath)
+                    .extension(extension)
+                    .build();
+            profileImageRepository.save(profileImage);
+            // 프로필 이미지와 member 연관관계
+            Member member = memberRepository.findByUsername(username).orElse(null);
+            member.setProfileImage(profileImage);
+            memberRepository.save(member);
             return RsData.of("S-1", "파일업로드 완료");
         } catch (IOException e) {
             e.printStackTrace();

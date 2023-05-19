@@ -1,4 +1,4 @@
-package com.example.ot.app.member.entity;
+package com.example.ot.app.mypage.entity;
 
 import com.example.ot.app.base.entity.BaseTimeEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
