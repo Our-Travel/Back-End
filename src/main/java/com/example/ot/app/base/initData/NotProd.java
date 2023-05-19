@@ -19,8 +19,8 @@ public class NotProd {
             @Override
             @Transactional
             public void run(String... args) throws Exception {
-                MemberDTO.SignUpDto user1 = new MemberDTO.SignUpDto("user1@example.com", "1234", "user1", "서울특별시", "관악구");
-                MemberDTO.SignUpDto user2 = new MemberDTO.SignUpDto("user2@example.com", "1234", "user2", "서울특별시", "관악구");
+                MemberDTO.SignUpDto user1 = new MemberDTO.SignUpDto("user1@example.com", "1234", "user1");
+                MemberDTO.SignUpDto user2 = new MemberDTO.SignUpDto("user2@example.com", "1234", "user2");
                 memberService.create(user1);
                 memberService.create(user2);
             }

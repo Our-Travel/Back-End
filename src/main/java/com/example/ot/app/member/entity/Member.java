@@ -41,10 +41,6 @@ public class Member extends BaseTimeEntity {
 
     private String providerTypeCode;
 
-    private String regionLevel1;
-
-    private String regionLevel2;
-
     // 현재 회원이 가지고 있는 권한들을 List<GrantedAuthority> 형태로 리턴
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<GrantedAuthority> authorities = new ArrayList<>();

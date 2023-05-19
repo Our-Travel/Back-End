@@ -32,8 +32,6 @@ public class MemberController {
         log.info("username : {} " , signUpDto.getUsername());
         log.info("password : {} " , signUpDto.getPassword());
         log.info("nickName : {} " , signUpDto.getNickName());
-        log.info("regionLevel1 : {} " , signUpDto.getRegionLevel1());
-        log.info("regionLevel2 : {} " , signUpDto.getRegionLevel2());
 
         RsData<Member> check = memberService.check(signUpDto);
 

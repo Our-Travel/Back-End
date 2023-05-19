@@ -37,8 +37,6 @@ public class MemberService {
                 .password(passwordEncoder.encode(signUpDto.getPassword()))
                 .nickName(signUpDto.getNickName())
                 .providerTypeCode(providerTypeCode)
-                .regionLevel1(signUpDto.getRegionLevel1())
-                .regionLevel2(signUpDto.getRegionLevel2())
                 .build();
         
         memberRepository.save(member);

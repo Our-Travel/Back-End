@@ -39,9 +39,7 @@ public class SignUpTest {
                                         {
                                             "username": "user3@example.com",
                                             "password": "1234",
-                                            "nickName": "user3",
-                                            "regionLevel1": "서울시",
-                                            "regionLevel2": "관악구"
+                                            "nickName": "user3"
                                         }
                                         """.stripIndent())
                                 .contentType(new MediaType(MediaType.APPLICATION_JSON, StandardCharsets.UTF_8))
@@ -66,9 +64,7 @@ public class SignUpTest {
                                         {
                                             "username": "",
                                             "password": "1234",
-                                            "nickName": "user1",
-                                            "regionLevel1": "서울시",
-                                            "regionLevel2": "관악구"
+                                            "nickName": "user1"
                                         }
                                         """.stripIndent())
                                 .contentType(new MediaType(MediaType.APPLICATION_JSON, StandardCharsets.UTF_8))
@@ -89,9 +85,7 @@ public class SignUpTest {
                                         {
                                             "username": "user1@naver.com",
                                             "password": "1234",
-                                            "nickName": "",
-                                            "regionLevel1": "서울시",
-                                            "regionLevel2": "관악구"
+                                            "nickName": ""
                                         }
                                         """.stripIndent())
                                 .contentType(new MediaType(MediaType.APPLICATION_JSON, StandardCharsets.UTF_8))
