@@ -41,3 +41,5 @@ logging:
     com.example.ot: DEBUG
     org.hibernate.orm.jdbc.bind: TRACE
     org.hibernate.orm.jdbc.extract: TRACE
+custom:
+  genFileDirPath: c:/Temp/ot
