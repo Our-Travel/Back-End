@@ -1,6 +1,6 @@
 package com.example.ot.app.member.service;
 
-import com.example.ot.app.base.dto.RsData;
+import com.example.ot.app.base.rsData.RsData;
 import com.example.ot.config.security.jwt.JwtProvider;
 import com.example.ot.app.member.dto.MemberDTO;
 import com.example.ot.app.member.entity.Member;
@@ -37,8 +37,6 @@ public class MemberService {
                 .password(passwordEncoder.encode(signUpDto.getPassword()))
                 .nickName(signUpDto.getNickName())
                 .providerTypeCode(providerTypeCode)
-                .regionLevel1(signUpDto.getRegionLevel1())
-                .regionLevel2(signUpDto.getRegionLevel2())
                 .build();
         
         memberRepository.save(member);

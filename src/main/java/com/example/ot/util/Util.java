@@ -1,7 +1,7 @@
 package com.example.ot.util;
 
 import com.example.ot.config.AppConfig;
-import com.example.ot.app.base.dto.RsData;
+import com.example.ot.app.base.rsData.RsData;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.http.HttpHeaders;
@@ -26,6 +26,14 @@ public class Util {
     }
 
     public static class json {
+
+        public static String toStr(Object obj) {
+            try {
+                return new ObjectMapper().writeValueAsString(obj);
+            } catch (JsonProcessingException e) {
+                return null;
+            }
+        }
 
         public static Object toStr(Map<String, Object> map) {
             try {

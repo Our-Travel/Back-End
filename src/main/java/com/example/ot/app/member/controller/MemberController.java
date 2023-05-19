@@ -1,6 +1,6 @@
 package com.example.ot.app.member.controller;
 
-import com.example.ot.app.base.dto.RsData;
+import com.example.ot.app.base.rsData.RsData;
 import com.example.ot.app.member.dto.MemberDTO;
 import com.example.ot.app.member.entity.Member;
 import com.example.ot.app.member.service.MemberService;
@@ -32,8 +32,6 @@ public class MemberController {
         log.info("username : {} " , signUpDto.getUsername());
         log.info("password : {} " , signUpDto.getPassword());
         log.info("nickName : {} " , signUpDto.getNickName());
-        log.info("regionLevel1 : {} " , signUpDto.getRegionLevel1());
-        log.info("regionLevel2 : {} " , signUpDto.getRegionLevel2());
 
         RsData<Member> check = memberService.check(signUpDto);
 
