@@ -1,6 +1,6 @@
 package com.example.ot.app.mypage.controller;
 
-import com.example.ot.app.base.dto.RsData;
+import com.example.ot.app.base.rsData.RsData;
 import com.example.ot.config.security.entity.MemberContext;
 import com.example.ot.util.Util;
 import io.swagger.v3.oas.annotations.Operation;

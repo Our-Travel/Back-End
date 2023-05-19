@@ -1,6 +1,6 @@
 package com.example.ot.app.base.exceptionHandler;
 
-import com.example.ot.app.base.dto.RsData;
+import com.example.ot.app.base.rsData.RsData;
 import com.example.ot.util.Util;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.ResponseEntity;

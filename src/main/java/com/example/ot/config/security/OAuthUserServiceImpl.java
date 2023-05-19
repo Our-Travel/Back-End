@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
@@ -65,7 +66,7 @@ public class OAuthUserServiceImpl extends DefaultOAuth2UserService {
         log.info("Successfully pulled user info username {} authProvider {}",
                 username,
                 providerTypeCode);
-        return new CustomOAuth2User(member.getUsername(), member.getNickName(), oAuth2User.getAttributes());
+        return new CustomOAuth2User(member.getUsername(), member.getNickName(), member.getAuthorities());
 
     }
 

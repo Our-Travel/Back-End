@@ -1,4 +1,4 @@
-package com.example.ot.app.base.dto;
+package com.example.ot.app.base.rsData;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
