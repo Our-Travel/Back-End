@@ -3,8 +3,10 @@ package com.example.ot.app.member.entity;
 import com.example.ot.app.base.entity.BaseTimeEntity;
 import com.example.ot.util.Util;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.OneToOne;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -40,6 +42,9 @@ public class Member extends BaseTimeEntity {
     private String accessToken;
 
     private String providerTypeCode;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    private ProfileImage profileImage;
 
     // 현재 회원이 가지고 있는 권한들을 List<GrantedAuthority> 형태로 리턴
     public Collection<? extends GrantedAuthority> getAuthorities() {
