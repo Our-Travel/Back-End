@@ -15,14 +15,21 @@ public class AppConfig {
     private static ApplicationContext context;
     @Getter
     private static long MAX_FILE_SIZE;
+    @Getter
+    private static String uploadPath;
     @Autowired
     public void setContext(ApplicationContext context) {
         AppConfig.context = context;
     }
 
     @Value("${custom.file.maxFileSize}")
-    public void setLikeablePersonModifyCoolTime(long MAX_FILE_SIZE) {
+    public void setMaxFileSize(long MAX_FILE_SIZE) {
         AppConfig.MAX_FILE_SIZE = MAX_FILE_SIZE;
+    }
+
+    @Value("${custom.file.genFileDirPath}")
+    public void setUploadPath(String uploadPath) {
+        AppConfig.uploadPath = uploadPath;
     }
 
     // access토큰 시간 관련 오류 해결.

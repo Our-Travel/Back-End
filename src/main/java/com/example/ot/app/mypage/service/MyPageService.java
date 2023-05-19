@@ -57,13 +57,18 @@ public class MyPageService {
 
     // 프로필 사진 업로드
     public RsData uploadProfilePicture(MultipartFile file, String username) {
-        String originalFileName = file.getOriginalFilename();
+
+        int dotIndex = file.getOriginalFilename().lastIndexOf(".");
+        String extension = file.getOriginalFilename().substring(dotIndex); // 파일 확장자 (.png 또는 .jpeg)
+        String newFileName = username.split("@")[0] + extension;
+
         try {
             // 파일을 저장할 경로를 지정
-            String uploadPath = "c:/Temp/ot/" + username + "/" + originalFileName;
+            String uploadPath = AppConfig.getUploadPath() + "profileImage/" + newFileName;
             File fileDir = new File(uploadPath);
             // 폴더가 없을 경우 폴더 생성
             if(!fileDir.exists()){
+                System.out.println("파일 생성");
                 fileDir.mkdirs();
             }
             // 파일을 지정된 경로에 저장
