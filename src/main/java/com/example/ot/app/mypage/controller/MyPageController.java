@@ -29,6 +29,7 @@ import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.Base64;
 import java.util.List;
+import java.util.Map;
 
 @Tag(name = "마이 페이지")
 @Slf4j
@@ -52,10 +53,11 @@ public class MyPageController {
         if (file.exists()) {
             byte[] fileBytes = Files.readAllBytes(file.toPath());
             String base64File = Base64.getEncoder().encodeToString(fileBytes);
-            JSONObject json = new JSONObject();
-            json.put("image", base64File);
 
-            return Util.spring.responseEntityOf(RsData.of("S-1", "마이페이지", Util.mapOf(Util.json.toMap(memberContext), json)));
+            Map<String, Object> memberContextMap = Util.json.toMap(memberContext);
+            memberContextMap.put("image", base64File);
+
+            return Util.spring.responseEntityOf(RsData.of("S-1", "마이페이지", memberContextMap));
         }
         return Util.spring.responseEntityOf(RsData.successOf(memberContext));
     }
