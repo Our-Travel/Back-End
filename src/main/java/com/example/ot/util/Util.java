@@ -52,6 +52,10 @@ public class Util {
                 return null;
             }
         }
+        public static Map<String, Object> toMap(Object obj) {
+            ObjectMapper mapper = new ObjectMapper();
+            return mapper.convertValue(obj, Map.class);
+        }
     }
 
     public static <K, V> Map<K, V> mapOf(Object... args) {

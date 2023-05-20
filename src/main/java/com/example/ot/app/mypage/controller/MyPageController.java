@@ -3,6 +3,7 @@ package com.example.ot.app.mypage.controller;
 import com.example.ot.app.base.rsData.RsData;
 import com.example.ot.app.member.entity.Member;
 import com.example.ot.app.member.service.MemberService;
+import com.example.ot.app.mypage.dto.MyPageDTO;
 import com.example.ot.app.mypage.service.MyPageService;
 import com.example.ot.config.security.entity.MemberContext;
 import com.example.ot.util.Util;
@@ -11,6 +12,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import net.minidev.json.JSONObject;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
@@ -23,7 +25,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.Arrays;
+import java.util.Base64;
 import java.util.List;
 
 @Tag(name = "마이 페이지")
@@ -43,18 +47,15 @@ public class MyPageController {
         Member member = memberService.findById(memberContext.getId()).orElse(null);
         String filePath = member.getProfileImage().getStoredFilePath();
 
-        String newFileName = memberContext.getUsername().split("@")[0];
-
         File file = new File(filePath);
 
-        if(file.exists()){
-            Resource resource = new FileSystemResource(file);
-            MediaType mediaType = determineMediaType(newFileName);
-            HttpHeaders headers = new HttpHeaders();
-            headers.setContentType(mediaType);
-            return ResponseEntity.ok()
-                    .headers(headers)
-                    .body(resource);
+        if (file.exists()) {
+            byte[] fileBytes = Files.readAllBytes(file.toPath());
+            String base64File = Base64.getEncoder().encodeToString(fileBytes);
+            JSONObject json = new JSONObject();
+            json.put("image", base64File);
+
+            return Util.spring.responseEntityOf(RsData.of("S-1", "마이페이지", Util.mapOf(Util.json.toMap(memberContext), json)));
         }
         return Util.spring.responseEntityOf(RsData.successOf(memberContext));
     }
@@ -71,23 +72,5 @@ public class MyPageController {
         RsData upload = myPageService.uploadProfilePicture(file, memberContext.getUsername());
 
         return Util.spring.responseEntityOf(upload);
-    }
-
-    private MediaType determineMediaType(String fileName) {
-        String fileExtension = getFileExtension(fileName);
-        if (fileExtension.equalsIgnoreCase("jpg") || fileExtension.equalsIgnoreCase("jpeg")) {
-            return MediaType.IMAGE_JPEG;
-        } else if (fileExtension.equalsIgnoreCase("png")) {
-            return MediaType.IMAGE_PNG;
-        }
-        // 기본값으로 IMAGE_JPEG 반환
-        return MediaType.IMAGE_JPEG;
-    }
-    private String getFileExtension(String fileName) {
-        int dotIndex = fileName.lastIndexOf(".");
-        if (dotIndex != -1 && dotIndex < fileName.length() - 1) {
-            return fileName.substring(dotIndex + 1).toLowerCase();
-        }
-        return "";
     }
 }
