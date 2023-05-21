@@ -47,15 +47,18 @@ public class MyPageController {
 //        RsData rsData = myPageService.showProfilePicture()
         Member member = memberService.findById(memberContext.getId()).orElse(null);
         String filePath = member.getProfileImage().getStoredFilePath();
-
+        String extension = member.getProfileImage().getExtension().substring(1);
+        if(extension.equals("jpg")){
+            extension = "jpeg";
+        }
         File file = new File(filePath);
 
         if (file.exists()) {
             byte[] fileBytes = Files.readAllBytes(file.toPath());
             String base64File = Base64.getEncoder().encodeToString(fileBytes);
-
+            String base64ImageString = "data:image/"+extension +";base64," + base64File;
             Map<String, Object> memberContextMap = Util.json.toMap(memberContext);
-            memberContextMap.put("image", base64File);
+            memberContextMap.put("image", base64ImageString);
 
             return Util.spring.responseEntityOf(RsData.of("S-1", "마이페이지", memberContextMap));
         }

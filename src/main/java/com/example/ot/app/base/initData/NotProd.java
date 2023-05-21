@@ -2,6 +2,8 @@ package com.example.ot.app.base.initData;
 
 import com.example.ot.app.member.dto.MemberDTO;
 import com.example.ot.app.member.service.MemberService;
+import com.example.ot.app.mypage.entity.ProfileImage;
+import com.example.ot.app.mypage.repository.ProfileImageRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,7 +15,8 @@ import org.springframework.transaction.annotation.Transactional;
 public class NotProd {
     @Bean
     CommandLineRunner initData(
-            MemberService memberService
+            MemberService memberService,
+            ProfileImageRepository profileImageRepository
     ) {
         return new CommandLineRunner() {
             @Override
@@ -25,6 +28,11 @@ public class NotProd {
                 memberService.create(admin);
                 memberService.create(user1);
                 memberService.create(user2);
+                ProfileImage profileImage = ProfileImage.builder()
+                        .storedFilePath("c:/Temp/ot/profileImage/ot.png")
+                        .extension(".jpg")
+                        .build();
+                profileImageRepository.save(profileImage);
             }
         };
     }
