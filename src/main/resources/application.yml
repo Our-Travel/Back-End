@@ -41,3 +41,11 @@ logging:
     com.example.ot: DEBUG
     org.hibernate.orm.jdbc.bind: TRACE
     org.hibernate.orm.jdbc.extract: TRACE
+custom:
+  file:
+    genFileDirPath: c:/Temp/ot/
+    maxFileSize: '#{10 * 1024 * 1024}' # 10MB
+kakao:
+  rest:
+    api:
+      key: '카카오 REST API KEY'

@@ -1,6 +1,7 @@
 package com.example.ot.app.member.service;
 
 import com.example.ot.app.base.rsData.RsData;
+import com.example.ot.app.mypage.repository.ProfileImageRepository;
 import com.example.ot.config.security.jwt.JwtProvider;
 import com.example.ot.app.member.dto.MemberDTO;
 import com.example.ot.app.member.entity.Member;
@@ -22,6 +23,7 @@ import java.util.Optional;
 public class MemberService {
 
     private final MemberRepository memberRepository;
+    private final ProfileImageRepository profileImageRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtProvider jwtProvider;
 
@@ -36,6 +38,7 @@ public class MemberService {
                 .username(signUpDto.getUsername())
                 .password(passwordEncoder.encode(signUpDto.getPassword()))
                 .nickName(signUpDto.getNickName())
+                .profileImage(profileImageRepository.findById(1L).get())
                 .providerTypeCode(providerTypeCode)
                 .build();
         
@@ -68,6 +71,9 @@ public class MemberService {
 
     public Optional<Member> findByUsername(String username) {
         return memberRepository.findByUsername(username);
+    }
+    public Optional<Member> findById(Long id){
+        return memberRepository.findById(id);
     }
 
     @Transactional

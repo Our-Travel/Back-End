@@ -32,7 +32,7 @@ public class SecurityConfig implements WebMvcConfigurer {
     private final OAuthUserServiceImpl oAuthUserService;
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http, AuthenticationConfiguration authenticationConfiguration) throws Exception {
         http
                 .securityMatcher("/api/**")
                 .exceptionHandling(exceptionHandling -> exceptionHandling
@@ -51,7 +51,7 @@ public class SecurityConfig implements WebMvcConfigurer {
                 .formLogin().disable() // 폼 로그인 방식 끄기
                 .sessionManagement(sessionManagement ->
                         sessionManagement.sessionCreationPolicy(STATELESS) // 세션 사용안함
-                );
+                )
 //                .oauth2Login()
 //                        .redirectionEndpoint().baseUri("/oauth2/callback/*")
 //                        .and().authorizationEndpoint().baseUri("/auth/zuthorize").and()
@@ -65,12 +65,23 @@ public class SecurityConfig implements WebMvcConfigurer {
 //                .userInfoEndpoint().userService(oAuthUserService)
 //                .and()
 //                .successHandler(oAuthSuccessHandler);
-                http.addFilterBefore( // JWT 인증 필터 적용
+                .addFilterBefore( // JWT 인증 필터 적용
                         jwtAuthorizationFilter,
                         UsernamePasswordAuthenticationFilter.class
-                );
-                //Oauth2 설정
-//                .oauth2Login().userInfoEndpoint().userService(oAuthUserService).and().successHandler(oAuthSuccessHandler);
+                )
+                // 에러 핸들링
+                .exceptionHandling()
+                // 권한 문제가 발생했을 때 이 부분을 호출한다.
+                .accessDeniedHandler((request, response, accessDeniedException) -> {
+                    response.setStatus(HttpStatus.FORBIDDEN.value());
+                    response.setCharacterEncoding("utf-8");
+                    response.setContentType("application/json; charset=UTF-8");
+
+                    RsData rsData = RsData.of("F-AccessDeniedException", "권한이 없는 사용자입니다.", null);
+                    String json = new ObjectMapper().writeValueAsString(rsData);
+
+                    response.getWriter().write(json);
+                });
 
         return http.build();
     }
