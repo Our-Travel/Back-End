@@ -1,6 +1,9 @@
 package com.example.ot.app.localplaces.controller;
 
+import com.example.ot.app.api.dto.KakaoApiResponseDTO;
+import com.example.ot.app.api.service.KakaoCategorySearchService;
 import com.example.ot.app.base.rsData.RsData;
+import com.example.ot.app.localplaces.service.LocalPlacesService;
 import com.example.ot.config.security.entity.MemberContext;
 import com.example.ot.util.Util;
 import io.swagger.v3.oas.annotations.Operation;
@@ -16,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
+import java.util.List;
 
 @Tag(name = "주변 관광지, 숙박")
 @Slf4j
@@ -24,11 +28,16 @@ import java.io.IOException;
 @RequestMapping("/api/local-place")
 public class LocalPlacesController {
 
+    private final LocalPlacesService localPlacesService;
+    private static final String SPOT_CATEGORY = "AT4";
+    private static final String HOTEL_CATEGORY = "AD5";
+    private final KakaoCategorySearchService kakaoCategorySearchService;
+
     @Operation(summary = "주변 관광지", security = @SecurityRequirement(name = "bearerAuth"))
     @GetMapping("/site")
     public ResponseEntity<RsData> spot(@AuthenticationPrincipal MemberContext memberContext, @RequestParam double latitude, @RequestParam double longitude) {
-
-        return Util.spring.responseEntityOf(RsData.successOf(memberContext));
+//        List<KakaoApiResponseDTO> responseDTOList = localPlacesService.response(SPOT_CATEGORY, latitude, longitude);
+        return Util.spring.responseEntityOf(RsData.successOf(kakaoCategorySearchService.requestCategorySearch(SPOT_CATEGORY, latitude, longitude)));
     }
 
 }
