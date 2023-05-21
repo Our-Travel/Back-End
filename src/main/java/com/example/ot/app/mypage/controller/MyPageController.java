@@ -39,11 +39,10 @@ import java.util.Map;
 public class MyPageController {
 
     private final MyPageService myPageService;
-    private final MemberService memberService;
 
     @Operation(summary = "마이페이지 초기화면", security = @SecurityRequirement(name = "bearerAuth"))
     @GetMapping("")
-    public ResponseEntity<?> me(@AuthenticationPrincipal MemberContext memberContext) throws IOException {
+    public ResponseEntity<?> me(@AuthenticationPrincipal MemberContext memberContext) {
         return Util.spring.responseEntityOf(RsData.successOf(memberContext));
     }
 
