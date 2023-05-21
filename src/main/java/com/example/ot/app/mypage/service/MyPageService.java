@@ -12,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -23,6 +24,7 @@ import java.util.List;
 @Slf4j
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class MyPageService {
 
     private final ProfileImageRepository profileImageRepository;
@@ -62,6 +64,7 @@ public class MyPageService {
     }
 
     // 프로필 사진 업로드
+    @Transactional
     public RsData uploadProfilePicture(MultipartFile file, String username) {
 
         int dotIndex = file.getOriginalFilename().lastIndexOf(".");

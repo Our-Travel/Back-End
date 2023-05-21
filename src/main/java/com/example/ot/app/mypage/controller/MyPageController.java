@@ -44,24 +44,6 @@ public class MyPageController {
     @Operation(summary = "마이페이지 초기화면", security = @SecurityRequirement(name = "bearerAuth"))
     @GetMapping("")
     public ResponseEntity<?> me(@AuthenticationPrincipal MemberContext memberContext) throws IOException {
-//        RsData rsData = myPageService.showProfilePicture()
-        Member member = memberService.findById(memberContext.getId()).orElse(null);
-        String filePath = member.getProfileImage().getStoredFilePath();
-        String extension = member.getProfileImage().getExtension().substring(1);
-        if(extension.equals("jpg")){
-            extension = "jpeg";
-        }
-        File file = new File(filePath);
-
-        if (file.exists()) {
-            byte[] fileBytes = Files.readAllBytes(file.toPath());
-            String base64File = Base64.getEncoder().encodeToString(fileBytes);
-            String base64ImageString = "data:image/"+extension +";base64," + base64File;
-            Map<String, Object> memberContextMap = Util.json.toMap(memberContext);
-            memberContextMap.put("image", base64ImageString);
-
-            return Util.spring.responseEntityOf(RsData.of("S-1", "마이페이지", memberContextMap));
-        }
         return Util.spring.responseEntityOf(RsData.successOf(memberContext));
     }
 

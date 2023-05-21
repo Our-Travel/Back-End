@@ -22,17 +22,18 @@ public class NotProd {
             @Override
             @Transactional
             public void run(String... args) throws Exception {
+                ProfileImage profileImage = ProfileImage.builder()
+                        .storedFilePath("c:/Temp/ot/profileImage/ot.jpg")
+                        .extension(".jpg")
+                        .build();
+                profileImageRepository.save(profileImage);
+
                 MemberDTO.SignUpDto admin = new MemberDTO.SignUpDto("admin@example.com", "1234", "admin");
                 MemberDTO.SignUpDto user1 = new MemberDTO.SignUpDto("user1@example.com", "1234", "user1");
                 MemberDTO.SignUpDto user2 = new MemberDTO.SignUpDto("user2@example.com", "1234", "user2");
                 memberService.create(admin);
                 memberService.create(user1);
                 memberService.create(user2);
-                ProfileImage profileImage = ProfileImage.builder()
-                        .storedFilePath("c:/Temp/ot/profileImage/ot.png")
-                        .extension(".jpg")
-                        .build();
-                profileImageRepository.save(profileImage);
             }
         };
     }
