@@ -1,7 +1,6 @@
 package com.example.ot.app.localplaces.controller;
 
 import com.example.ot.app.api.dto.KakaoApiResponseDTO;
-import com.example.ot.app.api.service.KakaoCategorySearchService;
 import com.example.ot.app.base.rsData.RsData;
 import com.example.ot.app.localplaces.entity.Hotel;
 import com.example.ot.app.localplaces.entity.Spot;
@@ -16,9 +15,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-
-import java.io.IOException;
-import java.util.List;
 
 @Tag(name = "주변 관광지, 숙박")
 @Slf4j

@@ -25,7 +25,7 @@ public class LocalPlacesService {
 
     // 관광지or숙박 정보 제공 및 DB저장.
     @Transactional
-    public KakaoApiResponseDTO response(String category, double latitude, double longitude){
+    public KakaoApiResponseDTO response(String category, double longitude, double latitude){
         KakaoApiResponseDTO apiResponseDTO = kakaoCategorySearchService.requestCategorySearch(category, latitude, longitude);
         if(category.equals("AT4")){
             saveSpotInfo(apiResponseDTO);
