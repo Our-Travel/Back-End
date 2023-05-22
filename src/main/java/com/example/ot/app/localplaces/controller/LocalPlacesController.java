@@ -13,10 +13,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.util.List;
@@ -31,13 +28,19 @@ public class LocalPlacesController {
     private final LocalPlacesService localPlacesService;
     private static final String SPOT_CATEGORY = "AT4";
     private static final String HOTEL_CATEGORY = "AD5";
-    private final KakaoCategorySearchService kakaoCategorySearchService;
 
     @Operation(summary = "주변 관광지", security = @SecurityRequirement(name = "bearerAuth"))
-    @GetMapping("/site")
+    @GetMapping("/spot")
     public ResponseEntity<RsData> spot(@AuthenticationPrincipal MemberContext memberContext, @RequestParam double latitude, @RequestParam double longitude) {
-//        List<KakaoApiResponseDTO> responseDTOList = localPlacesService.response(SPOT_CATEGORY, latitude, longitude);
-        return Util.spring.responseEntityOf(RsData.successOf(kakaoCategorySearchService.requestCategorySearch(SPOT_CATEGORY, latitude, longitude)));
+        KakaoApiResponseDTO responseDTOList = localPlacesService.response(SPOT_CATEGORY, latitude, longitude);
+        return Util.spring.responseEntityOf(RsData.successOf(responseDTOList));
     }
+
+//    @Operation(summary = "관광지 세부정보", security = @SecurityRequirement(name = "bearerAuth"))
+//    @GetMapping("/spot/{siteId}")
+//    public ResponseEntity<RsData> spotId(@AuthenticationPrincipal MemberContext memberContext, @PathVariable Long siteId) {
+//
+//        return Util.spring.responseEntityOf(RsData.successOf(kakaoCategorySearchService.requestCategorySearch(SPOT_CATEGORY, latitude, longitude)));
+//    }
 
 }
