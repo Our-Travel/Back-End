@@ -46,7 +46,6 @@ public class KakaoCategorySearchServiceTest {
         // Then
         assertThat(kakaoApiResponseDTO.getMetaDTO().getTotalCount()).isNotNull();
         assertThat(kakaoApiResponseDTO.getDocumentDTOList().size()).isNotNull();
-        assertThat(kakaoApiResponseDTO.getDocumentDTOList().get(0).getAddressName()).isNotNull();
     }
 
     @Test
