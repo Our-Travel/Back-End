@@ -1,29 +1,23 @@
 package com.example.ot.config.security;
 
-import com.example.ot.app.base.dto.RsData;
+import com.example.ot.app.base.rsData.RsData;
+import com.example.ot.config.security.entryPoint.ApiAuthenticationEntryPoint;
 import com.example.ot.config.security.filter.JwtAuthorizationFilter;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 
-import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.access.AccessDeniedHandler;
+import org.springframework.security.web.authentication.Http403ForbiddenEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-
-import java.io.IOException;
 
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 
@@ -33,14 +27,19 @@ import static org.springframework.security.config.http.SessionCreationPolicy.STA
 public class SecurityConfig implements WebMvcConfigurer {
 
     private final JwtAuthorizationFilter jwtAuthorizationFilter;
+    private final ApiAuthenticationEntryPoint authenticationEntryPoint;
+    private final OAuthSuccessHandler oAuthSuccessHandler;
+    private final OAuthUserServiceImpl oAuthUserService;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http, AuthenticationConfiguration authenticationConfiguration) throws Exception {
         http
+                .securityMatcher("/api/**")
+                .exceptionHandling(exceptionHandling -> exceptionHandling
+                .authenticationEntryPoint(authenticationEntryPoint)
+        )
                 .authorizeHttpRequests(
                         authorizeRequests -> authorizeRequests
-                                .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html")
-                                .permitAll()
                                 .requestMatchers("/api/member/**", "/auth/**", "/oauth2/**")
                                 .permitAll()
                                 .anyRequest()
@@ -52,7 +51,21 @@ public class SecurityConfig implements WebMvcConfigurer {
                 .formLogin().disable() // 폼 로그인 방식 끄기
                 .sessionManagement(sessionManagement ->
                         sessionManagement.sessionCreationPolicy(STATELESS) // 세션 사용안함
-                ).addFilterBefore( // JWT 인증 필터 적용
+                )
+//                .oauth2Login()
+//                        .redirectionEndpoint().baseUri("/oauth2/callback/*")
+//                        .and().authorizationEndpoint().baseUri("/auth/zuthorize").and()
+//                                .userInfoEndpoint()
+//                                        .userService(oAuthUserService).and().successHandler(oAuthSuccessHandler)
+//                        .and().exceptionHandling().authenticationEntryPoint(new Http403ForbiddenEntryPoint());
+//                .loginPage("/oauth2Login")
+//                .redirectionEndpoint()
+//                .baseUri("/oauth2/callback/*") // 디폴트는 login/oauth2/code/*
+//                .and()
+//                .userInfoEndpoint().userService(oAuthUserService)
+//                .and()
+//                .successHandler(oAuthSuccessHandler);
+                .addFilterBefore( // JWT 인증 필터 적용
                         jwtAuthorizationFilter,
                         UsernamePasswordAuthenticationFilter.class
                 )
@@ -65,17 +78,6 @@ public class SecurityConfig implements WebMvcConfigurer {
                     response.setContentType("application/json; charset=UTF-8");
 
                     RsData rsData = RsData.of("F-AccessDeniedException", "권한이 없는 사용자입니다.", null);
-                    String json = new ObjectMapper().writeValueAsString(rsData);
-
-                    response.getWriter().write(json);
-                })
-                // 인증문제가 발생했을 때 이 부분을 호출한다.
-                .authenticationEntryPoint((request, response, authException) -> {
-                    response.setStatus(HttpStatus.UNAUTHORIZED.value());
-                    response.setCharacterEncoding("utf-8");
-                    response.setContentType("application/json; charset=UTF-8");
-
-                    RsData rsData = RsData.of("F-UnauthorizedException", "인증되지 않은 사용자입니다.", null);
                     String json = new ObjectMapper().writeValueAsString(rsData);
 
                     response.getWriter().write(json);

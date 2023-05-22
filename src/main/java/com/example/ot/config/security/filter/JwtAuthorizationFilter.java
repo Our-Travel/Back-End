@@ -50,7 +50,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
     }
 
     // 인가
-    private void forceAuthentication(Member member) {
+    private void forceAuthentication(Member member) throws IOException {
         MemberContext memberContext = new MemberContext(member);
 
         UsernamePasswordAuthenticationToken authentication =

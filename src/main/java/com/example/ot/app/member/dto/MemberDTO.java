@@ -25,13 +25,6 @@ public class MemberDTO {
         @NotBlank(message = "닉네임을 입력해주세요.")
         private String nickName;
 
-        @Schema(description = "ex) 서울특별시, 인천광역시")
-        @NotBlank(message = "regionLevel1 을(를) 입력해주세요.")
-        private String regionLevel1;
-
-        @Schema(description = "ex) 관악구, 강릉시, 화성시")
-        @NotBlank(message = "regionLevel2 을(를) 입력해주세요.")
-        private String regionLevel2;
     }
 
     @Getter
