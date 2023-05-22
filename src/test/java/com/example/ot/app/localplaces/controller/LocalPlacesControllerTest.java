@@ -26,7 +26,7 @@ public class LocalPlacesControllerTest {
     private MockMvc mvc;
 
     @Test
-    @DisplayName("GET 주변관광지 위도와 경도 모두 있으면 성공")
+    @DisplayName("GET 주변관광지 제공할 때 위도와 경도 모두 있으면 성공")
     @WithUserDetails("user1@example.com")
     void t1() throws Exception {
 
@@ -44,7 +44,7 @@ public class LocalPlacesControllerTest {
     }
 
     @Test
-    @DisplayName("GET 주변관광지 위도와 경도 하나라도 없으면 실패")
+    @DisplayName("GET 주변관광지 제공할 때 위도와 경도 하나라도 없으면 실패")
     @WithUserDetails("user1@example.com")
     void t2() throws Exception {
 
@@ -93,6 +93,82 @@ public class LocalPlacesControllerTest {
         mvc
                 .perform(
                         get("/api/local-place/spot?8252248")
+                )
+                .andDo(print());
+
+        // Then
+        resultActions
+                .andExpect(status().is2xxSuccessful());
+    }
+
+    @Test
+    @DisplayName("GET 주변숙박 제공할 때 위도와 경도 모두 있으면 성공")
+    @WithUserDetails("user1@example.com")
+    void t4() throws Exception {
+
+        // When
+        ResultActions resultActions = mvc
+                .perform(
+                        get("/api/local-place/hotel?latitude=37.51766013568054&longitude=126.95803386590158")
+                )
+                .andDo(print());
+
+        // Then
+
+        resultActions
+                .andExpect(status().is2xxSuccessful());
+    }
+
+    @Test
+    @DisplayName("GET 주변호텔 제공할 때 위도와 경도 하나라도 없으면 실패")
+    @WithUserDetails("user1@example.com")
+    void t5() throws Exception {
+
+        // When
+        ResultActions resultActions = mvc
+                .perform(
+                        get("/api/local-place/hotel?latitude=37.51766013568054")
+                )
+                .andDo(print());
+
+        // Then
+        resultActions
+                .andExpect(status().is4xxClientError());
+
+        // When
+        mvc
+                .perform(
+                        get("/api/local-place/hotel?longitude=126.95803386590158")
+                )
+                .andDo(print());
+
+        // Then
+        resultActions
+                .andExpect(status().is4xxClientError());
+
+    }
+
+    @Test
+    @DisplayName("GET 하나의 숙박 세부정보 제공.")
+    @WithUserDetails("user1@example.com")
+    void t6() throws Exception {
+
+        // When
+        ResultActions resultActions = mvc
+                .perform(
+                        get("/api/local-place/hotel?latitude=37.51766013568054&longitude=126.95803386590158")
+                )
+                .andDo(print());
+
+        // Then
+
+        resultActions
+                .andExpect(status().is2xxSuccessful());
+
+        // When
+        mvc
+                .perform(
+                        get("/api/local-place/hotel?8252248")
                 )
                 .andDo(print());
 
