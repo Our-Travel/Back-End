@@ -8,6 +8,7 @@ import com.example.ot.app.localplaces.repository.SpotRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.ObjectUtils;
 
 import java.util.List;
 
@@ -39,5 +40,16 @@ public class LocalPlacesService {
         }
 
         return kakaoCategorySearchService.requestCategorySearch(category, latitude, longitude);
+    }
+
+    public Spot findSpotByid(Long siteId) {
+        return spotRepository.findById(siteId).orElse(null);
+    }
+
+    public boolean canResponseSpot(double latitude, double longitude) {
+        if(ObjectUtils.isEmpty(latitude) || ObjectUtils.isEmpty(longitude)){
+            return true;
+        }
+        return false;
     }
 }
