@@ -23,8 +23,8 @@ public class NotProd {
             @Transactional
             public void run(String... args) throws Exception {
                 ProfileImage profileImage = ProfileImage.builder()
-                        .storedFilePath("c:/Temp/ot/profileImage/ot.jpg")
-                        .extension(".jpg")
+                        .storedFilePath("src/main/resources/static/profileImage/ot.png")
+                        .extension(".png")
                         .build();
                 profileImageRepository.save(profileImage);
 

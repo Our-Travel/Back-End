@@ -77,7 +77,6 @@ public class MyPageService {
             File fileDir = new File(uploadPath);
             // 폴더가 없을 경우 폴더 생성
             if(!fileDir.exists()){
-                System.out.println("파일 생성");
                 fileDir.mkdirs();
             }
             // 파일을 지정된 경로에 저장
