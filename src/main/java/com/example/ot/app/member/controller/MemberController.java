@@ -98,7 +98,10 @@ public class MemberController {
         return Util.spring.responseEntityOf(
                 RsData.of(
                         "S-1",
-                        "로그인 성공, Access Token을 발급합니다."
+                        "로그인 성공, Access Token을 발급합니다.",
+                        Util.mapOf(
+                                "accessToken", accessToken
+                        )
                 ),
                 Util.spring.httpHeadersOf("Authentication", accessToken)
         );
