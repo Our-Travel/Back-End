@@ -1,4 +1,7 @@
 package com.example.ot.app.host.repository;
 
-public interface HostRepository {
+import com.example.ot.app.host.entity.Host;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface HostRepository extends JpaRepository<Host, Long> {
 }
