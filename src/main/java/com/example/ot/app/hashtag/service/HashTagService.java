@@ -33,7 +33,7 @@ public class HashTagService {
     private HashTag saveHashTag(Host host, String keywordContent) {
         Keyword keyword = keywordService.save(keywordContent);
 
-        Optional<HashTag> opHashTag = hashTagRepository.findByArticleIdAndKeywordId(host.getId(), keyword.getId());
+        Optional<HashTag> opHashTag = hashTagRepository.findByHostIdAndKeywordId(host.getId(), keyword.getId());
 
         if (opHashTag.isPresent()) {
             return opHashTag.get();
