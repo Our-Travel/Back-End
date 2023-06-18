@@ -38,7 +38,7 @@ public class HostService {
 //                .city(city)
                 .build();
         hostRepository.save(host);
-        member.setHostPermisstion(true);
+        member.setHostAuthority(true);
 
         return RsData.of("S-1", "Host 등록이 완료되었습니다.");
     }
