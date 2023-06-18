@@ -2,6 +2,7 @@ package com.example.ot.app.host.controller;
 
 import com.example.ot.app.base.rsData.RsData;
 import com.example.ot.app.host.dto.HostDTO;
+import com.example.ot.app.host.dto.RegionDTO;
 import com.example.ot.app.host.entity.Host;
 import com.example.ot.app.host.service.HostService;
 import com.example.ot.config.security.entity.MemberContext;
@@ -14,10 +15,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "호스트 설정")
 @Slf4j
@@ -30,7 +28,7 @@ public class HostController {
 
     @Operation(summary = "호스트 등록", security = @SecurityRequirement(name = "bearerAuth"))
     @PostMapping("")
-    public ResponseEntity<RsData> registerHost(@Valid @RequestBody HostDTO.registerHostDTO registerHostDTO,
+    public ResponseEntity<RsData> registerHost(@Valid @RequestBody HostDTO.RegisterHostDTO registerHostDTO,
                                                @AuthenticationPrincipal MemberContext memberContext){
         log.info("Introduction : {} " , registerHostDTO.getIntroduction());
         log.info("HashTag : {} " , registerHostDTO.getHashTag());
@@ -43,6 +41,13 @@ public class HostController {
         }
 
         return Util.spring.responseEntityOf(host);
+    }
+
+    @Operation(summary = "호스트 등록페이지(지역정보 제공)", security = @SecurityRequirement(name = "bearerAuth"))
+    @GetMapping("")
+    public ResponseEntity<RsData> registerHost(){
+        RegionDTO regionDTO = hostService.getRegion();
+        return Util.spring.responseEntityOf(RsData.successOf(regionDTO));
     }
 
 }

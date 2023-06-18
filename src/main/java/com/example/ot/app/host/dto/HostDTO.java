@@ -5,7 +5,7 @@ import lombok.Getter;
 public class HostDTO {
 
     @Getter
-    public static class registerHostDTO{
+    public static class RegisterHostDTO{
 
         private String introduction;
 
