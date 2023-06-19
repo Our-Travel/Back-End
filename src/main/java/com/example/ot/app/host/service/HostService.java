@@ -2,7 +2,7 @@ package com.example.ot.app.host.service;
 
 import com.example.ot.app.base.rsData.RsData;
 import com.example.ot.app.hashtag.service.HashTagService;
-import com.example.ot.app.host.dto.*;
+import com.example.ot.app.host.dto.RegisterHostDTO;
 import com.example.ot.app.host.entity.Host;
 import com.example.ot.app.host.repository.HostRepository;
 import com.example.ot.app.member.entity.Member;

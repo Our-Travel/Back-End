@@ -1,11 +1,11 @@
 package com.example.ot.app.member.service;
 
 import com.example.ot.app.base.rsData.RsData;
-import com.example.ot.config.AppConfig;
-import com.example.ot.config.security.jwt.JwtProvider;
 import com.example.ot.app.member.dto.MemberDTO;
 import com.example.ot.app.member.entity.Member;
 import com.example.ot.app.member.repository.MemberRepository;
+import com.example.ot.config.AppConfig;
+import com.example.ot.config.security.jwt.JwtProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.Cacheable;

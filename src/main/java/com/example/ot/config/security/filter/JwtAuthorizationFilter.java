@@ -1,9 +1,9 @@
 package com.example.ot.config.security.filter;
 
-import com.example.ot.config.security.entity.MemberContext;
-import com.example.ot.config.security.jwt.JwtProvider;
 import com.example.ot.app.member.entity.Member;
 import com.example.ot.app.member.service.MemberService;
+import com.example.ot.config.security.entity.MemberContext;
+import com.example.ot.config.security.jwt.JwtProvider;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -13,7 +13,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 

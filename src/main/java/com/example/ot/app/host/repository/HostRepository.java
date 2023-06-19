@@ -1,7 +1,6 @@
 package com.example.ot.app.host.repository;
 
 import com.example.ot.app.host.entity.Host;
-import com.example.ot.app.member.entity.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
