@@ -23,10 +23,10 @@ public class HostService {
     @Transactional
     public RsData<Host> createHost(RegisterHostDTO registerHostDTO, long id){
         Member member = memberRepository.findById(id).orElse(null);
-        if(member == null){
+        if(ObjectUtils.isEmpty(member)){
             return RsData.of("F-1", "로그인 후 이용해주세요.");
         }
-        if(registerHostDTO.getRegion() == null){
+        if(ObjectUtils.isEmpty(registerHostDTO.getRegion())){
             return RsData.of("F-1", "지역을 선택해주세요.");
         }
         Host host = Host

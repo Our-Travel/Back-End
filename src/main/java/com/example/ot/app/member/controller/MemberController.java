@@ -14,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "로그인 및 회원가입")
@@ -83,11 +84,11 @@ public class MemberController {
     public ResponseEntity<RsData> signIn(@Valid @RequestBody MemberDTO.SignInDto signInDto){
         Member member = memberService.findByUsername(signInDto.getUsername()).orElse(null);
 
-        if(member == null){
+        if(ObjectUtils.isEmpty(member)){
             return Util.spring.responseEntityOf(RsData.of("F-1", "일치하는 회원이 존재하지 않습니다."));
         }
 
-        if (passwordEncoder.matches(signInDto.getPassword(), member.getPassword()) == false) {
+        if (!passwordEncoder.matches(signInDto.getPassword(), member.getPassword())) {
             return Util.spring.responseEntityOf(RsData.of("F-1", "비밀번호가 일치하지 않습니다."));
         }
 
