@@ -2,6 +2,8 @@ package com.example.ot.config.security.entity;
 
 import com.example.ot.app.member.entity.Member;
 import com.fasterxml.jackson.annotation.JsonIncludeProperties;
+import com.fasterxml.jackson.databind.PropertyNamingStrategy;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -16,7 +18,8 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Getter
-@JsonIncludeProperties({"id", "username", "nickName", "image", "authorities"})
+@JsonIncludeProperties({"id", "username", "nick_name", "image", "authorities"})
+@JsonNaming(value = PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class MemberContext extends User {
     private final long id;
     private final String username;

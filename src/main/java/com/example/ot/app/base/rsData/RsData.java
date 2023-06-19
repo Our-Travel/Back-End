@@ -1,6 +1,8 @@
 package com.example.ot.app.base.rsData;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.PropertyNamingStrategy;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -8,6 +10,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
+@JsonNaming(value = PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class RsData<T> {
     private String resultCode;
     private String msg;
@@ -31,7 +34,7 @@ public class RsData<T> {
 
     @JsonIgnore
     public boolean isSuccess() {
-        return resultCode.startsWith("S-1");
+        return resultCode.startsWith("S");
     }
 
     @JsonIgnore

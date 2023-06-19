@@ -14,13 +14,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "로그인 및 회원가입")
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/member")
+@RequestMapping("/api/members")
 public class MemberController {
 
     private final MemberService memberService;
@@ -43,13 +44,13 @@ public class MemberController {
         return Util.spring.responseEntityOf(
                 RsData.of(
                         "S-1",
-                        "회원가입 완료"
+                        "회원가입이 완료되었습니다."
                 )
         );
     }
 
     @Operation(summary = "아이디 중복체크")
-    @GetMapping("/check-username/{username}")
+    @GetMapping("/exists/username/{username}")
     public ResponseEntity<RsData> checkUsername(@PathVariable @NotBlank(message = "아이디를 입력해주세요.") String username){
         RsData<Member> checkUsername = memberService.checkUsername(username);
         if(checkUsername.isFail()){
@@ -64,7 +65,7 @@ public class MemberController {
     }
 
     @Operation(summary = "닉네임 중복체크")
-    @GetMapping("/check-nickName/{nickName}")
+    @GetMapping("/exists/nickName/{nickName}")
     public ResponseEntity<RsData> checkNickName(@PathVariable @NotBlank(message = "닉네임을 입력해주세요.") String nickName){
         RsData<Member> checkNickName = memberService.checkNickName(nickName);
         if(checkNickName.isFail()){
@@ -83,11 +84,11 @@ public class MemberController {
     public ResponseEntity<RsData> signIn(@Valid @RequestBody MemberDTO.SignInDto signInDto){
         Member member = memberService.findByUsername(signInDto.getUsername()).orElse(null);
 
-        if(member == null){
+        if(ObjectUtils.isEmpty(member)){
             return Util.spring.responseEntityOf(RsData.of("F-1", "일치하는 회원이 존재하지 않습니다."));
         }
 
-        if (passwordEncoder.matches(signInDto.getPassword(), member.getPassword()) == false) {
+        if (!passwordEncoder.matches(signInDto.getPassword(), member.getPassword())) {
             return Util.spring.responseEntityOf(RsData.of("F-1", "비밀번호가 일치하지 않습니다."));
         }
 
@@ -98,9 +99,9 @@ public class MemberController {
         return Util.spring.responseEntityOf(
                 RsData.of(
                         "S-1",
-                        "로그인 성공, Access Token을 발급합니다.",
+                        "로그인이 성공적으로 완료되었습니다.",
                         Util.mapOf(
-                                "accessToken", accessToken
+                                "access_token", accessToken
                         )
                 ),
                 Util.spring.httpHeadersOf("Authentication", accessToken)

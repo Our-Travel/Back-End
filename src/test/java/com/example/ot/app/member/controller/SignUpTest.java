@@ -34,12 +34,12 @@ public class SignUpTest {
         // When
         ResultActions resultActions = mvc
                 .perform(
-                        post("/api/member/signup")
+                        post("/api/members/signup")
                                 .content("""
                                         {
                                             "username": "user3@example.com",
                                             "password": "1234",
-                                            "nickName": "user3"
+                                            "nick_name": "user3"
                                         }
                                         """.stripIndent())
                                 .contentType(new MediaType(MediaType.APPLICATION_JSON, StandardCharsets.UTF_8))
@@ -59,12 +59,12 @@ public class SignUpTest {
         // When
         ResultActions resultActions = mvc
                 .perform(
-                        post("/api/member/signup")
+                        post("/api/members/signup")
                                 .content("""
                                         {
                                             "username": "",
                                             "password": "1234",
-                                            "nickName": "user1"
+                                            "nick_name": "user1"
                                         }
                                         """.stripIndent())
                                 .contentType(new MediaType(MediaType.APPLICATION_JSON, StandardCharsets.UTF_8))
@@ -80,12 +80,12 @@ public class SignUpTest {
         // When
         resultActions = mvc
                 .perform(
-                        post("/api/member/signup")
+                        post("/api/members/signup")
                                 .content("""
                                         {
                                             "username": "user1@naver.com",
                                             "password": "1234",
-                                            "nickName": ""
+                                            "nick_name": ""
                                         }
                                         """.stripIndent())
                                 .contentType(new MediaType(MediaType.APPLICATION_JSON, StandardCharsets.UTF_8))
@@ -108,7 +108,7 @@ public class SignUpTest {
         // When
         ResultActions resultActions = mvc
                 .perform(
-                        get("/api/member/check-username/{username}", username)
+                        get("/api/members/exists/username/{username}", username)
                 )
                 .andDo(print());
 
@@ -126,7 +126,7 @@ public class SignUpTest {
         // When
         ResultActions resultActions = mvc
                 .perform(
-                        get("/api/member/check-username/{username}", username)
+                        get("/api/members/exists/username/{username}", username)
                 )
                 .andDo(print());
 
@@ -144,7 +144,7 @@ public class SignUpTest {
         // When
         ResultActions resultActions = mvc
                 .perform(
-                        get("/api/member/check-nickName/{nickName}", nickName)
+                        get("/api/members/exists/nickName/{nickName}", nickName)
                 )
                 .andDo(print());
 
@@ -162,7 +162,7 @@ public class SignUpTest {
         // When
         ResultActions resultActions = mvc
                 .perform(
-                        get("/api/member/check-nickName/{nickName}", nickName)
+                        get("/api/members/exists/nickName/{nickName}", nickName)
                 )
                 .andDo(print());
 
