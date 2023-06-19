@@ -38,7 +38,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
             if (jwtProvider.verify(token)) {
                 Map<String, Object> claims = jwtProvider.getClaims(token);
 
-                Member member = memberService.findByUsername((String) claims.get("username")).get();
+                Member member = memberService.findById((Long) claims.get("id")).get();
 
                 if(memberService.verifyWithWhiteList(member, token)){
                     forceAuthentication(member); // member 찾았으면 인증.

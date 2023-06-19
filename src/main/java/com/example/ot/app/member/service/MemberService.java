@@ -64,8 +64,8 @@ public class MemberService {
 
     // 아이디 닉네임 동시체크
     public RsData<Member> check(MemberDTO.SignUpDto signUpDto) {
-        if(checkUsername(signUpDto.getUsername()).isFail());
-        if(checkNickName(signUpDto.getNickName()).isFail());
+        checkUsername(signUpDto.getUsername()).isFail();
+        checkNickName(signUpDto.getNickName()).isFail();
         return RsData.of("S-1", "중복 없음.");
     }
 
@@ -80,7 +80,7 @@ public class MemberService {
     public String genAccessToken(Member member) {
         String accessToken = member.getAccessToken();
 
-        if (StringUtils.hasLength(accessToken) == false ) {
+        if (!StringUtils.hasLength(accessToken)) {
             accessToken = jwtProvider.generateAccessToken(member.getAccessTokenClaims(), 60L * 60 * 24 * 365 * 100);
             member.setAccessToken(accessToken);
         }
