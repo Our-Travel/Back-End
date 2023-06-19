@@ -6,11 +6,9 @@ import lombok.Builder;
 import lombok.Getter;
 
 @Getter
+@Builder
 @JsonNaming(value = PropertyNamingStrategy.SnakeCaseStrategy.class)
-public class RegisterHostDTO {
-
-    private String introduction;
-    private String hashTag;
-    private int city;
-
+public class StateDTO {
+    private Integer stateId;
+    private String stateName;
 }

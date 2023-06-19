@@ -43,7 +43,7 @@ public class MemberController {
         return Util.spring.responseEntityOf(
                 RsData.of(
                         "S-1",
-                        "회원가입 완료"
+                        "회원가입이 완료되었습니다."
                 )
         );
     }
@@ -98,9 +98,9 @@ public class MemberController {
         return Util.spring.responseEntityOf(
                 RsData.of(
                         "S-1",
-                        "로그인 성공, Access Token을 발급합니다.",
+                        "로그인이 성공적으로 완료되었습니다.",
                         Util.mapOf(
-                                "accessToken", accessToken
+                                "access_token", accessToken
                         )
                 ),
                 Util.spring.httpHeadersOf("Authentication", accessToken)

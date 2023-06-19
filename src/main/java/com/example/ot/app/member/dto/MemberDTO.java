@@ -1,5 +1,6 @@
 package com.example.ot.app.member.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -23,6 +24,7 @@ public class MemberDTO {
 
         @Schema(description = "닉네임")
         @NotBlank(message = "닉네임을 입력해주세요.")
+        @JsonProperty("nick_name")
         private String nickName;
 
     }

@@ -2,10 +2,7 @@ package com.example.ot.app.host.service;
 
 import com.example.ot.app.base.rsData.RsData;
 import com.example.ot.app.hashtag.service.HashTagService;
-import com.example.ot.app.host.dto.HostInfoDTO;
-import com.example.ot.app.host.dto.HostInfoResponse;
-import com.example.ot.app.host.dto.RegionDTO;
-import com.example.ot.app.host.dto.RegisterHostDTO;
+import com.example.ot.app.host.dto.*;
 import com.example.ot.app.host.entity.Host;
 import com.example.ot.app.host.repository.HostRepository;
 import com.example.ot.app.member.entity.Member;
@@ -54,8 +51,25 @@ public class HostService {
     }
 
     public RegionDTO getRegion() {
-        List<City> cityList = new ArrayList<>(cityRepository.findAll());
-        List<State> stateList = new ArrayList<>(stateRepository.findAll());
+        List<CityDTO> cityList = new ArrayList<>();
+        List<StateDTO> stateList = new ArrayList<>();
+        for(City city : cityRepository.findAll()){
+            CityDTO cityDTO = CityDTO
+                    .builder()
+                    .cityId(city.getId())
+                    .cityName(city.getCityName())
+                    .stateId(city.getState().getId())
+                    .build();
+            cityList.add(cityDTO);
+        }
+        for(State state : stateRepository.findAll()){
+            StateDTO stateDTO = StateDTO
+                    .builder()
+                    .stateId(state.getId())
+                    .stateName(state.getStateName())
+                    .build();
+            stateList.add(stateDTO);
+        }
 
         return RegionDTO.builder()
                 .cityList(cityList)
