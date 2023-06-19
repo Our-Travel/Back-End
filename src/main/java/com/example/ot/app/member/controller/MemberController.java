@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/member")
+@RequestMapping("/api/members")
 public class MemberController {
 
     private final MemberService memberService;
@@ -49,7 +49,7 @@ public class MemberController {
     }
 
     @Operation(summary = "아이디 중복체크")
-    @GetMapping("/check-username/{username}")
+    @GetMapping("/exists/username/{username}")
     public ResponseEntity<RsData> checkUsername(@PathVariable @NotBlank(message = "아이디를 입력해주세요.") String username){
         RsData<Member> checkUsername = memberService.checkUsername(username);
         if(checkUsername.isFail()){
@@ -64,7 +64,7 @@ public class MemberController {
     }
 
     @Operation(summary = "닉네임 중복체크")
-    @GetMapping("/check-nickName/{nickName}")
+    @GetMapping("/exists/nickName/{nickName}")
     public ResponseEntity<RsData> checkNickName(@PathVariable @NotBlank(message = "닉네임을 입력해주세요.") String nickName){
         RsData<Member> checkNickName = memberService.checkNickName(nickName);
         if(checkNickName.isFail()){

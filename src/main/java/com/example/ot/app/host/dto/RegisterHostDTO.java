@@ -11,6 +11,6 @@ public class RegisterHostDTO {
 
     private String introduction;
     private String hashTag;
-    private int city;
+    private String region;
 
 }

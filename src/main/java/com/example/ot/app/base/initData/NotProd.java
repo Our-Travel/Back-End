@@ -4,10 +4,6 @@ import com.example.ot.app.member.dto.MemberDTO;
 import com.example.ot.app.member.service.MemberService;
 import com.example.ot.app.mypage.entity.ProfileImage;
 import com.example.ot.app.mypage.repository.ProfileImageRepository;
-import com.example.ot.app.region.entity.City;
-import com.example.ot.app.region.entity.State;
-import com.example.ot.app.region.repository.CityRepository;
-import com.example.ot.app.region.repository.StateRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,9 +16,7 @@ public class NotProd {
     @Bean
     CommandLineRunner initData(
             MemberService memberService,
-            ProfileImageRepository profileImageRepository,
-            CityRepository cityRepository,
-            StateRepository stateRepository
+            ProfileImageRepository profileImageRepository
     ) {
         return new CommandLineRunner() {
             @Override

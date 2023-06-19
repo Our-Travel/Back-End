@@ -1,9 +1,6 @@
 package com.example.ot.app.mypage.controller;
 
 import com.example.ot.app.base.rsData.RsData;
-import com.example.ot.app.member.entity.Member;
-import com.example.ot.app.member.service.MemberService;
-import com.example.ot.app.mypage.dto.MyPageDTO;
 import com.example.ot.app.mypage.service.MyPageService;
 import com.example.ot.config.security.entity.MemberContext;
 import com.example.ot.util.Util;
@@ -12,24 +9,11 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import net.minidev.json.JSONObject;
-import org.springframework.core.io.FileSystemResource;
-import org.springframework.core.io.Resource;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.util.Arrays;
-import java.util.Base64;
-import java.util.List;
-import java.util.Map;
 
 @Tag(name = "마이 페이지")
 @Slf4j

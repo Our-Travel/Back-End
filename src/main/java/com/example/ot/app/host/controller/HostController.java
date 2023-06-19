@@ -1,12 +1,9 @@
 package com.example.ot.app.host.controller;
 
 import com.example.ot.app.base.rsData.RsData;
-import com.example.ot.app.host.dto.HostInfoResponse;
-import com.example.ot.app.host.dto.RegionDTO;
 import com.example.ot.app.host.dto.RegisterHostDTO;
 import com.example.ot.app.host.entity.Host;
 import com.example.ot.app.host.service.HostService;
-import com.example.ot.app.member.entity.Member;
 import com.example.ot.config.security.entity.MemberContext;
 import com.example.ot.util.Util;
 import io.swagger.v3.oas.annotations.Operation;
@@ -23,7 +20,7 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/host")
+@RequestMapping("/api/hosts")
 public class HostController {
 
     private final HostService hostService;
@@ -34,7 +31,7 @@ public class HostController {
                                                @AuthenticationPrincipal MemberContext memberContext){
         log.info("Introduction : {} " , registerHostDTO.getIntroduction());
         log.info("HashTag : {} " , registerHostDTO.getHashTag());
-        log.info("City : {} " , registerHostDTO.getCity());
+        log.info("City : {} " , registerHostDTO.getRegion());
 
         RsData<Host> host = hostService.createHost(registerHostDTO, memberContext.getId());
 
@@ -43,23 +40,6 @@ public class HostController {
         }
 
         return Util.spring.responseEntityOf(host);
-    }
-
-    @Operation(summary = "호스트 등록페이지(지역정보 제공)", security = @SecurityRequirement(name = "bearerAuth"))
-    @GetMapping("")
-    public ResponseEntity<RsData> registerHost(@AuthenticationPrincipal MemberContext memberContext){
-        RsData<Member> checkHostAuthority = hostService.hasHostAuthority(memberContext.getId());
-        if(checkHostAuthority.isFail()){
-            return Util.spring.responseEntityOf(checkHostAuthority);
-        }
-        RegionDTO regionDTO = hostService.getRegion();
-
-        if(checkHostAuthority.getResultCode().equals("S-2")){
-            return Util.spring.responseEntityOf(RsData.successOf(regionDTO));
-        }
-
-        HostInfoResponse hostInfoResponse = hostService.hostInfo(memberContext.getId(), regionDTO);
-        return Util.spring.responseEntityOf(RsData.of("S-2", "호스트 정보 수정", hostInfoResponse));
     }
 
 }

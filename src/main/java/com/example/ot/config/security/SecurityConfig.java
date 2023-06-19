@@ -40,7 +40,7 @@ public class SecurityConfig implements WebMvcConfigurer {
         )
                 .authorizeHttpRequests(
                         authorizeRequests -> authorizeRequests
-                                .requestMatchers("/api/member/**", "/auth/**", "/oauth2/**")
+                                .requestMatchers("/api/members/**", "/auth/**", "/oauth2/**")
                                 .permitAll()
                                 .anyRequest()
                                 .authenticated() // 최소자격 : 로그인
