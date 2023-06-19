@@ -8,11 +8,13 @@ import com.example.ot.app.member.entity.Member;
 import com.example.ot.app.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+import java.util.Map;
 import java.util.Optional;
 
 
@@ -90,5 +92,10 @@ public class MemberService {
 
     public boolean verifyWithWhiteList(Member member, String token) {
         return member.getAccessToken().equals(token);
+    }
+
+    @Cacheable("MemberService___getById__cached")
+    public Member getById__cached(long id) {
+        return findById(id).orElse(null);
     }
 }

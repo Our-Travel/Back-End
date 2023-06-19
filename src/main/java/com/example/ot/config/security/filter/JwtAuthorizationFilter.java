@@ -38,8 +38,8 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
             if (jwtProvider.verify(token)) {
                 Map<String, Object> claims = jwtProvider.getClaims(token);
                 long id = (int) claims.get("id");
-                Member member = memberService.findById(id).get();
-
+                // 캐시(레디스) 사용
+                Member member = memberService.getById__cached(id);
                 if(memberService.verifyWithWhiteList(member, token)){
                     forceAuthentication(member); // member 찾았으면 인증.
                 }
