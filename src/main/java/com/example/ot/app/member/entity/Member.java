@@ -1,14 +1,10 @@
 package com.example.ot.app.member.entity;
 
 import com.example.ot.app.base.entity.BaseTimeEntity;
-import com.example.ot.app.host.entity.Host;
-import com.example.ot.app.mypage.entity.ProfileImage;
 import com.example.ot.util.Util;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.OneToOne;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -43,10 +39,6 @@ public class Member extends BaseTimeEntity {
     private String accessToken;
 
     private String providerTypeCode;
-
-    @OneToOne(cascade = CascadeType.ALL)
-    @Setter
-    private ProfileImage profileImage;
 
     @Setter
     private boolean hostAuthority = false;

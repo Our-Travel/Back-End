@@ -1,7 +1,6 @@
 package com.example.ot.app.member.service;
 
 import com.example.ot.app.base.rsData.RsData;
-import com.example.ot.app.mypage.repository.ProfileImageRepository;
 import com.example.ot.config.security.jwt.JwtProvider;
 import com.example.ot.app.member.dto.MemberDTO;
 import com.example.ot.app.member.entity.Member;
@@ -14,7 +13,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
-import java.util.Map;
 import java.util.Optional;
 
 
@@ -25,7 +23,6 @@ import java.util.Optional;
 public class MemberService {
 
     private final MemberRepository memberRepository;
-    private final ProfileImageRepository profileImageRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtProvider jwtProvider;
 
@@ -40,7 +37,6 @@ public class MemberService {
                 .username(signUpDto.getUsername())
                 .password(passwordEncoder.encode(signUpDto.getPassword()))
                 .nickName(signUpDto.getNickName())
-                .profileImage(profileImageRepository.findById(1L).get())
                 .providerTypeCode(providerTypeCode)
                 .build();
         
