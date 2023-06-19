@@ -1,6 +1,7 @@
 package com.example.ot.app.member.service;
 
 import com.example.ot.app.base.rsData.RsData;
+import com.example.ot.config.AppConfig;
 import com.example.ot.config.security.jwt.JwtProvider;
 import com.example.ot.app.member.dto.MemberDTO;
 import com.example.ot.app.member.entity.Member;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+import java.util.Map;
 import java.util.Optional;
 
 
@@ -90,8 +92,16 @@ public class MemberService {
         return member.getAccessToken().equals(token);
     }
 
+    public Member getByMemberId__cached(long id) {
+        MemberService thisObj = (MemberService) AppConfig.getContext().getBean("memberService");
+        Map<String, Object> memberMap = thisObj.getMemberMapByMemberId__cached(id);
+
+        return Member.fromMap(memberMap);
+    }
+
     @Cacheable("member")
-    public Member getById__cached(long id) {
-        return findById(id).orElse(null);
+    public Map<String, Object> getMemberMapByMemberId__cached(long id) {
+        Member member = findById(id).orElse(null);
+        return member.toMap();
     }
 }
