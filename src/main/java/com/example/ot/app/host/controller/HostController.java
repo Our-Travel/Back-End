@@ -59,7 +59,7 @@ public class HostController {
         }
 
         HostInfoResponse hostInfoResponse = hostService.hostInfo(memberContext.getId(), regionDTO);
-        return Util.spring.responseEntityOf(RsData.successOf(hostInfoResponse));
+        return Util.spring.responseEntityOf(RsData.of("S-2", "호스트 정보 수정", hostInfoResponse));
     }
 
 }
