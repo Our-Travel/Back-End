@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
@@ -19,7 +18,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.nio.charset.StandardCharsets;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -41,22 +39,21 @@ public class HostControllerTest {
 
     @Test
     @DisplayName("host 등록")
-    @WithUserDetails("admin@example.com")
+    @WithUserDetails("user1@example.com")
     void t1() throws Exception {
         // When
-
-        Member member = memberRepository.findByUsername("admin@example.com").orElse(null);
+        Member member = memberRepository.findByUsername("user1@example.com").orElse(null);
 
         ResultActions resultActions = mvc
                 .perform(
                         post("/api/host")
                                 .content("""
-                                        {
-                                            "introduction": "저는 호스트가 되고싶어요.",
-                                            "hashTag": "#호스트 #여행",
-                                            "city": 1
-                                        }
-                                        """)
+                                    {
+                                        "introduction": "저는 호스트가 되고싶어요.",
+                                        "hashTag": "#호스트 #여행",
+                                        "city": 1
+                                    }
+                                    """)
                                 .contentType(new MediaType(MediaType.APPLICATION_JSON, StandardCharsets.UTF_8))
                 )
                 .andDo(print());
@@ -64,8 +61,8 @@ public class HostControllerTest {
         // Then
         resultActions
                 .andExpect(status().is2xxSuccessful());
-//        assertThat(member.isHostAuthority()).isTrue();
-//        assertThat(keywordRepository.count()).isEqualTo(2);
+        assertThat(member.isHostAuthority()).isTrue();
+        assertThat(keywordRepository.count()).isEqualTo(2);
     }
 
 }
