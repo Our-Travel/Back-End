@@ -90,7 +90,7 @@ public class MemberService {
         return member.getAccessToken().equals(token);
     }
 
-    @Cacheable("MemberService___getById__cached")
+    @Cacheable("member")
     public Member getById__cached(long id) {
         return findById(id).orElse(null);
     }
