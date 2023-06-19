@@ -76,7 +76,7 @@ public class HostControllerTest {
                                 .content("""
                                     {
                                         "introduction": "저는 호스트가 되고싶어요.",
-                                        "hashTag": "#호스트 #여행",
+                                        "hash_tag": "#호스트 #여행",
                                         "city": 1
                                     }
                                     """)
@@ -102,7 +102,7 @@ public class HostControllerTest {
                                 .content("""
                                     {
                                         "introduction": "저는 호스트가 되고싶어요.",
-                                        "hashTag": "#호스트 #여행"
+                                        "hash_tag": "#호스트 #여행"
                                     }
                                     """)
                                 .contentType(new MediaType(MediaType.APPLICATION_JSON, StandardCharsets.UTF_8))

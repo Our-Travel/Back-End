@@ -39,7 +39,7 @@ public class SignUpTest {
                                         {
                                             "username": "user3@example.com",
                                             "password": "1234",
-                                            "nickName": "user3"
+                                            "nick_name": "user3"
                                         }
                                         """.stripIndent())
                                 .contentType(new MediaType(MediaType.APPLICATION_JSON, StandardCharsets.UTF_8))
@@ -64,7 +64,7 @@ public class SignUpTest {
                                         {
                                             "username": "",
                                             "password": "1234",
-                                            "nickName": "user1"
+                                            "nick_name": "user1"
                                         }
                                         """.stripIndent())
                                 .contentType(new MediaType(MediaType.APPLICATION_JSON, StandardCharsets.UTF_8))
@@ -85,7 +85,7 @@ public class SignUpTest {
                                         {
                                             "username": "user1@naver.com",
                                             "password": "1234",
-                                            "nickName": ""
+                                            "nick_name": ""
                                         }
                                         """.stripIndent())
                                 .contentType(new MediaType(MediaType.APPLICATION_JSON, StandardCharsets.UTF_8))
