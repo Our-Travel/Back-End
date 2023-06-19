@@ -65,4 +65,28 @@ public class HostControllerTest {
         assertThat(keywordRepository.count()).isEqualTo(2);
     }
 
+    @Test
+    @DisplayName("host 등록에서 지역을 안넣는 경우 오류발생")
+    @WithUserDetails("user1@example.com")
+    void t2() throws Exception {
+        // When
+        ResultActions resultActions = mvc
+                .perform(
+                        post("/api/host")
+                                .content("""
+                                    {
+                                        "introduction": "저는 호스트가 되고싶어요.",
+                                        "hashTag": "#호스트 #여행"
+                                    }
+                                    """)
+                                .contentType(new MediaType(MediaType.APPLICATION_JSON, StandardCharsets.UTF_8))
+                )
+                .andDo(print());
+
+        // Then
+        resultActions
+                .andExpect(status().is4xxClientError());
+
+    }
+
 }
