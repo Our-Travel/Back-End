@@ -2,8 +2,10 @@ package com.example.ot.app.host.service;
 
 import com.example.ot.app.base.rsData.RsData;
 import com.example.ot.app.hashtag.service.HashTagService;
-import com.example.ot.app.host.dto.HostDTO;
+import com.example.ot.app.host.dto.HostInfoDTO;
+import com.example.ot.app.host.dto.HostInfoResponse;
 import com.example.ot.app.host.dto.RegionDTO;
+import com.example.ot.app.host.dto.RegisterHostDTO;
 import com.example.ot.app.host.entity.Host;
 import com.example.ot.app.host.repository.HostRepository;
 import com.example.ot.app.member.entity.Member;
@@ -30,10 +32,10 @@ public class HostService {
     private final HashTagService hashTagService;
 
     @Transactional
-    public RsData<Host> createHost(HostDTO.RegisterHostDTO registerHostDTO, long id){
+    public RsData<Host> createHost(RegisterHostDTO registerHostDTO, long id){
         Member member = memberRepository.findById(id).orElse(null);
         if(member == null){
-            return RsData.of("F-1", "사용자를 찾을 수 없습니다.");
+            return RsData.of("F-1", "로그인 후 이용해주세요.");
         }
         City city = cityRepository.findById(registerHostDTO.getCity()).orElse(null);
         if(city == null){
@@ -59,5 +61,34 @@ public class HostService {
                 .cityList(cityList)
                 .stateList(stateList)
                 .build();
+    }
+
+    public RsData<Member> hasHostAuthority(long id) {
+        Member member = memberRepository.findById(id).orElse(null);
+        if(member == null){
+            return RsData.of("F-1", "로그인 후 이용해주세요.");
+        }
+        if(!member.isHostAuthority()){
+            return RsData.of("S-2", "호스트 권한이 없습니다.");
+        }
+        return RsData.of("S-1", "호스트 권한이 있습니다.");
+    }
+
+    public HostInfoResponse hostInfo(long id, RegionDTO regionDTO) {
+        Host host = hostRepository.findByMemberId(id).orElse(null);
+        String hashTag = hashTagService.getHashTag(host.getId());
+        HostInfoDTO hostInfoDTO = HostInfoDTO
+                .builder()
+                .cityId(host.getCity().getId())
+                .stateId(host.getCity().getState().getId())
+                .introduction(host.getIntroduction())
+                .hashTag(hashTag)
+                .build();
+        return HostInfoResponse
+                .builder()
+                .hostInfoDTO(hostInfoDTO)
+                .regionDTO(regionDTO)
+                .build();
+
     }
 }

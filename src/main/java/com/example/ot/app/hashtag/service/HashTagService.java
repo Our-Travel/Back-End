@@ -48,4 +48,11 @@ public class HashTagService {
 
         return hashTag;
     }
+
+    public String getHashTag(long hostId){
+        List<HashTag> hashTags = hashTagRepository.findByHostId(hostId);
+        return hashTags.stream()
+                .map(hashTag -> "#" + hashTag.getKeyword().getContent())
+                .collect(Collectors.joining());
+    }
 }

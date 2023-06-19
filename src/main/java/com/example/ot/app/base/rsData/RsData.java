@@ -31,7 +31,7 @@ public class RsData<T> {
 
     @JsonIgnore
     public boolean isSuccess() {
-        return resultCode.startsWith("S-1");
+        return resultCode.startsWith("S");
     }
 
     @JsonIgnore

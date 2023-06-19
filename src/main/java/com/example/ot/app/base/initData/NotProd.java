@@ -34,20 +34,6 @@ public class NotProd {
                         .build();
                 profileImageRepository.save(profileImage);
 
-                State state = State
-                        .builder()
-                        .id(1)
-                        .stateName("서울특별시")
-                        .build();
-                stateRepository.save(state);
-                City city = City
-                        .builder()
-                        .id(1)
-                        .cityName("관악구")
-                        .state(state)
-                        .build();
-                cityRepository.save(city);
-
                 MemberDTO.SignUpDto admin = new MemberDTO.SignUpDto("admin@example.com", "1234", "admin");
                 MemberDTO.SignUpDto user1 = new MemberDTO.SignUpDto("user1@example.com", "1234", "user1");
                 MemberDTO.SignUpDto user2 = new MemberDTO.SignUpDto("user2@example.com", "1234", "user2");

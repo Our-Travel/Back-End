@@ -3,6 +3,12 @@ package com.example.ot.app.host.controller;
 import com.example.ot.app.keyword.repository.KeywordRepository;
 import com.example.ot.app.member.entity.Member;
 import com.example.ot.app.member.repository.MemberRepository;
+import com.example.ot.app.region.entity.City;
+import com.example.ot.app.region.entity.State;
+import com.example.ot.app.region.repository.CityRepository;
+import com.example.ot.app.region.repository.StateRepository;
+import org.aspectj.lang.annotation.Before;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,12 +36,32 @@ public class HostControllerTest {
 
     @Autowired
     private MockMvc mvc;
-
     @Autowired
     private KeywordRepository keywordRepository;
-
     @Autowired
     private MemberRepository memberRepository;
+    @Autowired
+    private CityRepository cityRepository;
+    @Autowired
+    private StateRepository stateRepository;
+
+    @BeforeEach
+    void beforeEach() {
+        State state = State
+                .builder()
+                .id(1)
+                .stateName("서울특별시")
+                .build();
+        stateRepository.save(state);
+        City city = City
+                .builder()
+                .id(1)
+                .cityName("관악구")
+                .state(state)
+                .build();
+        cityRepository.save(city);
+    }
+
 
     @Test
     @DisplayName("host 등록")
