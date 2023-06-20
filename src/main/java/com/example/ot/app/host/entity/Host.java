@@ -21,5 +21,5 @@ public class Host extends BaseTimeEntity {
     @OneToOne
     private Member member;
 
-    private String region;
+    private int regionCode;
 }

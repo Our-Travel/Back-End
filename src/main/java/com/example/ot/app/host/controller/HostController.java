@@ -34,7 +34,7 @@ public class HostController {
                                                @AuthenticationPrincipal MemberContext memberContext){
         log.info("Introduction : {} " , registerHostDTO.getIntroduction());
         log.info("HashTag : {} " , registerHostDTO.getHashTag());
-        log.info("City : {} " , registerHostDTO.getRegion());
+        log.info("City : {} " , registerHostDTO.getRegionCode());
 
         RsData<Host> host = hostService.createHost(registerHostDTO, memberContext.getId());
 
