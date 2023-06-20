@@ -12,6 +12,6 @@ public class RegisterHostDTO {
     @Size(min = 10, max = 15, message = "자기소개는 10~15자로 입력해주세요.")
     private String introduction;
     private String hashTag;
-    private int regionCode;
+    private Integer regionCode;
 
 }
