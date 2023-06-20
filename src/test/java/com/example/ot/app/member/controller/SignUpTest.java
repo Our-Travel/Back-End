@@ -38,7 +38,7 @@ public class SignUpTest {
                                 .content("""
                                         {
                                             "username": "user3@example.com",
-                                            "password": "1234",
+                                            "password": "@a123456",
                                             "nick_name": "user3"
                                         }
                                         """.stripIndent())
@@ -163,6 +163,110 @@ public class SignUpTest {
         ResultActions resultActions = mvc
                 .perform(
                         get("/api/members/exists/nickName/{nickName}", nickName)
+                )
+                .andDo(print());
+
+        // Then
+        resultActions
+                .andExpect(status().is4xxClientError());
+    }
+
+    @Test
+    @DisplayName("POST 회원가입에서 유효성 검증 통과 못해서 실패")
+    void t7() throws Exception {
+        // When
+        // 아이디 유효성 검증
+        ResultActions resultActions = mvc
+                .perform(
+                        post("/api/members/signup")
+                                .content("""
+                                        {
+                                            "username": "user3",
+                                            "password": "@a123456",
+                                            "nick_name": "user6"
+                                        }
+                                        """.stripIndent())
+                                .contentType(new MediaType(MediaType.APPLICATION_JSON, StandardCharsets.UTF_8))
+                )
+                .andDo(print());
+
+        // Then
+        resultActions
+                .andExpect(status().is4xxClientError());
+
+        // When
+        // 비밀번호 길이 유효성 검증
+        resultActions = mvc
+                .perform(
+                        post("/api/members/signup")
+                                .content("""
+                                        {
+                                            "username": "user3@example.com",
+                                            "password": "@a123",
+                                            "nick_name": "user6"
+                                        }
+                                        """.stripIndent())
+                                .contentType(new MediaType(MediaType.APPLICATION_JSON, StandardCharsets.UTF_8))
+                )
+                .andDo(print());
+
+        // Then
+        resultActions
+                .andExpect(status().is4xxClientError());
+
+        // When
+        // 비밀번호 특문포함 유효성 검증
+        resultActions = mvc
+                .perform(
+                        post("/api/members/signup")
+                                .content("""
+                                        {
+                                            "username": "user3@example.com",
+                                            "password": "1a123456",
+                                            "nick_name": "user6"
+                                        }
+                                        """.stripIndent())
+                                .contentType(new MediaType(MediaType.APPLICATION_JSON, StandardCharsets.UTF_8))
+                )
+                .andDo(print());
+
+        // Then
+        resultActions
+                .andExpect(status().is4xxClientError());
+
+        // When
+        // 비밀번호 영어포함 유효성 검증
+        resultActions = mvc
+                .perform(
+                        post("/api/members/signup")
+                                .content("""
+                                        {
+                                            "username": "user3@example.com",
+                                            "password": "1@123456",
+                                            "nick_name": "user6"
+                                        }
+                                        """.stripIndent())
+                                .contentType(new MediaType(MediaType.APPLICATION_JSON, StandardCharsets.UTF_8))
+                )
+                .andDo(print());
+
+        // Then
+        resultActions
+                .andExpect(status().is4xxClientError());
+
+        // When
+        // 닉네임 길이 유효성 검증
+        resultActions = mvc
+                .perform(
+                        post("/api/members/signup")
+                                .content("""
+                                        {
+                                            "username": "user3@example.com",
+                                            "password": "1@5123456",
+                                            "nick_name": "user6333333"
+                                        }
+                                        """.stripIndent())
+                                .contentType(new MediaType(MediaType.APPLICATION_JSON, StandardCharsets.UTF_8))
                 )
                 .andDo(print());
 

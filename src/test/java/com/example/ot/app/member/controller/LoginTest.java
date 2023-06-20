@@ -39,7 +39,7 @@ public class LoginTest {
                                 .content("""
                                         {
                                             "username": "user1@example.com",
-                                            "password": "1234"
+                                            "password": "@a123456"
                                         }
                                         """.stripIndent())
                                 .contentType(new MediaType(MediaType.APPLICATION_JSON, StandardCharsets.UTF_8))
