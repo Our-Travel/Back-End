@@ -3,6 +3,7 @@ package com.example.ot.app.localplaces.entity;
 import com.example.ot.app.base.entity.BaseTimeEntity;
 import com.example.ot.app.member.entity.Member;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -16,10 +17,10 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 public class LikedHotel extends BaseTimeEntity {
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private Member member;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private Hotel hotel;
 
 }

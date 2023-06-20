@@ -3,6 +3,7 @@ package com.example.ot.app.host.entity;
 import com.example.ot.app.base.entity.BaseTimeEntity;
 import com.example.ot.app.member.entity.Member;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.OneToOne;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -18,7 +19,7 @@ public class Host extends BaseTimeEntity {
 
     private String introduction;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     private Member member;
 
     private Integer regionCode;

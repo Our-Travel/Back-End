@@ -4,6 +4,7 @@ import com.example.ot.app.base.entity.BaseTimeEntity;
 import com.example.ot.app.host.entity.Host;
 import com.example.ot.app.keyword.entity.Keyword;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -16,8 +17,9 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @SuperBuilder
 public class HashTag extends BaseTimeEntity {
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private Host host;
-    @ManyToOne
+
+    @ManyToOne(fetch = FetchType.LAZY)
     private Keyword keyword;
 }
