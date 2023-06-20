@@ -47,26 +47,38 @@ public class MemberService {
     }
 
     // 아이디 중복체크.
-    public  RsData<Member> checkUsername(String username){
-        if(memberRepository.existsByUsername(username)){
-            return RsData.of("F-1", "중복된 이메일입니다.");
-        }
-        return  RsData.of("S-1", "중복 없음.");
+    public RsData<Member> checkUsername(String username) {
+        return constructResponse(memberRepository.existsByUsername(username), "이메일");
     }
 
     // 닉네임 중복체크.
     public RsData<Member> checkNickName(String nickName) {
-        if(memberRepository.existsByNickName(nickName)){
-            return RsData.of("F-1", "중복된 닉네임입니다.");
-        }
-        return  RsData.of("S-1", "중복 없음.");
+        return constructResponse(memberRepository.existsByNickName(nickName), "닉네임");
     }
 
     // 아이디 닉네임 동시체크
     public RsData<Member> check(MemberDTO.SignUpDto signUpDto) {
-        checkUsername(signUpDto.getUsername()).isFail();
-        checkNickName(signUpDto.getNickName()).isFail();
+        RsData<Member> usernameCheckResult = checkUsername(signUpDto.getUsername());
+        if (isDuplicate(usernameCheckResult)) {
+            return usernameCheckResult;
+        }
+
+        RsData<Member> nickNameCheckResult = checkNickName(signUpDto.getNickName());
+        if (isDuplicate(nickNameCheckResult)) {
+            return nickNameCheckResult;
+        }
+
         return RsData.of("S-1", "중복 없음.");
+    }
+
+    // 응답 메세지 구성
+    private RsData<Member> constructResponse(boolean exists, String field) {
+        return exists ? RsData.of("F-1", "중복된 " + field + "입니다.") : RsData.of("S-1", "중복 없음.");
+    }
+
+    // 중복 체크 결과 확인
+    private boolean isDuplicate(RsData<Member> rsData) {
+        return "F-1".equals(rsData.getResultCode());
     }
 
     public Optional<Member> findByUsername(String username) {
