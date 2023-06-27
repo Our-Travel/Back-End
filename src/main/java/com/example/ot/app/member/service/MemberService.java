@@ -1,7 +1,7 @@
 package com.example.ot.app.member.service;
 
 import com.example.ot.app.base.rsData.RsData;
-import com.example.ot.app.member.dto.MemberDTO;
+import com.example.ot.app.member.dto.request.SignUpRequest;
 import com.example.ot.app.member.entity.Member;
 import com.example.ot.app.member.repository.MemberRepository;
 import com.example.ot.config.AppConfig;
@@ -29,16 +29,16 @@ public class MemberService {
     private final JwtProvider jwtProvider;
 
     @Transactional
-    public void create(MemberDTO.SignUpDto signUpDto){
-        create("OT", signUpDto);
+    public void create(SignUpRequest signUpRequest){
+        create("OT", signUpRequest);
     }
 
     // 회원가입 생성.
-    private void create(String providerTypeCode, MemberDTO.SignUpDto signUpDto){
+    private void create(String providerTypeCode, SignUpRequest signUpRequest){
         Member member = Member.builder()
-                .username(signUpDto.getUsername())
-                .password(passwordEncoder.encode(signUpDto.getPassword()))
-                .nickName(signUpDto.getNickName())
+                .username(signUpRequest.getUsername())
+                .password(passwordEncoder.encode(signUpRequest.getPassword()))
+                .nickName(signUpRequest.getNickName())
                 .providerTypeCode(providerTypeCode)
                 .build();
         
@@ -57,13 +57,13 @@ public class MemberService {
     }
 
     // 아이디 닉네임 동시체크
-    public RsData<Member> check(MemberDTO.SignUpDto signUpDto) {
-        RsData<Member> usernameCheckResult = checkUsername(signUpDto.getUsername());
+    public RsData<Member> check(SignUpRequest signUpRequest) {
+        RsData<Member> usernameCheckResult = checkUsername(signUpRequest.getUsername());
         if (isDuplicate(usernameCheckResult)) {
             return usernameCheckResult;
         }
 
-        RsData<Member> nickNameCheckResult = checkNickName(signUpDto.getNickName());
+        RsData<Member> nickNameCheckResult = checkNickName(signUpRequest.getNickName());
         if (isDuplicate(nickNameCheckResult)) {
             return nickNameCheckResult;
         }

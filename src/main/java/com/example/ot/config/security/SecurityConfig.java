@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
@@ -33,8 +34,8 @@ public class SecurityConfig implements WebMvcConfigurer {
         http
                 .securityMatcher("/api/**")
                 .exceptionHandling(exceptionHandling -> exceptionHandling
-                .authenticationEntryPoint(authenticationEntryPoint)
-        )
+                        .authenticationEntryPoint(authenticationEntryPoint)
+                )
                 .authorizeHttpRequests(
                         authorizeRequests -> authorizeRequests
                                 .requestMatchers("/api/members/**", "/auth/**", "/oauth2/**")
@@ -48,6 +49,9 @@ public class SecurityConfig implements WebMvcConfigurer {
                 .formLogin().disable() // 폼 로그인 방식 끄기
                 .sessionManagement(sessionManagement ->
                         sessionManagement.sessionCreationPolicy(STATELESS) // 세션 사용안함
+                )
+                .logout(
+                        AbstractHttpConfigurer::disable
                 )
 //                .oauth2Login()
 //                        .redirectionEndpoint().baseUri("/oauth2/callback/*")

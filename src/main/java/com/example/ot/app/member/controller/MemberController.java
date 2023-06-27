@@ -1,7 +1,8 @@
 package com.example.ot.app.member.controller;
 
 import com.example.ot.app.base.rsData.RsData;
-import com.example.ot.app.member.dto.MemberDTO;
+import com.example.ot.app.member.dto.request.SignInRequest;
+import com.example.ot.app.member.dto.request.SignUpRequest;
 import com.example.ot.app.member.entity.Member;
 import com.example.ot.app.member.service.MemberService;
 import com.example.ot.util.Util;
@@ -28,18 +29,18 @@ public class MemberController {
 
     @Operation(summary = "회원가입")
     @PostMapping("/signup")
-    public ResponseEntity<RsData> signUp(@Valid @RequestBody MemberDTO.SignUpDto signUpDto){
-        log.info("username : {} " , signUpDto.getUsername());
-        log.info("password : {} " , signUpDto.getPassword());
-        log.info("nickName : {} " , signUpDto.getNickName());
+    public ResponseEntity<RsData> signUp(@Valid @RequestBody SignUpRequest signUpRequest){
+        log.info("username : {} " , signUpRequest.getUsername());
+        log.info("password : {} " , signUpRequest.getPassword());
+        log.info("nickName : {} " , signUpRequest.getNickName());
 
-        RsData<Member> check = memberService.check(signUpDto);
+        RsData<Member> check = memberService.check(signUpRequest);
 
         // 중복된 것이 있을 경우.
         if(check.isFail()){
             return Util.spring.responseEntityOf(check);
         }
-        memberService.create(signUpDto);
+        memberService.create(signUpRequest);
         return Util.spring.responseEntityOf(
                 RsData.of(
                         "S-1",
@@ -80,14 +81,14 @@ public class MemberController {
 
     @Operation(summary = "로그인")
     @PostMapping("/login")
-    public ResponseEntity<RsData> signIn(@Valid @RequestBody MemberDTO.SignInDto signInDto){
-        Member member = memberService.findByUsername(signInDto.getUsername()).orElse(null);
+    public ResponseEntity<RsData> signIn(@Valid @RequestBody SignInRequest signInRequest){
+        Member member = memberService.findByUsername(signInRequest.getUsername()).orElse(null);
 
         if(ObjectUtils.isEmpty(member)){
             return Util.spring.responseEntityOf(RsData.of("F-1", "일치하는 회원이 존재하지 않습니다."));
         }
 
-        if (!passwordEncoder.matches(signInDto.getPassword(), member.getPassword())) {
+        if (!passwordEncoder.matches(signInRequest.getPassword(), member.getPassword())) {
             return Util.spring.responseEntityOf(RsData.of("F-1", "비밀번호가 일치하지 않습니다."));
         }
 
