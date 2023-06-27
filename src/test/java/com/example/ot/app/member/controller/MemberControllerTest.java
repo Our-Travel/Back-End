@@ -1,18 +1,23 @@
 package com.example.ot.app.member.controller;
 
+import com.example.ot.app.member.dto.request.SignUpRequest;
+import com.example.ot.app.member.service.MemberService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.nio.charset.StandardCharsets;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -23,23 +28,26 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @Transactional
 @ActiveProfiles("test")
-public class SignUpTest {
+public class MemberControllerTest {
 
     @Autowired
     private MockMvc mvc;
 
+    @Autowired
+    private MemberService memberService;
+
     @Test
-    @DisplayName("POST 회원가입 성공")
-    void t1() throws Exception {
+    @DisplayName("회원가입 요청이 성공적으로 처리되어야 한다")
+    void shouldSignUpSuccessfully() throws Exception {
         // When
         ResultActions resultActions = mvc
                 .perform(
                         post("/api/members/signup")
                                 .content("""
                                         {
-                                            "username": "user3@example.com",
-                                            "password": "@a123456",
-                                            "nick_name": "user3"
+                                            "username": "user5@example.com",
+                                            "password": "@a2123456",
+                                            "nick_name": "user5"
                                         }
                                         """.stripIndent())
                                 .contentType(new MediaType(MediaType.APPLICATION_JSON, StandardCharsets.UTF_8))
@@ -54,8 +62,8 @@ public class SignUpTest {
     }
 
     @Test
-    @DisplayName("POST 회원가입에서 값 누락하여 실패")
-    void t2() throws Exception {
+    @DisplayName("회원가입 요청시 필요한 정보가 누락되면 실패해야 한다")
+    void shouldFailSignUpWithMissingValues() throws Exception {
         // When
         ResultActions resultActions = mvc
                 .perform(
@@ -100,8 +108,8 @@ public class SignUpTest {
     }
 
     @Test
-    @DisplayName("GET 아이디 중복 체크 성공")
-    void t3() throws Exception {
+    @DisplayName("아이디 중복 체크 요청이 성공적으로 처리되어야 한다")
+    void shouldPassUsernameCheck() throws Exception {
         // Given
         String username = "user4@example.com";
 
@@ -118,8 +126,8 @@ public class SignUpTest {
     }
 
     @Test
-    @DisplayName("GET 아이디 중복체크에서 중복되어서 실패")
-    void t4() throws Exception {
+    @DisplayName("아이디가 중복되었을 때 중복 체크 요청이 실패해야 한다")
+    void shouldFailOnDuplicatedUsername() throws Exception {
         // Given
         String username = "user1@example.com";
 
@@ -136,8 +144,8 @@ public class SignUpTest {
     }
 
     @Test
-    @DisplayName("GET 닉네임 중복 체크 성공")
-    void t5() throws Exception {
+    @DisplayName("닉네임 중복 체크 요청이 성공적으로 처리되어야 한다")
+    void shouldPassNickNameCheck() throws Exception {
         // Given
         String nickName = "user3";
 
@@ -154,10 +162,10 @@ public class SignUpTest {
     }
 
     @Test
-    @DisplayName("GET 닉네임 중복체크에서 중복되어서 실패")
-    void t6() throws Exception {
+    @DisplayName("닉네임이 중복되었을 때 중복 체크 요청이 실패해야 한다")
+    void shouldFailNickCheck() throws Exception {
         // Given
-        String nickName = "user1";
+        String nickName = "user123";
 
         // When
         ResultActions resultActions = mvc
@@ -172,8 +180,8 @@ public class SignUpTest {
     }
 
     @Test
-    @DisplayName("POST 회원가입에서 유효성 검증 통과 못해서 실패")
-    void t7() throws Exception {
+    @DisplayName("회원가입 요청에서 유효성 검증을 통과하지 못했을 때 가입이 실패해야 한다")
+    void shouldFailSignup() throws Exception {
         // When
         // 아이디 유효성 검증
         ResultActions resultActions = mvc
@@ -264,6 +272,78 @@ public class SignUpTest {
                                             "username": "user3@example.com",
                                             "password": "1@5123456",
                                             "nick_name": "user6333333"
+                                        }
+                                        """.stripIndent())
+                                .contentType(new MediaType(MediaType.APPLICATION_JSON, StandardCharsets.UTF_8))
+                )
+                .andDo(print());
+
+        // Then
+        resultActions
+                .andExpect(status().is4xxClientError());
+    }
+
+    @Test
+    @DisplayName("올바른 username과 password가 제공되었을 때 JWT 키를 성공적으로 발급해야 한다")
+    void successfulLoginAndJwtIssuance() throws Exception {
+        // Given
+        memberService.create(new SignUpRequest("user55@example.com", "@a123456", "user551"));
+
+        // When
+        ResultActions resultActions = mvc
+                .perform(
+                        post("/api/members/login")
+                                .content("""
+                                        {
+                                            "username": "user55@example.com",
+                                            "password": "@a123456"
+                                        }
+                                        """.stripIndent())
+                                .contentType(new MediaType(MediaType.APPLICATION_JSON, StandardCharsets.UTF_8))
+                )
+                .andDo(print());
+
+        // Then
+        resultActions
+                .andExpect(status().is2xxSuccessful());
+
+        MvcResult mvcResult = resultActions.andReturn();
+
+        MockHttpServletResponse response = mvcResult.getResponse();
+
+        String authentication = response.getHeader("Authentication");
+
+        assertThat(authentication).isNotEmpty();
+    }
+
+    @Test
+    @DisplayName("올바르지 않은 아이디와 비밀번호로 로그인 시도는 실패한다.")
+    void loginFailureWithIncorrectUsernameAndPassword() throws Exception {
+        // When
+        ResultActions resultActions = mvc
+                .perform(
+                        post("/api/members/login")
+                                .content("""
+                                        {
+                                            "username": "",
+                                            "password": "1234"
+                                        }
+                                        """.stripIndent())
+                                .contentType(new MediaType(MediaType.APPLICATION_JSON, StandardCharsets.UTF_8))
+                )
+                .andDo(print());
+
+        // Then
+        resultActions
+                .andExpect(status().is4xxClientError());
+
+        mvc
+                .perform(
+                        post("/api/members/login")
+                                .content("""
+                                        {
+                                            "username": "user1@example.com",
+                                            "password": ""
                                         }
                                         """.stripIndent())
                                 .contentType(new MediaType(MediaType.APPLICATION_JSON, StandardCharsets.UTF_8))
