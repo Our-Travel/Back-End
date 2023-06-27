@@ -2,8 +2,6 @@ package com.example.ot.app.base.initData;
 
 import com.example.ot.app.member.dto.MemberDTO;
 import com.example.ot.app.member.service.MemberService;
-import com.example.ot.app.mypage.entity.ProfileImage;
-import com.example.ot.app.mypage.repository.ProfileImageRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,22 +13,15 @@ import org.springframework.transaction.annotation.Transactional;
 public class NotProd {
     @Bean
     CommandLineRunner initData(
-            MemberService memberService,
-            ProfileImageRepository profileImageRepository
+            MemberService memberService
     ) {
         return new CommandLineRunner() {
             @Override
             @Transactional
             public void run(String... args) throws Exception {
-                ProfileImage profileImage = ProfileImage.builder()
-                        .storedFilePath("src/main/resources/static/profileImage/ot.png")
-                        .extension(".png")
-                        .build();
-                profileImageRepository.save(profileImage);
-
-                MemberDTO.SignUpDto admin = new MemberDTO.SignUpDto("admin@example.com", "1234", "admin");
-                MemberDTO.SignUpDto user1 = new MemberDTO.SignUpDto("user1@example.com", "1234", "user1");
-                MemberDTO.SignUpDto user2 = new MemberDTO.SignUpDto("user2@example.com", "1234", "user2");
+                MemberDTO.SignUpDto admin = new MemberDTO.SignUpDto("admin@example.com", "@a123456", "admin");
+                MemberDTO.SignUpDto user1 = new MemberDTO.SignUpDto("user1@example.com", "@a123456", "user1");
+                MemberDTO.SignUpDto user2 = new MemberDTO.SignUpDto("user2@example.com", "@a123456", "user2");
                 memberService.create(admin);
                 memberService.create(user1);
                 memberService.create(user2);

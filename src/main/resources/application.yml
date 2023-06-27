@@ -7,10 +7,17 @@ spring:
     active: dev
     include: secret
   datasource:
-    driver-class-name: org.mariadb.jdbc.Driver
-    url: jdbc:mariadb://127.0.0.1:3306/ot__dev?useUnicode=true&characterEncoding=utf8&autoReconnect=true&serverTimezone=Asia/Seoul
-    username: root
-    password: 1234
+    driver-class-name: '${custom.dev.database.driver-class-name}'
+    url: '${custom.dev.database.url}'
+    username: '${custom.dev.database.username}'
+    password: '${custom.dev.database.password}'
+  cache:
+    type: redis
+  data:
+    redis:
+      host: '${custom.dev.redis.host}'
+      port: '${custom.dev.redis.port}'
+
   security:
     oauth2:
       client:
@@ -35,16 +42,13 @@ spring:
         show_sql: true
         format_sql: true
         use_sql_comments: true
+        default_batch_fetch_size: 1000
 logging:
   level:
     root: INFO
     com.example.ot: DEBUG
     org.hibernate.orm.jdbc.bind: TRACE
     org.hibernate.orm.jdbc.extract: TRACE
-custom:
-  file:
-    genFileDirPath: c:/Temp/ot/
-    maxFileSize: '#{10 * 1024 * 1024}' # 10MB
 kakao:
   rest:
     api:

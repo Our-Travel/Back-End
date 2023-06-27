@@ -2,7 +2,7 @@ package com.example.ot.app.host.service;
 
 import com.example.ot.app.base.rsData.RsData;
 import com.example.ot.app.hashtag.service.HashTagService;
-import com.example.ot.app.host.dto.*;
+import com.example.ot.app.host.dto.RegisterHostDTO;
 import com.example.ot.app.host.entity.Host;
 import com.example.ot.app.host.repository.HostRepository;
 import com.example.ot.app.member.entity.Member;
@@ -26,14 +26,14 @@ public class HostService {
         if(ObjectUtils.isEmpty(member)){
             return RsData.of("F-1", "로그인 후 이용해주세요.");
         }
-        if(ObjectUtils.isEmpty(registerHostDTO.getRegion())){
+        if(ObjectUtils.isEmpty(registerHostDTO.getRegionCode())){
             return RsData.of("F-1", "지역을 선택해주세요.");
         }
         Host host = Host
                 .builder()
                 .introduction(registerHostDTO.getIntroduction())
                 .member(member)
-                .region(registerHostDTO.getRegion())
+                .regionCode(registerHostDTO.getRegionCode())
                 .build();
         hostRepository.save(host);
         member.setHostAuthority(true);

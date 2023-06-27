@@ -1,18 +1,20 @@
 package com.example.ot.app.member.service;
 
 import com.example.ot.app.base.rsData.RsData;
-import com.example.ot.app.mypage.repository.ProfileImageRepository;
-import com.example.ot.config.security.jwt.JwtProvider;
 import com.example.ot.app.member.dto.MemberDTO;
 import com.example.ot.app.member.entity.Member;
 import com.example.ot.app.member.repository.MemberRepository;
+import com.example.ot.config.AppConfig;
+import com.example.ot.config.security.jwt.JwtProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+import java.util.Map;
 import java.util.Optional;
 
 
@@ -23,7 +25,6 @@ import java.util.Optional;
 public class MemberService {
 
     private final MemberRepository memberRepository;
-    private final ProfileImageRepository profileImageRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtProvider jwtProvider;
 
@@ -38,7 +39,6 @@ public class MemberService {
                 .username(signUpDto.getUsername())
                 .password(passwordEncoder.encode(signUpDto.getPassword()))
                 .nickName(signUpDto.getNickName())
-                .profileImage(profileImageRepository.findById(1L).get())
                 .providerTypeCode(providerTypeCode)
                 .build();
         
@@ -47,26 +47,38 @@ public class MemberService {
     }
 
     // 아이디 중복체크.
-    public  RsData<Member> checkUsername(String username){
-        if(memberRepository.existsByUsername(username)){
-            return RsData.of("F-1", "중복된 이메일입니다.");
-        }
-        return  RsData.of("S-1", "중복 없음.");
+    public RsData<Member> checkUsername(String username) {
+        return constructResponse(memberRepository.existsByUsername(username), "이메일");
     }
 
     // 닉네임 중복체크.
     public RsData<Member> checkNickName(String nickName) {
-        if(memberRepository.existsByNickName(nickName)){
-            return RsData.of("F-1", "중복된 닉네임입니다.");
-        }
-        return  RsData.of("S-1", "중복 없음.");
+        return constructResponse(memberRepository.existsByNickName(nickName), "닉네임");
     }
 
     // 아이디 닉네임 동시체크
     public RsData<Member> check(MemberDTO.SignUpDto signUpDto) {
-        checkUsername(signUpDto.getUsername()).isFail();
-        checkNickName(signUpDto.getNickName()).isFail();
+        RsData<Member> usernameCheckResult = checkUsername(signUpDto.getUsername());
+        if (isDuplicate(usernameCheckResult)) {
+            return usernameCheckResult;
+        }
+
+        RsData<Member> nickNameCheckResult = checkNickName(signUpDto.getNickName());
+        if (isDuplicate(nickNameCheckResult)) {
+            return nickNameCheckResult;
+        }
+
         return RsData.of("S-1", "중복 없음.");
+    }
+
+    // 응답 메세지 구성
+    private RsData<Member> constructResponse(boolean exists, String field) {
+        return exists ? RsData.of("F-1", "중복된 " + field + "입니다.") : RsData.of("S-1", "중복 없음.");
+    }
+
+    // 중복 체크 결과 확인
+    private boolean isDuplicate(RsData<Member> rsData) {
+        return "F-1".equals(rsData.getResultCode());
     }
 
     public Optional<Member> findByUsername(String username) {
@@ -90,5 +102,18 @@ public class MemberService {
 
     public boolean verifyWithWhiteList(Member member, String token) {
         return member.getAccessToken().equals(token);
+    }
+
+    public Member getByMemberId__cached(long id) {
+        MemberService thisObj = (MemberService) AppConfig.getContext().getBean("memberService");
+        Map<String, Object> memberMap = thisObj.getMemberMapByMemberId__cached(id);
+
+        return Member.fromMap(memberMap);
+    }
+
+    @Cacheable("member")
+    public Map<String, Object> getMemberMapByMemberId__cached(long id) {
+        Member member = findById(id).orElse(null);
+        return member.toMap();
     }
 }

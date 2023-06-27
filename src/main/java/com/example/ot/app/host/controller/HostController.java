@@ -14,7 +14,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @Tag(name = "호스트 설정")
 @Slf4j
@@ -31,7 +34,7 @@ public class HostController {
                                                @AuthenticationPrincipal MemberContext memberContext){
         log.info("Introduction : {} " , registerHostDTO.getIntroduction());
         log.info("HashTag : {} " , registerHostDTO.getHashTag());
-        log.info("City : {} " , registerHostDTO.getRegion());
+        log.info("City : {} " , registerHostDTO.getRegionCode());
 
         RsData<Host> host = hostService.createHost(registerHostDTO, memberContext.getId());
 

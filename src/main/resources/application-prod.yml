@@ -1,0 +1,24 @@
+spring:
+  datasource:
+    driver-class-name: '${custom.prod.database.driver-class-name}'
+    url: '${custom.prod.database.url}'
+    username: '${custom.prod.database.username}'
+    password: '${custom.prod.database.password}'
+  data:
+    redis:
+      host: '${custom.prod.redis.host}'
+      port: '${custom.prod.redis.port}'
+  jpa:
+    hibernate:
+      ddl-auto: none
+    properties:
+      hibernate:
+        show_sql: false
+        format_sql: false
+        use_sql_comments: false
+logging:
+  level:
+    root: INFO
+    com.example.ot: INFO
+    org.hibernate.orm.jdbc.bind: INFO
+    org.hibernate.orm.jdbc.extract: INFO
