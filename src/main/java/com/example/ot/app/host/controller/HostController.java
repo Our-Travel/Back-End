@@ -32,17 +32,9 @@ public class HostController {
     @PostMapping("")
     public ResponseEntity<RsData> registerHost(@Valid @RequestBody RegisterHostRequest registerHostRequest,
                                                @AuthenticationPrincipal MemberContext memberContext){
-        log.info("Introduction : {} " , registerHostRequest.getIntroduction());
-        log.info("HashTag : {} " , registerHostRequest.getHashTag());
-        log.info("City : {} " , registerHostRequest.getRegionCode());
+        hostService.createHost(registerHostRequest, memberContext.getId());
 
-        RsData<Host> host = hostService.createHost(registerHostRequest, memberContext.getId());
-
-        if(host.isFail()){
-            return Util.spring.responseEntityOf(host);
-        }
-
-        return Util.spring.responseEntityOf(host);
+        return Util.spring.responseEntityOf(RsData.successOf("Host 등록이 완료되었습니다."));
     }
 
 }

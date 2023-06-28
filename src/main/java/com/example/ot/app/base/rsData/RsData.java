@@ -24,12 +24,16 @@ public class RsData<T> {
         return of(resultCode, msg, null);
     }
 
-    public static <T> RsData<T> successOf(T data) {
-        return of("S-1", "성공", data);
+    public static <T> RsData<T> successOf(String msg, T data) {
+        return new RsData<>("S", msg, data);
+    }
+
+    public static <T> RsData<T> successOf(String msg) {
+        return successOf(msg, null);
     }
 
     public static <T> RsData<T> failOf(T data) {
-        return of("F-1", "실패", data);
+        return of("F", "실패", data);
     }
 
     @JsonIgnore
