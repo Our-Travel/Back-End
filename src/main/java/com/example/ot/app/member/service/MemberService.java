@@ -9,7 +9,7 @@ import com.example.ot.config.AppConfig;
 import com.example.ot.config.security.jwt.JwtProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -116,7 +116,7 @@ public class MemberService {
         return member.toMap();
     }
 
-    @CacheEvict("member")
-    public void evictMemberMapByUsername__cached(Long id) {
+    @CachePut("member")
+    public void putMemberMapByUsername__cached(Long id) {
     }
 }

@@ -6,8 +6,6 @@ import com.example.ot.app.host.entity.Host;
 import com.example.ot.app.host.exception.HostException;
 import com.example.ot.app.host.repository.HostRepository;
 import com.example.ot.app.member.entity.Member;
-import com.example.ot.app.member.exception.MemberException;
-import com.example.ot.app.member.repository.MemberRepository;
 import com.example.ot.app.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -15,7 +13,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 
 import static com.example.ot.app.host.exception.ErrorCode.*;
-import static com.example.ot.app.member.exception.ErrorCode.MEMBER_NOT_EXISTS;
 
 @Service
 @RequiredArgsConstructor
@@ -39,7 +36,6 @@ public class HostService {
                 .build();
         hostRepository.save(host);
         member.setHostAuthority(true);
-        memberService.evictMemberMapByUsername__cached(member.getId());
         hashTagService.applyHashTags(host, registerHostRequest.getHashTag());
     }
 }
