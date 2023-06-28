@@ -1,8 +1,9 @@
 package com.example.ot.app.member.service;
 
-import com.example.ot.app.base.rsData.RsData;
+import com.example.ot.app.member.dto.request.SignInRequest;
 import com.example.ot.app.member.dto.request.SignUpRequest;
 import com.example.ot.app.member.entity.Member;
+import com.example.ot.app.member.exception.MemberException;
 import com.example.ot.app.member.repository.MemberRepository;
 import com.example.ot.config.AppConfig;
 import com.example.ot.config.security.jwt.JwtProvider;
@@ -12,10 +13,12 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
 import java.util.Map;
-import java.util.Optional;
+
+import static com.example.ot.app.member.exception.ErrorCode.*;
 
 
 @Slf4j
@@ -47,49 +50,47 @@ public class MemberService {
     }
 
     // 아이디 중복체크.
-    public RsData<Member> checkUsername(String username) {
-        return constructResponse(memberRepository.existsByUsername(username), "이메일");
+    public void checkUsername(String username) {
+        if(!ObjectUtils.isEmpty(findByUsername(username))){
+            throw new MemberException(EXISTS_USERNAME);
+        }
     }
 
     // 닉네임 중복체크.
-    public RsData<Member> checkNickName(String nickName) {
-        return constructResponse(memberRepository.existsByNickName(nickName), "닉네임");
+    public void checkNickName(String nickName) {
+        if(memberRepository.existsByNickName(nickName)){
+            throw new MemberException(EXISTS_NICKNAME);
+        }
     }
 
     // 아이디 닉네임 동시체크
-    public RsData<Member> check(SignUpRequest signUpRequest) {
-        RsData<Member> usernameCheckResult = checkUsername(signUpRequest.getUsername());
-        if (isDuplicate(usernameCheckResult)) {
-            return usernameCheckResult;
+    public void check(SignUpRequest signUpRequest) {
+        checkUsername(signUpRequest.getUsername());
+        checkNickName(signUpRequest.getNickName());
+    }
+
+    public Member findByUsername(String username) {
+        return memberRepository.findByUsername(username).orElseThrow(() -> new MemberException(NOT_EXISTS_USERNAME));
+    }
+
+    public Member findById(Long id){
+        return memberRepository.findById(id).orElseThrow(() -> new MemberException(MEMBER_NOT_EXISTS));
+    }
+
+    public void verifyUsername(String username) {
+        findByUsername(username);
+    }
+
+    public void verifyPassword(SignInRequest signInRequest) {
+        Member member = findByUsername(signInRequest.getUsername());
+        if (!passwordEncoder.matches(signInRequest.getPassword(), member.getPassword())) {
+            throw new MemberException(WRONG_PASSWORD);
         }
-
-        RsData<Member> nickNameCheckResult = checkNickName(signUpRequest.getNickName());
-        if (isDuplicate(nickNameCheckResult)) {
-            return nickNameCheckResult;
-        }
-
-        return RsData.of("S-1", "중복 없음.");
-    }
-
-    // 응답 메세지 구성
-    private RsData<Member> constructResponse(boolean exists, String field) {
-        return exists ? RsData.of("F-1", "중복된 " + field + "입니다.") : RsData.of("S-1", "중복 없음.");
-    }
-
-    // 중복 체크 결과 확인
-    private boolean isDuplicate(RsData<Member> rsData) {
-        return "F-1".equals(rsData.getResultCode());
-    }
-
-    public Optional<Member> findByUsername(String username) {
-        return memberRepository.findByUsername(username);
-    }
-    public Optional<Member> findById(Long id){
-        return memberRepository.findById(id);
     }
 
     @Transactional
-    public String genAccessToken(Member member) {
+    public String genAccessToken(String username) {
+        Member member = findByUsername(username);
         String accessToken = member.getAccessToken();
 
         if (!StringUtils.hasLength(accessToken)) {
@@ -113,7 +114,7 @@ public class MemberService {
 
     @Cacheable("member")
     public Map<String, Object> getMemberMapByMemberId__cached(long id) {
-        Member member = findById(id).orElse(null);
+        Member member = findById(id);
         return member.toMap();
     }
 }

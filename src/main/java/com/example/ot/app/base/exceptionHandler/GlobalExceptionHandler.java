@@ -1,6 +1,7 @@
 package com.example.ot.app.base.exceptionHandler;
 
 import com.example.ot.app.base.rsData.RsData;
+import com.example.ot.app.member.exception.MemberException;
 import com.example.ot.util.Util;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.ResponseEntity;
@@ -43,5 +44,12 @@ public class GlobalExceptionHandler {
         String data = exception.getMessage();
 
         return RsData.of("F-RuntimeException", msg, data);
+    }
+
+    @ExceptionHandler({
+            MemberException.class
+    })
+    public ResponseEntity<RsData> handleNoSuchData(final RuntimeException e) {
+        return Util.spring.responseEntityOf(RsData.of("F-1", e.getMessage()));
     }
 }
