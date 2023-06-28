@@ -34,7 +34,7 @@ public class GlobalExceptionHandler {
                 .map(DefaultMessageSourceResolvable::getCode)
                 .collect(Collectors.joining("/"));
 
-        return Util.spring.responseEntityOf(RsData.of("F-MethodArgumentNotValidException", msg, data));
+        return Util.spring.responseEntityOf(RsData.fail(msg, data));
     }
 
     @ExceptionHandler(RuntimeException.class)
@@ -44,7 +44,7 @@ public class GlobalExceptionHandler {
 
         String data = exception.getMessage();
 
-        return RsData.of("F-RuntimeException", msg, data);
+        return RsData.fail(msg, data);
     }
 
     @ExceptionHandler({
@@ -52,6 +52,6 @@ public class GlobalExceptionHandler {
             HostException.class
     })
     public ResponseEntity<RsData> handleNoSuchData(final RuntimeException e) {
-        return Util.spring.responseEntityOf(RsData.of("F-1", e.getMessage()));
+        return Util.spring.responseEntityOf(RsData.fail(e.getMessage()));
     }
 }

@@ -34,7 +34,7 @@ public class HostController {
                                                @AuthenticationPrincipal MemberContext memberContext){
         hostService.createHost(registerHostRequest, memberContext.getId());
 
-        return Util.spring.responseEntityOf(RsData.successOf("Host 등록이 완료되었습니다."));
+        return Util.spring.responseEntityOf(RsData.success("Host 등록이 완료되었습니다."));
     }
 
 }

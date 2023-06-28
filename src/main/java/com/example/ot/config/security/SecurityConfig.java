@@ -78,7 +78,7 @@ public class SecurityConfig implements WebMvcConfigurer {
                     response.setCharacterEncoding("utf-8");
                     response.setContentType("application/json; charset=UTF-8");
 
-                    RsData rsData = RsData.of("F-AccessDeniedException", "권한이 없는 사용자입니다.", null);
+                    RsData rsData = RsData.fail("권한이 없는 사용자입니다.");
                     String json = new ObjectMapper().writeValueAsString(rsData);
 
                     response.getWriter().write(json);

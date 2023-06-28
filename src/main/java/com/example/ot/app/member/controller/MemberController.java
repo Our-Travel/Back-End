@@ -31,12 +31,7 @@ public class MemberController {
         memberService.check(signUpRequest);
         memberService.create(signUpRequest);
 
-        return Util.spring.responseEntityOf(
-                RsData.of(
-                        "S-1",
-                        "회원가입이 완료되었습니다."
-                )
-        );
+        return Util.spring.responseEntityOf(RsData.success("회원가입이 완료되었습니다."));
     }
 
     @Operation(summary = "아이디 중복체크")
@@ -45,10 +40,7 @@ public class MemberController {
         memberService.checkUsername(username);
 
         return Util.spring.responseEntityOf(
-                RsData.of(
-                        "S-1",
-                        "%s는 사용가능한 이메일입니다.".formatted(username)
-                )
+                RsData.success("S-1", "%s는 사용가능한 이메일입니다.".formatted(username))
         );
     }
 
@@ -58,10 +50,7 @@ public class MemberController {
         memberService.checkNickName(nickName);
 
         return Util.spring.responseEntityOf(
-                RsData.of(
-                        "S-1",
-                        "%s는 사용가능한 닉네임입니다.".formatted(nickName)
-                )
+                RsData.success("S-1", "%s는 사용가능한 닉네임입니다.".formatted(nickName))
         );
     }
 
@@ -74,9 +63,7 @@ public class MemberController {
         String accessToken = memberService.genAccessToken(signInRequest.getUsername());
 
         return Util.spring.responseEntityOf(
-                RsData.of(
-                        "S-1",
-                        "로그인이 성공적으로 완료되었습니다.",
+                RsData.success("로그인이 성공적으로 완료되었습니다.",
                         Util.mapOf(
                                 "access_token", accessToken
                         )

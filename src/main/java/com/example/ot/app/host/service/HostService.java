@@ -1,6 +1,5 @@
 package com.example.ot.app.host.service;
 
-import com.example.ot.app.base.rsData.RsData;
 import com.example.ot.app.hashtag.service.HashTagService;
 import com.example.ot.app.host.dto.request.RegisterHostRequest;
 import com.example.ot.app.host.entity.Host;

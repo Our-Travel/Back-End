@@ -22,8 +22,7 @@ public class HashTagService {
     public void applyHashTags(Host host, String keywordContentsStr) {
         List<String> keywordContents = Arrays.stream(keywordContentsStr.split("#"))
                 .map(String::trim)
-                .filter(s -> s.length() > 0)
-                .collect(Collectors.toList());
+                .filter(s -> s.length() > 0).toList();
 
         keywordContents.forEach(keywordContent -> {
             saveHashTag(host, keywordContent);
