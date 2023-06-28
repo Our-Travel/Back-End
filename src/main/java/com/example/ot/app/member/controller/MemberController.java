@@ -3,6 +3,7 @@ package com.example.ot.app.member.controller;
 import com.example.ot.app.base.rsData.RsData;
 import com.example.ot.app.member.dto.request.SignInRequest;
 import com.example.ot.app.member.dto.request.SignUpRequest;
+import com.example.ot.app.member.entity.Member;
 import com.example.ot.app.member.service.MemberService;
 import com.example.ot.util.Util;
 import io.swagger.v3.oas.annotations.Operation;
@@ -12,7 +13,6 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "로그인 및 회원가입")
@@ -23,7 +23,6 @@ import org.springframework.web.bind.annotation.*;
 public class MemberController {
 
     private final MemberService memberService;
-    private final PasswordEncoder passwordEncoder;
 
     @Operation(summary = "회원가입")
     @PostMapping("/signup")
@@ -57,10 +56,10 @@ public class MemberController {
     @Operation(summary = "로그인")
     @PostMapping("/login")
     public ResponseEntity<RsData> signIn(@Valid @RequestBody SignInRequest signInRequest){
-        memberService.verifyUsername(signInRequest.getUsername());
-        memberService.verifyPassword(signInRequest);
+        Member member = memberService.verifyUsername(signInRequest.getUsername());
+        memberService.verifyPassword(member.getPassword(), signInRequest.getPassword());
 
-        String accessToken = memberService.genAccessToken(signInRequest.getUsername());
+        String accessToken = memberService.genAccessToken(member);
 
         return Util.spring.responseEntityOf(
                 RsData.success("로그인이 성공적으로 완료되었습니다.",

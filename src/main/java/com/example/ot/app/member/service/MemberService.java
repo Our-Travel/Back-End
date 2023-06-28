@@ -9,6 +9,7 @@ import com.example.ot.config.AppConfig;
 import com.example.ot.config.security.jwt.JwtProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -76,20 +77,18 @@ public class MemberService {
         return memberRepository.findById(id).orElseThrow(() -> new MemberException(MEMBER_NOT_EXISTS));
     }
 
-    public void verifyUsername(String username) {
-        findByUsername(username);
+    public Member verifyUsername(String username) {
+        return findByUsername(username);
     }
 
-    public void verifyPassword(SignInRequest signInRequest) {
-        Member member = findByUsername(signInRequest.getUsername());
-        if (!passwordEncoder.matches(signInRequest.getPassword(), member.getPassword())) {
+    public void verifyPassword(String password, String inputPassword) {
+        if (!passwordEncoder.matches(inputPassword, password)) {
             throw new MemberException(WRONG_PASSWORD);
         }
     }
 
     @Transactional
-    public String genAccessToken(String username) {
-        Member member = findByUsername(username);
+    public String genAccessToken(Member member) {
         String accessToken = member.getAccessToken();
 
         if (!StringUtils.hasLength(accessToken)) {
@@ -104,7 +103,7 @@ public class MemberService {
         return member.getAccessToken().equals(token);
     }
 
-    public Member getByMemberId__cached(long id) {
+    public Member getByMemberId__cached(Long id) {
         MemberService thisObj = (MemberService) AppConfig.getContext().getBean("memberService");
         Map<String, Object> memberMap = thisObj.getMemberMapByMemberId__cached(id);
 
@@ -112,8 +111,12 @@ public class MemberService {
     }
 
     @Cacheable("member")
-    public Map<String, Object> getMemberMapByMemberId__cached(long id) {
+    public Map<String, Object> getMemberMapByMemberId__cached(Long id) {
         Member member = findById(id);
         return member.toMap();
+    }
+
+    @CacheEvict("member")
+    public void evictMemberMapByUsername__cached(Long id) {
     }
 }

@@ -8,6 +8,7 @@ import com.example.ot.app.host.repository.HostRepository;
 import com.example.ot.app.member.entity.Member;
 import com.example.ot.app.member.exception.MemberException;
 import com.example.ot.app.member.repository.MemberRepository;
+import com.example.ot.app.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,12 +22,12 @@ import static com.example.ot.app.member.exception.ErrorCode.MEMBER_NOT_EXISTS;
 public class HostService {
 
     private final HostRepository hostRepository;
-    private final MemberRepository memberRepository;
     private final HashTagService hashTagService;
+    private final MemberService memberService;
 
     @Transactional
     public void createHost(RegisterHostRequest registerHostRequest, long id){
-        Member member = memberRepository.findById(id).orElseThrow(() -> new MemberException(MEMBER_NOT_EXISTS));
+        Member member = memberService.findById(id);
         if(ObjectUtils.isEmpty(registerHostRequest.getRegionCode())){
             throw new HostException(NO_REGION_CODE);
         }
@@ -38,6 +39,7 @@ public class HostService {
                 .build();
         hostRepository.save(host);
         member.setHostAuthority(true);
+        memberService.evictMemberMapByUsername__cached(member.getId());
         hashTagService.applyHashTags(host, registerHostRequest.getHashTag());
     }
 }
