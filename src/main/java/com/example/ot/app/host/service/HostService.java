@@ -36,6 +36,7 @@ public class HostService {
                 .build();
         hostRepository.save(host);
         member.setHostAuthority(true);
+        memberService.putMemberMapByUsername__cached(member.getId());
         hashTagService.applyHashTags(host, registerHostRequest.getHashTag());
     }
 }
