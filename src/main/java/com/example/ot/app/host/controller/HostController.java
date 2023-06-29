@@ -1,9 +1,9 @@
 package com.example.ot.app.host.controller;
 
 import com.example.ot.app.base.rsData.RsData;
-import com.example.ot.app.host.dto.RegisterHostDTO;
-import com.example.ot.app.host.entity.Host;
+import com.example.ot.app.host.dto.request.RegisterHostRequest;
 import com.example.ot.app.host.service.HostService;
+import com.example.ot.app.member.service.MemberService;
 import com.example.ot.config.security.entity.MemberContext;
 import com.example.ot.util.Util;
 import io.swagger.v3.oas.annotations.Operation;
@@ -30,19 +30,10 @@ public class HostController {
 
     @Operation(summary = "호스트 등록", security = @SecurityRequirement(name = "bearerAuth"))
     @PostMapping("")
-    public ResponseEntity<RsData> registerHost(@Valid @RequestBody RegisterHostDTO registerHostDTO,
+    public ResponseEntity<RsData> registerHost(@Valid @RequestBody RegisterHostRequest registerHostRequest,
                                                @AuthenticationPrincipal MemberContext memberContext){
-        log.info("Introduction : {} " , registerHostDTO.getIntroduction());
-        log.info("HashTag : {} " , registerHostDTO.getHashTag());
-        log.info("City : {} " , registerHostDTO.getRegionCode());
-
-        RsData<Host> host = hostService.createHost(registerHostDTO, memberContext.getId());
-
-        if(host.isFail()){
-            return Util.spring.responseEntityOf(host);
-        }
-
-        return Util.spring.responseEntityOf(host);
+        hostService.createHost(registerHostRequest, memberContext.getId());
+        return Util.spring.responseEntityOf(RsData.success("Host 등록이 완료되었습니다."));
     }
 
 }

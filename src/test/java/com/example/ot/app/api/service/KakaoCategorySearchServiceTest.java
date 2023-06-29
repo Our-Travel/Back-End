@@ -25,7 +25,7 @@ public class KakaoCategorySearchServiceTest {
 
     @Test
     @DisplayName("모든값이 있다면 document 정상적으로 반환")
-    void t1() throws Exception {
+    void validApiCallReturnsDocuments() throws Exception {
         // Given
         String categoryGroupCode = "AT4";
         double longitude = 127.037033003036;
@@ -41,7 +41,7 @@ public class KakaoCategorySearchServiceTest {
 
     @Test
     @DisplayName("하나라도 값을 안넣으면 null 반환")
-    void t2() throws Exception {
+    void shouldReturnNull_whenMissingValue() throws Exception {
         // Given
         String categoryGroupCode = null;
         double longitude = 127.037033003036;

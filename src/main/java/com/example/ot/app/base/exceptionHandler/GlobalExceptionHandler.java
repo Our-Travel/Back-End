@@ -1,6 +1,8 @@
 package com.example.ot.app.base.exceptionHandler;
 
 import com.example.ot.app.base.rsData.RsData;
+import com.example.ot.app.host.exception.HostException;
+import com.example.ot.app.member.exception.MemberException;
 import com.example.ot.util.Util;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.ResponseEntity;
@@ -32,7 +34,7 @@ public class GlobalExceptionHandler {
                 .map(DefaultMessageSourceResolvable::getCode)
                 .collect(Collectors.joining("/"));
 
-        return Util.spring.responseEntityOf(RsData.of("F-MethodArgumentNotValidException", msg, data));
+        return Util.spring.responseEntityOf(RsData.fail(msg, data));
     }
 
     @ExceptionHandler(RuntimeException.class)
@@ -42,6 +44,14 @@ public class GlobalExceptionHandler {
 
         String data = exception.getMessage();
 
-        return RsData.of("F-RuntimeException", msg, data);
+        return RsData.fail(msg, data);
+    }
+
+    @ExceptionHandler({
+            MemberException.class,
+            HostException.class
+    })
+    public ResponseEntity<RsData> handleNoSuchData(final RuntimeException e) {
+        return Util.spring.responseEntityOf(RsData.fail(e.getMessage()));
     }
 }

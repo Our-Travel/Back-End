@@ -17,7 +17,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 public class ApiAuthenticationEntryPoint implements AuthenticationEntryPoint {
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
-        RsData rs = RsData.of("F-AccessDenied", "인증실패", null);
+        RsData rs = RsData.fail("인증실패");
 
         response.setCharacterEncoding("UTF-8");
         response.setContentType(APPLICATION_JSON_VALUE);

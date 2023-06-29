@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
@@ -38,7 +39,7 @@ public class HostControllerTest {
     @Test
     @DisplayName("host 등록")
     @WithUserDetails("user1@example.com")
-    void t1() throws Exception {
+    void shouldRegisterHostSuccessfully() throws Exception {
         // When
         Member member = memberRepository.findByUsername("user1@example.com").orElse(null);
 
@@ -66,7 +67,7 @@ public class HostControllerTest {
     @Test
     @DisplayName("host 등록에서 지역을 안넣는 경우 오류발생")
     @WithUserDetails("user1@example.com")
-    void t2() throws Exception {
+    void shouldFailWithoutRegion() throws Exception {
         // When
         ResultActions resultActions = mvc
                 .perform(
@@ -90,7 +91,7 @@ public class HostControllerTest {
     @Test
     @DisplayName("host 등록에서 자기소개 10~15자 아닌 경우 오류발생")
     @WithUserDetails("user1@example.com")
-    void t3() throws Exception {
+    void shouldFailWithInvalidIntroLength() throws Exception {
         // When
         ResultActions resultActions = mvc
                 .perform(

@@ -16,20 +16,20 @@ public class RsData<T> {
     private String msg;
     private T data;
 
-    public static <T> RsData<T> of(String resultCode, String msg, T data) {
-        return new RsData<>(resultCode, msg, data);
+    public static <T> RsData<T> success(String msg, T data) {
+        return new RsData<>("S", msg, data);
     }
 
-    public static <T> RsData<T> of(String resultCode, String msg) {
-        return of(resultCode, msg, null);
+    public static <T> RsData<T> success(String msg) {
+        return success(msg, null);
     }
 
-    public static <T> RsData<T> successOf(T data) {
-        return of("S-1", "성공", data);
+    public static <T> RsData<T> fail(String msg, T data) {
+        return new RsData<>("F", msg, data);
     }
 
-    public static <T> RsData<T> failOf(T data) {
-        return of("F-1", "실패", data);
+    public static <T> RsData<T> fail(String msg) {
+        return fail(msg, null);
     }
 
     @JsonIgnore
@@ -39,6 +39,6 @@ public class RsData<T> {
 
     @JsonIgnore
     public boolean isFail() {
-        return isSuccess() == false;
+        return !isSuccess();
     }
 }
