@@ -3,17 +3,28 @@ package com.example.ot.app.member.controller;
 import com.example.ot.app.base.rsData.RsData;
 import com.example.ot.app.member.dto.request.SignInRequest;
 import com.example.ot.app.member.dto.request.SignUpRequest;
+import com.example.ot.app.member.dto.response.MyPageResponse;
 import com.example.ot.app.member.entity.Member;
 import com.example.ot.app.member.service.MemberService;
+import com.example.ot.config.security.entity.MemberContext;
 import com.example.ot.util.Util;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.util.Optional;
 
 @Tag(name = "로그인 및 회원가입")
 @Slf4j
@@ -71,4 +82,11 @@ public class MemberController {
         );
     }
 
+    @Operation(summary = "마이페이지", security = @SecurityRequirement(name = "bearerAuth"))
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("")
+    public ResponseEntity<RsData> showMyPage(@AuthenticationPrincipal MemberContext memberContext) {
+        MyPageResponse myPageResponse = memberService.getMemberInfo(memberContext.getId());
+        return Util.spring.responseEntityOf(RsData.success("마이페이지입니다.", myPageResponse));
+    }
 }
