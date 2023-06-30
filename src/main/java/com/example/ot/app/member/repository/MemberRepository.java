@@ -12,7 +12,4 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     boolean existsByNickName(String nickName);
 
     Optional<Member> findByUsername(String username);
-
-    @Query("SELECT m, p.fullPath FROM Member m LEFT JOIN m.profileImage p WHERE m.id = :memberId")
-    Optional<Member> findMemberWithProfileImage(@Param("memberId") Long memberId);
 }

@@ -52,9 +52,6 @@ public class S3ProfileUploader {
     private ProfileImage upload(File uploadFile, String folderName) {
         String uploadFileName = uploadFile.getName();
         String[] split = uploadFileName.split("\\."); //확장자 추출하기 위해서 split
-        for (String s : split) {
-            System.out.println(s);
-        }
         String storedFileName = UUID.randomUUID().toString() + "." + split[1];
         String fileName = folderName + "/" + storedFileName;   // S3에 저장된 파일 이름
 

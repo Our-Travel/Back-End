@@ -1,11 +1,15 @@
 package com.example.ot.app.member.service;
 
+import com.example.ot.app.base.s3.S3ProfileUploader;
 import com.example.ot.app.member.dto.request.SignUpRequest;
 import com.example.ot.app.member.dto.response.MyPageResponse;
 import com.example.ot.app.member.entity.Member;
+import com.example.ot.app.member.entity.ProfileImage;
 import com.example.ot.app.member.exception.MemberException;
 import com.example.ot.app.member.repository.MemberRepository;
+import com.example.ot.app.member.repository.ProfileImageRepository;
 import com.example.ot.config.AppConfig;
+import com.example.ot.config.security.entity.MemberContext;
 import com.example.ot.config.security.jwt.JwtProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,8 +20,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.Map;
+import java.util.Optional;
 
 import static com.example.ot.app.member.exception.ErrorCode.*;
 
@@ -31,6 +38,8 @@ public class MemberService {
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtProvider jwtProvider;
+    private final ProfileImageRepository profileImageRepository;
+    private final S3ProfileUploader profileUploader;
 
     @Transactional
     public void create(SignUpRequest signUpRequest){
@@ -123,11 +132,31 @@ public class MemberService {
         return member.toMap();
     }
 
-    public MyPageResponse getMemberInfo(Long memberId) {
-        Member member = memberRepository.findMemberWithProfileImage(memberId).orElseThrow(() -> new MemberException(MEMBER_NOT_EXISTS));
-        if(ObjectUtils.isEmpty(member.getProfileImage())){
+    public MyPageResponse getMemberInfo(MemberContext member) {
+        ProfileImage profileImage = profileImageRepository.findByMemberId(member.getId()).orElse(null);
+        if(ObjectUtils.isEmpty(profileImage)){
             return new MyPageResponse(member.getUsername(), member.getNickName(), null);
         }
-        return new MyPageResponse(member.getUsername(), member.getNickName(), member.getProfileImage().getFullPath());
+        return new MyPageResponse(member.getUsername(), member.getNickName(), profileImage.getFullPath());
+    }
+
+    @Transactional
+    public void updateProfile(Long id, MultipartFile file) throws IOException {
+        Member member = findById(id);
+
+        if(!ObjectUtils.isEmpty(file)){
+            //기존에 프로필 이미지가 있으면 기존거 삭제하고 업로드
+            Optional<ProfileImage> findProfileImage = profileImageRepository.findByMember(member);
+            if(findProfileImage.isPresent()){
+                ProfileImage existProfileImage = findProfileImage.get();
+                ProfileImage changeProfile = profileUploader.updateFile(existProfileImage.getStoredFileName(), file);
+                existProfileImage.updateProfile(changeProfile);
+            }
+            else{
+                ProfileImage profileImage = profileUploader.uploadFile(file);
+                profileImage.setMember(member);
+                profileImageRepository.save(profileImage);
+            }
+        }
     }
 }

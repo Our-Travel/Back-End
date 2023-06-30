@@ -19,6 +19,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 
 @Tag(name = "로그인 및 회원가입")
@@ -81,28 +84,23 @@ public class MemberController {
     @PreAuthorize("isAuthenticated()")
     @GetMapping("")
     public ResponseEntity<RsData> showMyPage(@AuthenticationPrincipal MemberContext memberContext) {
-        MyPageResponse myPageResponse = memberService.getMemberInfo(memberContext.getId());
+        MyPageResponse myPageResponse = memberService.getMemberInfo(memberContext);
         return Util.spring.responseEntityOf(RsData.success("마이페이지입니다.", myPageResponse));
     }
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/profile")
     public ResponseEntity<RsData> showProfileEdit(@AuthenticationPrincipal MemberContext memberContext) {
-        MyPageResponse myPageResponse = memberService.getMemberInfo(memberContext.getId());
+        MyPageResponse myPageResponse = memberService.getMemberInfo(memberContext);
         return Util.spring.responseEntityOf(RsData.success("프로필 편집페이지 입니다.", myPageResponse));
     }
 
-//    @PreAuthorize("isAuthenticated()")
-//    @PostMapping("/profile")
-//    public String updateProfile(@ModelAttribute @Valid ProfileRequestDto profileRequestDto, BindingResult bindingResult,
-//                                MultipartFile file) throws IOException {
-//        if (bindingResult.hasErrors()) {
-//            return "/usr/member/profile_edit";
-//        }
-//        Member member = rq.getMember();
-//        memberService.updateProfile(member, profileRequestDto.getNickname(), file);
-//
-//        return "redirect:/usr/member/profile";
-//    }
+    @PreAuthorize("isAuthenticated()")
+    @PostMapping("/profile")
+    public ResponseEntity<RsData> updateProfile(@RequestParam("images")
+                                MultipartFile file, @AuthenticationPrincipal MemberContext memberContext) throws IOException {
+        memberService.updateProfile(memberContext.getId(), file);
+        return Util.spring.responseEntityOf(RsData.success("프로필 편집완료"));
+    }
 
 }

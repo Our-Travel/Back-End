@@ -129,4 +129,8 @@ public class Member extends BaseTimeEntity {
                 .hostAuthority(hostAuthority)
                 .build();
     }
+
+    public void updateNickName(String nickName) {
+        this.nickName = nickName;
+    }
 }
