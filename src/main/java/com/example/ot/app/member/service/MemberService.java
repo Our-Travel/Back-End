@@ -1,6 +1,5 @@
 package com.example.ot.app.member.service;
 
-import com.example.ot.app.member.dto.request.SignInRequest;
 import com.example.ot.app.member.dto.request.SignUpRequest;
 import com.example.ot.app.member.dto.response.MyPageResponse;
 import com.example.ot.app.member.entity.Member;
@@ -19,7 +18,6 @@ import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
 import java.util.Map;
-import java.util.Optional;
 
 import static com.example.ot.app.member.exception.ErrorCode.*;
 
