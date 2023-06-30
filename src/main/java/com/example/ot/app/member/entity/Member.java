@@ -5,6 +5,8 @@ import com.example.ot.util.Util;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.OneToOne;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -43,6 +45,9 @@ public class Member extends BaseTimeEntity {
 
     @Setter
     private boolean hostAuthority = false;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    private ProfileImage profileImage;
 
     // 현재 회원이 가지고 있는 권한들을 List<GrantedAuthority> 형태로 리턴
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -123,5 +128,9 @@ public class Member extends BaseTimeEntity {
                 .providerTypeCode(providerTypeCode)
                 .hostAuthority(hostAuthority)
                 .build();
+    }
+
+    public void updateNickName(String nickName) {
+        this.nickName = nickName;
     }
 }
