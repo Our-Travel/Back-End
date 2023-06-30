@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.multipart.MultipartException;
 
 import java.util.stream.Collectors;
 
@@ -45,6 +46,11 @@ public class GlobalExceptionHandler {
         String data = exception.getMessage();
 
         return RsData.fail(msg, data);
+    }
+
+    @ExceptionHandler(MultipartException.class)
+    public  ResponseEntity<RsData> NotExistsFile() {
+        return Util.spring.responseEntityOf(RsData.fail("파일을 업로드해주세요."));
     }
 
     @ExceptionHandler({
