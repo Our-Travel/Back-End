@@ -89,4 +89,32 @@ public class MemberController {
         MyPageResponse myPageResponse = memberService.getMemberInfo(memberContext.getId());
         return Util.spring.responseEntityOf(RsData.success("마이페이지입니다.", myPageResponse));
     }
+//
+//    @PreAuthorize("isAuthenticated()")
+//    @GetMapping("/profile")
+//    public ResponseEntity<RsData> showProfileEdit(@AuthenticationPrincipal MemberContext memberContext) {
+//        if (!rq.isLogin()) {
+//            return "redirect:/usr/member/login";
+//        }
+//        Member member = rq.getMember();
+//        ProfileRequestDto profileRequestDto = new ProfileRequestDto();
+//        profileRequestDto.setNickname(member.getNickname());
+//        model.addAttribute("profileRequestDto", profileRequestDto);
+//
+//        return "usr/member/profile_edit";
+//    }
+//
+//    @PreAuthorize("isAuthenticated()")
+//    @PostMapping("/profile")
+//    public String updateProfile(@ModelAttribute @Valid ProfileRequestDto profileRequestDto, BindingResult bindingResult,
+//                                MultipartFile file) throws IOException {
+//        if (bindingResult.hasErrors()) {
+//            return "/usr/member/profile_edit";
+//        }
+//        Member member = rq.getMember();
+//        memberService.updateProfile(member, profileRequestDto.getNickname(), file);
+//
+//        return "redirect:/usr/member/profile";
+//    }
+
 }

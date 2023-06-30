@@ -11,16 +11,16 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class S3Config {
-    @Value("${custom-naver-cloud.accessKey}")
+    @Value("${custom.naver-cloud.accessKey}")
     private String accessKey;
 
-    @Value("${custom-naver-cloud.secretKey}")
+    @Value("${custom.naver-cloud.secretKey}")
     private String secretKey;
 
-    @Value("${custom-naver-cloud.region.static}")
+    @Value("${custom.naver-cloud.region.static}")
     private String region;
 
-    @Value("${custom-naver-cloud.s3.endpoint}")
+    @Value("${custom.naver-cloud.s3.endpoint}")
     private String endPoint;
 
 

@@ -22,10 +22,10 @@ import java.util.UUID;
 @Slf4j
 public class S3ProfileUploader {
     private final AmazonS3Client amazonS3Client;
-    @Value("${naver-cloud.s3.bucket}")
+    @Value("${custom.naver-cloud.s3.bucket}")
     private String bucket;
 
-    @Value("${naver-cloud.s3.profileDir}")
+    @Value("${custom.naver-cloud.s3.profileDir}")
     private String dir;
 
     public ProfileImage uploadFile(MultipartFile multipartFile) throws IOException {

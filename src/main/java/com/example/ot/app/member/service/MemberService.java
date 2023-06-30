@@ -15,6 +15,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
 import java.util.Map;
@@ -119,11 +120,16 @@ public class MemberService {
     }
 
     @CachePut("member")
-    public void putMemberMapByUsername__cached(Long id) {
+    public Map<String, Object> putMemberMapByUsername__cached(Long id) {
+        Member member = findById(id);
+        return member.toMap();
     }
 
     public MyPageResponse getMemberInfo(Long memberId) {
         Member member = memberRepository.findMemberWithProfileImage(memberId).orElseThrow(() -> new MemberException(MEMBER_NOT_EXISTS));
+        if(ObjectUtils.isEmpty(member.getProfileImage())){
+            return new MyPageResponse(member.getUsername(), member.getNickName(), null);
+        }
         return new MyPageResponse(member.getUsername(), member.getNickName(), member.getProfileImage().getFullPath());
     }
 }
