@@ -1,6 +1,7 @@
 package com.example.ot.app.member.controller;
 
 import com.example.ot.app.member.dto.request.SignUpRequest;
+import com.example.ot.app.member.entity.Member;
 import com.example.ot.app.member.service.MemberService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -9,6 +10,8 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -18,8 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.nio.charset.StandardCharsets;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.handler;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -347,6 +349,115 @@ public class MemberControllerTest {
                                         }
                                         """.stripIndent())
                                 .contentType(new MediaType(MediaType.APPLICATION_JSON, StandardCharsets.UTF_8))
+                )
+                .andDo(print());
+
+        // Then
+        resultActions
+                .andExpect(status().is4xxClientError());
+    }
+
+    @Test
+    @DisplayName("로그인이 되어 있으면 마이페이지에 들어갈 수 있다.")
+    @WithUserDetails("user1@example.com")
+    void shouldMyPageSuccessfully() throws Exception {
+        ResultActions resultActions = mvc
+                .perform(
+                        get("/api/members"))
+                .andDo(print());
+
+        // Then
+        resultActions
+                .andExpect(status().is2xxSuccessful());
+    }
+
+    @Test
+    @DisplayName("로그인이 되어 있지 않으면 오류발생")
+    void shouldFailMyPageDueToNotSignIn() throws Exception {
+        ResultActions resultActions = mvc
+                .perform(
+                        get("/api/members"))
+                .andDo(print());
+
+        // Then
+        resultActions
+                .andExpect(status().is4xxClientError());
+    }
+
+    @Test
+    @DisplayName("로그인이 되어 있으면 프로필사진 편집 페이지에 들어갈 수 있다.")
+    @WithUserDetails("user1@example.com")
+    void shouldProfilePageSuccessfully() throws Exception {
+        ResultActions resultActions = mvc
+                .perform(
+                        get("/api/members/profile"))
+                .andDo(print());
+
+        // Then
+        resultActions
+                .andExpect(status().is2xxSuccessful());
+    }
+
+    @Test
+    @DisplayName("로그인이 되어 있지 않으면 오류발생")
+    void shouldProfilePageDueToNotSignIn() throws Exception {
+        ResultActions resultActions = mvc
+                .perform(
+                        get("/api/members/profile"))
+                .andDo(print());
+
+        // Then
+        resultActions
+                .andExpect(status().is4xxClientError());
+    }
+
+    @Test
+    @DisplayName("로그인이 되어 있으면 프로필 사진 업데이트가 성공한다.")
+    @WithUserDetails("user1@example.com")
+    void updateProfileSuccessfully() throws Exception {
+        // Given
+        MockMultipartFile file = new MockMultipartFile("images", "filename.jpg", "text/plain", "some image".getBytes());
+
+        // When
+        ResultActions resultActions = mvc
+                .perform(
+                        multipart("/api/members/profile")
+                                .file(file)
+                )
+                .andDo(print());
+
+        // Then
+        resultActions
+                .andExpect(status().is2xxSuccessful());
+    }
+
+    @Test
+    @DisplayName("로그인이 되어 있지만 프로필 사진을 업로드하지 않으면 업데이트는 실패한다.")
+    @WithUserDetails("user1@example.com")
+    void updateProfileFailureDueToNoImage() throws Exception {
+        // When
+        ResultActions resultActions = mvc
+                .perform(
+                        multipart("/api/members/profile")
+                )
+                .andDo(print());
+
+        // Then
+        resultActions
+                .andExpect(status().is4xxClientError());
+    }
+
+    @Test
+    @DisplayName("로그인이 되어 있지 않으면 프로필 사진 업데이트는 실패한다.")
+    void updateProfileFailureDueToNotSignIn() throws Exception {
+        // Given
+        MockMultipartFile file = new MockMultipartFile("images", "filename.jpg", "text/plain", "some image".getBytes());
+
+        // When
+        ResultActions resultActions = mvc
+                .perform(
+                        multipart("/api/members/profile")
+                                .file(file)
                 )
                 .andDo(print());
 
