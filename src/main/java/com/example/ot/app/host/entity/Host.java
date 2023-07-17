@@ -23,4 +23,9 @@ public class Host extends BaseTimeEntity {
     private Member member;
 
     private Integer regionCode;
+
+    public void updateHostInfo(String introduction, Integer regionCode){
+        this.introduction = introduction;
+        this.regionCode = regionCode;
+    }
 }

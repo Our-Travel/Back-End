@@ -54,4 +54,14 @@ public class HashTagService {
                 .map(hashTag -> "#" + hashTag.getKeyword().getContent())
                 .collect(Collectors.joining());
     }
+
+    public void updateHashTags(String hashTag, Host host){
+        deleteHashTag(host.getId());
+        applyHashTags(host, hashTag);
+    }
+
+    public void deleteHashTag(Long hostId) {
+        List<HashTag> hostHashTags = hashTagRepository.findByHostId(hostId);
+        hashTagRepository.deleteAll(hostHashTags);
+    }
 }
