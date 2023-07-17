@@ -45,15 +45,23 @@ public class HostService {
     }
 
     public EditHostResponse getHostInfo(Long id) {
-        Host host = hostRepository.findByMemberId(id).orElseThrow(() -> new MemberException(NOT_EXISTS_USERNAME));
+        Host host = hostRepository.findByMemberId(id).orElseThrow(() -> new HostException(NOT_EXISTS_HOST));
         String hostHashTag = hashTagService.getHashTag(host.getId());
         return new EditHostResponse(host.getIntroduction(), hostHashTag, host.getRegionCode());
     }
 
     @Transactional
     public void updateHostInfo(WriteHostInfoRequest writeHostInfoRequest, Long id) {
-        Host host = hostRepository.findByMemberId(id).orElseThrow(() -> new MemberException(NOT_EXISTS_USERNAME));
+        Host host = hostRepository.findByMemberId(id).orElseThrow(() -> new HostException(NOT_EXISTS_HOST));
         host.updateHostInfo(writeHostInfoRequest.getIntroduction(), writeHostInfoRequest.getRegionCode());
         hashTagService.updateHashTags(writeHostInfoRequest.getHashTag(), host);
+    }
+
+    @Transactional
+    public void removeHostAuthorize(Long id) {
+        Host host = hostRepository.findByMemberId(id).orElseThrow(() -> new HostException(NOT_EXISTS_HOST));
+        memberService.findById(id).setHostAuthority(false);
+        hashTagService.deleteHashTag(host.getId());
+        hostRepository.delete(host);
     }
 }

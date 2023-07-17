@@ -56,8 +56,12 @@ public class HashTagService {
     }
 
     public void updateHashTags(String hashTag, Host host){
-        List<HashTag> hostHashTags = hashTagRepository.findByHostId(host.getId());
-        hashTagRepository.deleteAll(hostHashTags);
+        deleteHashTag(host.getId());
         applyHashTags(host, hashTag);
+    }
+
+    public void deleteHashTag(Long hostId) {
+        List<HashTag> hostHashTags = hashTagRepository.findByHostId(hostId);
+        hashTagRepository.deleteAll(hostHashTags);
     }
 }

@@ -48,4 +48,11 @@ public class HostController {
         return Util.spring.responseEntityOf(RsData.success("Host 정보가 수정되었습니다."));
     }
 
+    @Operation(summary = "호스트 권한 삭제", security = @SecurityRequirement(name = "bearerAuth"))
+    @DeleteMapping("")
+    public ResponseEntity<RsData> unAuthorizeHost(@AuthenticationPrincipal MemberContext memberContext){
+        hostService.removeHostAuthorize(memberContext.getId());
+        return Util.spring.responseEntityOf(RsData.success("Host 권한을 삭제하였습니다."));
+    }
+
 }
