@@ -8,13 +8,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.Http403ForbiddenEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -36,11 +34,11 @@ public class SecurityConfig implements WebMvcConfigurer {
         http
                 .securityMatcher("/api/**")
                 .exceptionHandling(exceptionHandling -> exceptionHandling
-                .authenticationEntryPoint(authenticationEntryPoint)
-        )
+                        .authenticationEntryPoint(authenticationEntryPoint)
+                )
                 .authorizeHttpRequests(
                         authorizeRequests -> authorizeRequests
-                                .requestMatchers("/api/member/**", "/auth/**", "/oauth2/**")
+                                .requestMatchers("/api/members/**", "/auth/**", "/oauth2/**")
                                 .permitAll()
                                 .anyRequest()
                                 .authenticated() // 최소자격 : 로그인
@@ -51,6 +49,9 @@ public class SecurityConfig implements WebMvcConfigurer {
                 .formLogin().disable() // 폼 로그인 방식 끄기
                 .sessionManagement(sessionManagement ->
                         sessionManagement.sessionCreationPolicy(STATELESS) // 세션 사용안함
+                )
+                .logout(
+                        AbstractHttpConfigurer::disable
                 )
 //                .oauth2Login()
 //                        .redirectionEndpoint().baseUri("/oauth2/callback/*")
@@ -77,7 +78,7 @@ public class SecurityConfig implements WebMvcConfigurer {
                     response.setCharacterEncoding("utf-8");
                     response.setContentType("application/json; charset=UTF-8");
 
-                    RsData rsData = RsData.of("F-AccessDeniedException", "권한이 없는 사용자입니다.", null);
+                    RsData rsData = RsData.fail("권한이 없는 사용자입니다.");
                     String json = new ObjectMapper().writeValueAsString(rsData);
 
                     response.getWriter().write(json);

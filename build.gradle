@@ -8,6 +8,10 @@ group = 'com.example'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '17'
 
+bootJar {
+    archiveFileName = 'ot.jar'
+}
+
 configurations {
     compileOnly {
         extendsFrom annotationProcessor
@@ -44,7 +48,12 @@ dependencies {
 
     implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
 
-    implementation 'commons-fileupload:commons-fileupload:1.4'
+    // cache 적용
+    implementation 'org.springframework.boot:spring-boot-starter-cache'
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+
+    //aws
+    implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
 }
 
 tasks.named('test') {

@@ -6,20 +6,11 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.MediaType;
-import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.nio.charset.StandardCharsets;
-
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -34,7 +25,7 @@ public class KakaoCategorySearchServiceTest {
 
     @Test
     @DisplayName("모든값이 있다면 document 정상적으로 반환")
-    void t1() throws Exception {
+    void validApiCallReturnsDocuments() throws Exception {
         // Given
         String categoryGroupCode = "AT4";
         double longitude = 127.037033003036;
@@ -50,7 +41,7 @@ public class KakaoCategorySearchServiceTest {
 
     @Test
     @DisplayName("하나라도 값을 안넣으면 null 반환")
-    void t2() throws Exception {
+    void shouldReturnNull_whenMissingValue() throws Exception {
         // Given
         String categoryGroupCode = null;
         double longitude = 127.037033003036;

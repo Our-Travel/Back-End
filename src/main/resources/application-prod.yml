@@ -1,0 +1,13 @@
+spring:
+  datasource:
+    driver-class-name: '${custom.prod.database.driver-class-name}'
+    url: '${custom.prod.database.url}'
+    username: '${custom.prod.database.username}'
+    password: '${custom.prod.database.password}'
+  data:
+    redis:
+      host: '${custom.prod.redis.host}'
+      port: '${custom.prod.redis.port}'
+  jpa:
+    hibernate:
+      ddl-auto: none

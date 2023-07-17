@@ -1,19 +1,32 @@
 package com.example.ot.app.member.service;
 
-import com.example.ot.app.base.rsData.RsData;
-import com.example.ot.app.mypage.repository.ProfileImageRepository;
-import com.example.ot.config.security.jwt.JwtProvider;
-import com.example.ot.app.member.dto.MemberDTO;
+import com.example.ot.app.base.s3.S3ProfileUploader;
+import com.example.ot.app.member.dto.request.SignUpRequest;
+import com.example.ot.app.member.dto.response.MyPageResponse;
 import com.example.ot.app.member.entity.Member;
+import com.example.ot.app.member.entity.ProfileImage;
+import com.example.ot.app.member.exception.MemberException;
 import com.example.ot.app.member.repository.MemberRepository;
+import com.example.ot.app.member.repository.ProfileImageRepository;
+import com.example.ot.config.AppConfig;
+import com.example.ot.config.security.entity.MemberContext;
+import com.example.ot.config.security.jwt.JwtProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.util.Map;
 import java.util.Optional;
+
+import static com.example.ot.app.member.exception.ErrorCode.*;
 
 
 @Slf4j
@@ -23,22 +36,22 @@ import java.util.Optional;
 public class MemberService {
 
     private final MemberRepository memberRepository;
-    private final ProfileImageRepository profileImageRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtProvider jwtProvider;
+    private final ProfileImageRepository profileImageRepository;
+    private final S3ProfileUploader profileUploader;
 
     @Transactional
-    public void create(MemberDTO.SignUpDto signUpDto){
-        create("OT", signUpDto);
+    public void create(SignUpRequest signUpRequest){
+        create("OT", signUpRequest);
     }
 
     // 회원가입 생성.
-    private void create(String providerTypeCode, MemberDTO.SignUpDto signUpDto){
+    private void create(String providerTypeCode, SignUpRequest signUpRequest){
         Member member = Member.builder()
-                .username(signUpDto.getUsername())
-                .password(passwordEncoder.encode(signUpDto.getPassword()))
-                .nickName(signUpDto.getNickName())
-                .profileImage(profileImageRepository.findById(1L).get())
+                .username(signUpRequest.getUsername())
+                .password(passwordEncoder.encode(signUpRequest.getPassword()))
+                .nickName(signUpRequest.getNickName())
                 .providerTypeCode(providerTypeCode)
                 .build();
         
@@ -47,40 +60,48 @@ public class MemberService {
     }
 
     // 아이디 중복체크.
-    public  RsData<Member> checkUsername(String username){
+    public void checkUsername(String username) {
         if(memberRepository.existsByUsername(username)){
-            return RsData.of("F-1", "중복된 이메일입니다.");
+            throw new MemberException(EXISTS_USERNAME);
         }
-        return  RsData.of("S-1", "중복 없음.");
     }
 
     // 닉네임 중복체크.
-    public RsData<Member> checkNickName(String nickName) {
+    public void checkNickName(String nickName) {
         if(memberRepository.existsByNickName(nickName)){
-            return RsData.of("F-1", "중복된 닉네임입니다.");
+            throw new MemberException(EXISTS_NICKNAME);
         }
-        return  RsData.of("S-1", "중복 없음.");
     }
 
     // 아이디 닉네임 동시체크
-    public RsData<Member> check(MemberDTO.SignUpDto signUpDto) {
-        if(checkUsername(signUpDto.getUsername()).isFail());
-        if(checkNickName(signUpDto.getNickName()).isFail());
-        return RsData.of("S-1", "중복 없음.");
+    public void check(SignUpRequest signUpRequest) {
+        checkUsername(signUpRequest.getUsername());
+        checkNickName(signUpRequest.getNickName());
     }
 
-    public Optional<Member> findByUsername(String username) {
-        return memberRepository.findByUsername(username);
+    public Member findByUsername(String username) {
+        return memberRepository.findByUsername(username).orElseThrow(() -> new MemberException(NOT_EXISTS_USERNAME));
     }
-    public Optional<Member> findById(Long id){
-        return memberRepository.findById(id);
+
+    public Member findById(Long id){
+        return memberRepository.findById(id).orElseThrow(() -> new MemberException(MEMBER_NOT_EXISTS));
+    }
+
+    public Member verifyUsername(String username) {
+        return findByUsername(username);
+    }
+
+    public void verifyPassword(String password, String inputPassword) {
+        if (!passwordEncoder.matches(inputPassword, password)) {
+            throw new MemberException(WRONG_PASSWORD);
+        }
     }
 
     @Transactional
     public String genAccessToken(Member member) {
         String accessToken = member.getAccessToken();
 
-        if (StringUtils.hasLength(accessToken) == false ) {
+        if (!StringUtils.hasLength(accessToken)) {
             accessToken = jwtProvider.generateAccessToken(member.getAccessTokenClaims(), 60L * 60 * 24 * 365 * 100);
             member.setAccessToken(accessToken);
         }
@@ -90,5 +111,52 @@ public class MemberService {
 
     public boolean verifyWithWhiteList(Member member, String token) {
         return member.getAccessToken().equals(token);
+    }
+
+    public Member getByMemberId__cached(Long id) {
+        MemberService thisObj = (MemberService) AppConfig.getContext().getBean("memberService");
+        Map<String, Object> memberMap = thisObj.getMemberMapByMemberId__cached(id);
+
+        return Member.fromMap(memberMap);
+    }
+
+    @Cacheable("member")
+    public Map<String, Object> getMemberMapByMemberId__cached(Long id) {
+        Member member = findById(id);
+        return member.toMap();
+    }
+
+    @CachePut("member")
+    public Map<String, Object> putMemberMapByUsername__cached(Long id) {
+        Member member = findById(id);
+        return member.toMap();
+    }
+
+    public MyPageResponse getMemberInfo(MemberContext member) {
+        ProfileImage profileImage = profileImageRepository.findByMemberId(member.getId()).orElse(null);
+        if(ObjectUtils.isEmpty(profileImage)){
+            return new MyPageResponse(member.getUsername(), member.getNickName(), null);
+        }
+        return new MyPageResponse(member.getUsername(), member.getNickName(), profileImage.getFullPath());
+    }
+
+    @Transactional
+    public void updateProfile(Long id, MultipartFile file) throws IOException {
+        Member member = findById(id);
+
+        if(!ObjectUtils.isEmpty(file)){
+            //기존에 프로필 이미지가 있으면 기존거 삭제하고 업로드
+            Optional<ProfileImage> findProfileImage = profileImageRepository.findByMember(member);
+            if(findProfileImage.isPresent()){
+                ProfileImage existProfileImage = findProfileImage.get();
+                ProfileImage changeProfile = profileUploader.updateFile(existProfileImage.getStoredFileName(), file);
+                existProfileImage.updateProfile(changeProfile);
+            }
+            else{
+                ProfileImage profileImage = profileUploader.uploadFile(file);
+                profileImage.setMember(member);
+                profileImageRepository.save(profileImage);
+            }
+        }
     }
 }

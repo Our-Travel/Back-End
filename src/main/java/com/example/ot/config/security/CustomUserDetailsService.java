@@ -2,17 +2,17 @@ package com.example.ot.config.security;
 
 import com.example.ot.app.member.entity.Member;
 import com.example.ot.app.member.repository.MemberRepository;
+import com.example.ot.config.security.entity.MemberContext;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+
+import java.io.IOException;
 
 @Service
 @RequiredArgsConstructor
-@Transactional(readOnly = false)
 public class CustomUserDetailsService implements UserDetailsService {
     private final MemberRepository memberRepository;
 
@@ -20,7 +20,11 @@ public class CustomUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Member member = memberRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("username(%s) not found".formatted(username)));
 
-        return new User(member.getUsername(), member.getPassword(), member.getAuthorities());
+        try {
+            return new MemberContext(member);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
 
