@@ -1,10 +1,9 @@
 package com.example.ot.app.host.controller;
 
 import com.example.ot.app.base.rsData.RsData;
-import com.example.ot.app.host.dto.request.RegisterHostRequest;
+import com.example.ot.app.host.dto.request.WriteHostInfoRequest;
 import com.example.ot.app.host.dto.response.EditHostResponse;
 import com.example.ot.app.host.service.HostService;
-import com.example.ot.app.member.service.MemberService;
 import com.example.ot.config.security.entity.MemberContext;
 import com.example.ot.util.Util;
 import io.swagger.v3.oas.annotations.Operation;
@@ -28,19 +27,25 @@ public class HostController {
 
     @Operation(summary = "호스트 등록", security = @SecurityRequirement(name = "bearerAuth"))
     @PostMapping("")
-    public ResponseEntity<RsData> registerHost(@Valid @RequestBody RegisterHostRequest registerHostRequest,
+    public ResponseEntity<RsData> registerHost(@Valid @RequestBody WriteHostInfoRequest writeHostInfoRequest,
                                                @AuthenticationPrincipal MemberContext memberContext){
-        hostService.createHost(registerHostRequest, memberContext.getId());
+        hostService.createHost(writeHostInfoRequest, memberContext.getId());
         return Util.spring.responseEntityOf(RsData.success("Host 등록이 완료되었습니다."));
     }
 
     @Operation(summary = "호스트 수정 페이지", security = @SecurityRequirement(name = "bearerAuth"))
     @GetMapping("")
-    public ResponseEntity<RsData> editHostInfo(@AuthenticationPrincipal MemberContext memberContext){
-        EditHostResponse memberHostInfo = hostService.getMemberHostInfo(memberContext.getId());
-        return Util.spring.responseEntityOf(RsData.success("Host 수정 페이지로 이동합니다.", memberHostInfo));
+    public ResponseEntity<RsData> editHostInfoPage(@AuthenticationPrincipal MemberContext memberContext){
+        EditHostResponse hostInfo = hostService.getHostInfo(memberContext.getId());
+        return Util.spring.responseEntityOf(RsData.success("Host 수정 페이지로 이동합니다.", hostInfo));
     }
 
-
+    @Operation(summary = "호스트 정보 수정", security = @SecurityRequirement(name = "bearerAuth"))
+    @PatchMapping("")
+    public ResponseEntity<RsData> editHostInfo(@Valid @RequestBody WriteHostInfoRequest writeHostInfoRequest,
+                                               @AuthenticationPrincipal MemberContext memberContext){
+        hostService.updateHostInfo(writeHostInfoRequest, memberContext.getId());
+        return Util.spring.responseEntityOf(RsData.success("Host 정보가 수정되었습니다."));
+    }
 
 }

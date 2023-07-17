@@ -7,9 +7,9 @@ import lombok.Getter;
 
 @Getter
 @JsonNaming(value = PropertyNamingStrategy.SnakeCaseStrategy.class)
-public class RegisterHostRequest {
+public class WriteHostInfoRequest {
 
-    @Size(min = 10, max = 15, message = "자기소개는 10~15자로 입력해주세요.")
+    @Size(min = 2, max = 40, message = "자기소개는 2~40자로 입력해주세요.")
     private String introduction;
     private String hashTag;
     private Integer regionCode;
