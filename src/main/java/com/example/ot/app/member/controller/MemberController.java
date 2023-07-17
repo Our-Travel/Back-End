@@ -88,6 +88,7 @@ public class MemberController {
         return Util.spring.responseEntityOf(RsData.success("마이페이지입니다.", myPageResponse));
     }
 
+    @Operation(summary = "프로필 편집 페이지", security = @SecurityRequirement(name = "bearerAuth"))
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/profile")
     public ResponseEntity<RsData> showProfileEdit(@AuthenticationPrincipal MemberContext memberContext) {
@@ -95,6 +96,7 @@ public class MemberController {
         return Util.spring.responseEntityOf(RsData.success("프로필 편집페이지 입니다.", myPageResponse));
     }
 
+    @Operation(summary = "프로필 편집", security = @SecurityRequirement(name = "bearerAuth"))
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/profile")
     public ResponseEntity<RsData> updateProfile(@RequestParam("images")

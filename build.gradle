@@ -8,6 +8,10 @@ group = 'com.example'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '17'
 
+bootJar {
+    archiveFileName = 'ot.jar'
+}
+
 configurations {
     compileOnly {
         extendsFrom annotationProcessor
