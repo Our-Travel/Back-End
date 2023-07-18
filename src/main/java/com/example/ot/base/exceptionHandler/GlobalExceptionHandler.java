@@ -1,6 +1,6 @@
-package com.example.ot.app.base.exceptionHandler;
+package com.example.ot.base.exceptionHandler;
 
-import com.example.ot.app.base.rsData.RsData;
+import com.example.ot.base.rsData.RsData;
 import com.example.ot.app.host.exception.HostException;
 import com.example.ot.app.member.exception.MemberException;
 import com.example.ot.util.Util;

@@ -1,6 +1,6 @@
 package com.example.ot.app.host.controller;
 
-import com.example.ot.app.base.rsData.RsData;
+import com.example.ot.base.rsData.RsData;
 import com.example.ot.app.host.dto.request.WriteHostInfoRequest;
 import com.example.ot.app.host.dto.response.EditHostResponse;
 import com.example.ot.app.host.service.HostService;

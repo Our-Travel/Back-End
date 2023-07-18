@@ -1,6 +1,6 @@
 package com.example.ot.config.security;
 
-import com.example.ot.app.base.rsData.RsData;
+import com.example.ot.base.rsData.RsData;
 import com.example.ot.config.security.entryPoint.ApiAuthenticationEntryPoint;
 import com.example.ot.config.security.filter.JwtAuthorizationFilter;
 import com.fasterxml.jackson.databind.ObjectMapper;

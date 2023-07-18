@@ -1,6 +1,6 @@
 package com.example.ot.config.security.entryPoint;
 
-import com.example.ot.app.base.rsData.RsData;
+import com.example.ot.base.rsData.RsData;
 import com.example.ot.util.Util;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

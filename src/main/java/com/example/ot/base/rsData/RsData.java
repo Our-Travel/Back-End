@@ -1,4 +1,4 @@
-package com.example.ot.app.base.rsData;
+package com.example.ot.base.rsData;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;

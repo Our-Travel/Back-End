@@ -1,6 +1,6 @@
 package com.example.ot.app.member.entity;
 
-import com.example.ot.app.base.entity.BaseTimeEntity;
+import com.example.ot.base.entity.BaseTimeEntity;
 import com.example.ot.util.Util;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Column;

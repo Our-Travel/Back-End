@@ -1,6 +1,6 @@
 package com.example.ot.app.member.service;
 
-import com.example.ot.app.base.s3.S3ProfileUploader;
+import com.example.ot.base.s3.S3ProfileUploader;
 import com.example.ot.app.member.dto.request.SignUpRequest;
 import com.example.ot.app.member.dto.response.MyPageResponse;
 import com.example.ot.app.member.entity.Member;
