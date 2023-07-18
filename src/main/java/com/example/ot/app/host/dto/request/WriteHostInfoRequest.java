@@ -3,6 +3,7 @@ package com.example.ot.app.host.dto.request;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 
@@ -15,6 +16,6 @@ public class WriteHostInfoRequest {
     private String introduction;
     @NotBlank(message = "해시태그를 입력해주세요.")
     private String hashTag;
-    @NotBlank(message = "지역코드를 입력해주세요.")
+    @NotNull(message = "지역코드를 입력해주세요.")
     private Integer regionCode;
 }
