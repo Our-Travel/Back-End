@@ -29,9 +29,6 @@ public class HostService {
     @Transactional
     public void createHost(WriteHostInfoRequest writeHostInfoRequest, Long id){
         Member member = memberService.findById(id);
-        if(ObjectUtils.isEmpty(writeHostInfoRequest.getRegionCode())){
-            throw new HostException(NO_REGION_CODE);
-        }
         Host host = Host
                 .builder()
                 .introduction(writeHostInfoRequest.getIntroduction())
