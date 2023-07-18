@@ -14,5 +14,5 @@ spring:
 
   sql:
     init:
-      data-locations: classpath:data_h2.sql
+      data-locations: classpath:test_data_h2.sql
       mode: always
