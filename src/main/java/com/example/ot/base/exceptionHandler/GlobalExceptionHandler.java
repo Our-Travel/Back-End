@@ -15,6 +15,8 @@ import org.springframework.web.multipart.MultipartException;
 
 import java.util.stream.Collectors;
 
+import static com.example.ot.base.code.BasicErrorCode.*;
+
 @RestControllerAdvice(annotations = {RestController.class})
 public class GlobalExceptionHandler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -48,7 +50,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(MultipartException.class)
     public  ResponseEntity<RsData> NotExistsFile() {
-        return Util.spring.responseEntityOf(RsData.fail("파일을 업로드해주세요."));
+        return Util.spring.responseEntityOf(RsData.fail(FILE_NOT_EXISTS));
     }
 
     @ExceptionHandler({

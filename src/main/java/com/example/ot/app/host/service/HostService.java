@@ -7,15 +7,12 @@ import com.example.ot.app.host.entity.Host;
 import com.example.ot.app.host.exception.HostException;
 import com.example.ot.app.host.repository.HostRepository;
 import com.example.ot.app.member.entity.Member;
-import com.example.ot.app.member.exception.MemberException;
 import com.example.ot.app.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.ObjectUtils;
 
 import static com.example.ot.app.host.exception.ErrorCode.*;
-import static com.example.ot.app.member.exception.ErrorCode.NOT_EXISTS_USERNAME;
 
 @Service
 @RequiredArgsConstructor
@@ -42,21 +39,21 @@ public class HostService {
     }
 
     public EditHostResponse getHostInfo(Long id) {
-        Host host = hostRepository.findByMemberId(id).orElseThrow(() -> new HostException(NOT_EXISTS_HOST));
+        Host host = hostRepository.findByMemberId(id).orElseThrow(() -> new HostException(HOST_NOT_EXISTS));
         String hostHashTag = hashTagService.getHashTag(host.getId());
         return new EditHostResponse(host.getIntroduction(), hostHashTag, host.getRegionCode());
     }
 
     @Transactional
     public void updateHostInfo(WriteHostInfoRequest writeHostInfoRequest, Long id) {
-        Host host = hostRepository.findByMemberId(id).orElseThrow(() -> new HostException(NOT_EXISTS_HOST));
+        Host host = hostRepository.findByMemberId(id).orElseThrow(() -> new HostException(HOST_NOT_EXISTS));
         host.updateHostInfo(writeHostInfoRequest.getIntroduction(), writeHostInfoRequest.getRegionCode());
         hashTagService.updateHashTags(writeHostInfoRequest.getHashTag(), host);
     }
 
     @Transactional
     public void removeHostAuthorize(Long id) {
-        Host host = hostRepository.findByMemberId(id).orElseThrow(() -> new HostException(NOT_EXISTS_HOST));
+        Host host = hostRepository.findByMemberId(id).orElseThrow(() -> new HostException(HOST_NOT_EXISTS));
         memberService.findById(id).setHostAuthority(false);
         hashTagService.deleteHashTag(host.getId());
         hostRepository.delete(host);

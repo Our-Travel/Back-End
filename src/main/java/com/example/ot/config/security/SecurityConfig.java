@@ -17,6 +17,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+import static com.example.ot.base.code.BasicErrorCode.UNAUTHORIZED;
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 
 @Configuration
@@ -78,7 +79,7 @@ public class SecurityConfig implements WebMvcConfigurer {
                     response.setCharacterEncoding("utf-8");
                     response.setContentType("application/json; charset=UTF-8");
 
-                    RsData rsData = RsData.fail("권한이 없는 사용자입니다.");
+                    RsData rsData = RsData.fail(UNAUTHORIZED);
                     String json = new ObjectMapper().writeValueAsString(rsData);
 
                     response.getWriter().write(json);

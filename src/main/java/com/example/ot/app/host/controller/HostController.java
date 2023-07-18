@@ -17,6 +17,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import static com.example.ot.app.host.code.HostSuccessCode.*;
+
 @Tag(name = "호스트 설정")
 @Slf4j
 @RestController
@@ -32,7 +34,7 @@ public class HostController {
     public ResponseEntity<RsData> registerHost(@Valid @RequestBody WriteHostInfoRequest writeHostInfoRequest,
                                                @AuthenticationPrincipal MemberContext memberContext){
         hostService.createHost(writeHostInfoRequest, memberContext.getId());
-        return Util.spring.responseEntityOf(RsData.success("Host 등록이 완료되었습니다."));
+        return Util.spring.responseEntityOf(RsData.success(HOST_REGISTER));
     }
 
     @Operation(summary = "호스트 수정 페이지", security = @SecurityRequirement(name = "bearerAuth"))
@@ -40,7 +42,7 @@ public class HostController {
     @GetMapping("")
     public ResponseEntity<RsData> editHostInfoPage(@AuthenticationPrincipal MemberContext memberContext){
         EditHostResponse hostInfo = hostService.getHostInfo(memberContext.getId());
-        return Util.spring.responseEntityOf(RsData.success("Host 수정 페이지로 이동합니다.", hostInfo));
+        return Util.spring.responseEntityOf(RsData.success(HOST_EDIT_PAGE, hostInfo));
     }
 
     @Operation(summary = "호스트 정보 수정", security = @SecurityRequirement(name = "bearerAuth"))
@@ -49,7 +51,7 @@ public class HostController {
     public ResponseEntity<RsData> editHostInfo(@Valid @RequestBody WriteHostInfoRequest writeHostInfoRequest,
                                                @AuthenticationPrincipal MemberContext memberContext){
         hostService.updateHostInfo(writeHostInfoRequest, memberContext.getId());
-        return Util.spring.responseEntityOf(RsData.success("Host 정보가 수정되었습니다."));
+        return Util.spring.responseEntityOf(RsData.success(HOST_INFO_UPDATED));
     }
 
     @Operation(summary = "호스트 권한 삭제", security = @SecurityRequirement(name = "bearerAuth"))
@@ -57,7 +59,7 @@ public class HostController {
     @DeleteMapping("")
     public ResponseEntity<RsData> unAuthorizeHost(@AuthenticationPrincipal MemberContext memberContext){
         hostService.removeHostAuthorize(memberContext.getId());
-        return Util.spring.responseEntityOf(RsData.success("Host 권한을 삭제하였습니다."));
+        return Util.spring.responseEntityOf(RsData.success(HOST_DELETED));
     }
 
 }
