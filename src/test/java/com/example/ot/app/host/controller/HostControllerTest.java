@@ -339,6 +339,34 @@ public class HostControllerTest {
                 .andExpect(status().is4xxClientError());
     }
 
+    @Test
+    @DisplayName("각 지역의 호스트들을 불러옵니다.")
+    @WithUserDetails("user2@example.com")
+    void shouldGetHostsByRegionSuccessfully() throws Exception {
+        ResultActions resultActions = mvc
+                .perform(
+                        get("/api/hosts/list?regionCode=11020"))
+                .andDo(print());
+
+        // Then
+        resultActions
+                .andExpect(status().is2xxSuccessful());
+    }
+
+    @Test
+    @DisplayName("해당지역에 호스트가 없다면 실패")
+    @WithUserDetails("user2@example.com")
+    void shouldGetHostsByRegionFailDueToHostsNotExists() throws Exception {
+        ResultActions resultActions = mvc
+                .perform(
+                        get("/api/hosts/list?regionCode=11033"))
+                .andDo(print());
+
+        // Then
+        resultActions
+                .andExpect(status().is4xxClientError());
+    }
+
 
 
 }
