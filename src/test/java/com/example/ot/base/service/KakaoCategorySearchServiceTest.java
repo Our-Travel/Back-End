@@ -1,6 +1,7 @@
-package com.example.ot.app.api.service;
+package com.example.ot.base.service;
 
-import com.example.ot.app.api.dto.KakaoApiResponseDTO;
+import com.example.ot.base.api.dto.KakaoApiResponseDTO;
+import com.example.ot.base.api.service.KakaoCategorySearchService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

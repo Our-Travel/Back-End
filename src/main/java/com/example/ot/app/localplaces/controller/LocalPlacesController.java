@@ -1,19 +1,8 @@
 package com.example.ot.app.localplaces.controller;
 
-import com.example.ot.app.api.dto.KakaoApiResponseDTO;
-import com.example.ot.app.base.rsData.RsData;
-import com.example.ot.app.localplaces.entity.Hotel;
-import com.example.ot.app.localplaces.entity.Spot;
-import com.example.ot.app.localplaces.service.LocalPlacesService;
-import com.example.ot.config.security.entity.MemberContext;
-import com.example.ot.util.Util;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "주변 관광지, 숙박")

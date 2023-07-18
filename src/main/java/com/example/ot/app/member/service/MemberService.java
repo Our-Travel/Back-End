@@ -1,6 +1,6 @@
 package com.example.ot.app.member.service;
 
-import com.example.ot.app.base.s3.S3ProfileUploader;
+import com.example.ot.base.s3.S3ProfileUploader;
 import com.example.ot.app.member.dto.request.SignUpRequest;
 import com.example.ot.app.member.dto.response.MyPageResponse;
 import com.example.ot.app.member.entity.Member;
@@ -62,14 +62,14 @@ public class MemberService {
     // 아이디 중복체크.
     public void checkUsername(String username) {
         if(memberRepository.existsByUsername(username)){
-            throw new MemberException(EXISTS_USERNAME);
+            throw new MemberException(USERNAME_EXISTS);
         }
     }
 
     // 닉네임 중복체크.
     public void checkNickName(String nickName) {
         if(memberRepository.existsByNickName(nickName)){
-            throw new MemberException(EXISTS_NICKNAME);
+            throw new MemberException(NICKNAME_EXISTS);
         }
     }
 
@@ -80,7 +80,7 @@ public class MemberService {
     }
 
     public Member findByUsername(String username) {
-        return memberRepository.findByUsername(username).orElseThrow(() -> new MemberException(NOT_EXISTS_USERNAME));
+        return memberRepository.findByUsername(username).orElseThrow(() -> new MemberException(USERNAME_NOT_EXISTS));
     }
 
     public Member findById(Long id){
@@ -93,7 +93,7 @@ public class MemberService {
 
     public void verifyPassword(String password, String inputPassword) {
         if (!passwordEncoder.matches(inputPassword, password)) {
-            throw new MemberException(WRONG_PASSWORD);
+            throw new MemberException(PASSWORD_MISMATCH);
         }
     }
 

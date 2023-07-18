@@ -1,4 +1,4 @@
-package com.example.ot.app.api.service;
+package com.example.ot.base.api.service;
 
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponentsBuilder;

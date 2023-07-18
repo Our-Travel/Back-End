@@ -1,6 +1,6 @@
 package com.example.ot.app.host.entity;
 
-import com.example.ot.app.base.entity.BaseTimeEntity;
+import com.example.ot.base.entity.BaseTimeEntity;
 import com.example.ot.app.member.entity.Member;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;

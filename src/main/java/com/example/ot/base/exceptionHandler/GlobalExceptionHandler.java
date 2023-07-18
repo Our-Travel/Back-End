@@ -1,6 +1,6 @@
-package com.example.ot.app.base.exceptionHandler;
+package com.example.ot.base.exceptionHandler;
 
-import com.example.ot.app.base.rsData.RsData;
+import com.example.ot.base.rsData.RsData;
 import com.example.ot.app.host.exception.HostException;
 import com.example.ot.app.member.exception.MemberException;
 import com.example.ot.util.Util;
@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.multipart.MultipartException;
 
 import java.util.stream.Collectors;
+
+import static com.example.ot.base.code.BasicErrorCode.*;
 
 @RestControllerAdvice(annotations = {RestController.class})
 public class GlobalExceptionHandler {
@@ -48,7 +50,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(MultipartException.class)
     public  ResponseEntity<RsData> NotExistsFile() {
-        return Util.spring.responseEntityOf(RsData.fail("파일을 업로드해주세요."));
+        return Util.spring.responseEntityOf(RsData.fail(FILE_NOT_EXISTS));
     }
 
     @ExceptionHandler({

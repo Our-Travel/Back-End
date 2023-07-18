@@ -1,5 +1,6 @@
-package com.example.ot.app.base.rsData;
+package com.example.ot.base.rsData;
 
+import com.example.ot.base.code.Code;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
@@ -16,12 +17,23 @@ public class RsData<T> {
     private String msg;
     private T data;
 
-    public static <T> RsData<T> success(String msg, T data) {
-        return new RsData<>("S", msg, data);
+    public static <T> RsData<T> success(Code code, T data) {
+        return new RsData<>("S", code.getMessage(), data);
     }
 
+    public static <T> RsData<T> success(Code code) {
+        return success(code, null);
+    }
     public static <T> RsData<T> success(String msg) {
-        return success(msg, null);
+        return new RsData<>("S", msg, null);
+    }
+
+    public static <T> RsData<T> fail(Code code, T data) {
+        return new RsData<>("F", code.getMessage(), data);
+    }
+
+    public static <T> RsData<T> fail(Code code) {
+        return fail(code, null);
     }
 
     public static <T> RsData<T> fail(String msg, T data) {

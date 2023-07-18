@@ -1,6 +1,6 @@
-package com.example.ot.app.api.service;
+package com.example.ot.base.api.service;
 
-import com.example.ot.app.api.dto.KakaoApiResponseDTO;
+import com.example.ot.base.api.dto.KakaoApiResponseDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
