@@ -1,5 +1,6 @@
 package com.example.ot.app.host.controller;
 
+import com.example.ot.app.host.dto.response.HostInfoListResponse;
 import com.example.ot.base.rsData.RsData;
 import com.example.ot.app.host.dto.request.WriteHostInfoRequest;
 import com.example.ot.app.host.dto.response.EditHostResponse;
@@ -16,6 +17,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 import static com.example.ot.app.host.code.HostSuccessCode.*;
 
@@ -60,6 +63,14 @@ public class HostController {
     public ResponseEntity<RsData> unAuthorizeHost(@AuthenticationPrincipal MemberContext memberContext){
         hostService.removeHostAuthorize(memberContext.getId());
         return Util.spring.responseEntityOf(RsData.success(HOST_DELETED));
+    }
+
+    @Operation(summary = "각 지역의 호스트 목록", security = @SecurityRequirement(name = "bearerAuth"))
+    @GetMapping("")
+    public ResponseEntity<RsData> showHostListByRegion(@RequestParam("regionCode") Integer regionCode,
+                                                       @AuthenticationPrincipal MemberContext memberContext){
+        List<HostInfoListResponse> hostInfoListResponse = hostService.getHostListByRegion(regionCode);
+        return Util.spring.responseEntityOf(RsData.success(HOSTS_BY_REGION_FOUND, hostInfoListResponse));
     }
 
 }
