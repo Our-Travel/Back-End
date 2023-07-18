@@ -13,6 +13,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,6 +27,7 @@ public class HostController {
     private final HostService hostService;
 
     @Operation(summary = "호스트 등록", security = @SecurityRequirement(name = "bearerAuth"))
+    @PreAuthorize("isAuthenticated()")
     @PostMapping("")
     public ResponseEntity<RsData> registerHost(@Valid @RequestBody WriteHostInfoRequest writeHostInfoRequest,
                                                @AuthenticationPrincipal MemberContext memberContext){
@@ -34,6 +36,7 @@ public class HostController {
     }
 
     @Operation(summary = "호스트 수정 페이지", security = @SecurityRequirement(name = "bearerAuth"))
+    @PreAuthorize("hasAuthority('host')")
     @GetMapping("")
     public ResponseEntity<RsData> editHostInfoPage(@AuthenticationPrincipal MemberContext memberContext){
         EditHostResponse hostInfo = hostService.getHostInfo(memberContext.getId());
@@ -41,6 +44,7 @@ public class HostController {
     }
 
     @Operation(summary = "호스트 정보 수정", security = @SecurityRequirement(name = "bearerAuth"))
+    @PreAuthorize("hasAuthority('host')")
     @PatchMapping("")
     public ResponseEntity<RsData> editHostInfo(@Valid @RequestBody WriteHostInfoRequest writeHostInfoRequest,
                                                @AuthenticationPrincipal MemberContext memberContext){
@@ -49,6 +53,7 @@ public class HostController {
     }
 
     @Operation(summary = "호스트 권한 삭제", security = @SecurityRequirement(name = "bearerAuth"))
+    @PreAuthorize("hasAuthority('host')")
     @DeleteMapping("")
     public ResponseEntity<RsData> unAuthorizeHost(@AuthenticationPrincipal MemberContext memberContext){
         hostService.removeHostAuthorize(memberContext.getId());
