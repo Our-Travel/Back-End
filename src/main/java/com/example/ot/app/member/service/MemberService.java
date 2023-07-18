@@ -133,11 +133,19 @@ public class MemberService {
     }
 
     public MyPageResponse getMemberInfo(MemberContext member) {
-        ProfileImage profileImage = profileImageRepository.findByMemberId(member.getId()).orElse(null);
+        String profileImage = getMemberProfileImage(member.getId());
         if(ObjectUtils.isEmpty(profileImage)){
             return new MyPageResponse(member.getUsername(), member.getNickName(), null);
         }
-        return new MyPageResponse(member.getUsername(), member.getNickName(), profileImage.getFullPath());
+        return new MyPageResponse(member.getUsername(), member.getNickName(), profileImage);
+    }
+
+    public String getMemberProfileImage(Long memberId){
+        ProfileImage profileImage = profileImageRepository.findByMemberId(memberId).orElse(null);
+        if(ObjectUtils.isEmpty(profileImage)){
+            return null;
+        }
+        return profileImage.getFullPath();
     }
 
     @Transactional
