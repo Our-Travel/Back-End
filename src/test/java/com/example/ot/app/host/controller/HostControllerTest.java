@@ -65,7 +65,7 @@ public class HostControllerTest {
     }
 
     @Test
-    @DisplayName("host 등록에서 지역을 안넣는 경우 오류발생")
+    @DisplayName("host 등록에서 지역코드를 입력하지 않는 경우 오류발생")
     @WithUserDetails("user1@example.com")
     void shouldFailWithoutRegion() throws Exception {
         // When
@@ -89,7 +89,7 @@ public class HostControllerTest {
     }
 
     @Test
-    @DisplayName("host 등록에서 자기소개 10~15자 아닌 경우 오류발생")
+    @DisplayName("host 등록에서 자기소개 2~40자 아닌 경우 오류발생")
     @WithUserDetails("user1@example.com")
     void shouldFailWithInvalidIntroLength() throws Exception {
         // When
@@ -98,7 +98,7 @@ public class HostControllerTest {
                         post("/api/hosts")
                                 .content("""
                                     {
-                                        "introduction": "안녕하세요. 저는 호스트가 되고싶어요. 잘부탁드립니다.",
+                                        "introduction": "아",
                                         "hash_tag": "#호스트 #여행",
                                         "region_code": 10001
                                     }
@@ -117,7 +117,7 @@ public class HostControllerTest {
                         post("/api/hosts")
                                 .content("""
                                     {
-                                        "introduction": "저는 ",
+                                        "introduction": "이",
                                         "hash_tag": "#호스트 #여행",
                                         "region_code": 10001
                                     }
