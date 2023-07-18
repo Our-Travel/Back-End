@@ -47,9 +47,9 @@ public class MemberControllerTest {
                         post("/api/members/signup")
                                 .content("""
                                         {
-                                            "username": "user5@example.com",
+                                            "username": "user2222@example.com",
                                             "password": "@a2123456",
-                                            "nick_name": "user5"
+                                            "nick_name": "user2222"
                                         }
                                         """.stripIndent())
                                 .contentType(new MediaType(MediaType.APPLICATION_JSON, StandardCharsets.UTF_8))
@@ -113,7 +113,7 @@ public class MemberControllerTest {
     @DisplayName("아이디 중복 체크 요청이 성공적으로 처리되어야 한다")
     void shouldPassUsernameCheck() throws Exception {
         // Given
-        String username = "user4@example.com";
+        String username = "user222@example.com";
 
         // When
         ResultActions resultActions = mvc
