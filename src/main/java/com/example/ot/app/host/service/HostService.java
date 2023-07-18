@@ -65,7 +65,11 @@ public class HostService {
     }
 
     public List<HostInfoListResponse> getHostListByRegion(Integer regionCode) {
-        List<Host> hostList = hostRepository.findHostByRegionCode(regionCode).orElseThrow(() -> new HostException(HOSTS_NOT_EXISTS_BY_REGION));
+        List<Host> hostList = hostRepository.findHostByRegionCode(regionCode);
+
+        if (hostList.isEmpty()) {
+            throw new HostException(HOST_NOT_EXISTS_BY_REGION);
+        }
 
         return hostList.stream()
                 .map(this::mapToHostInfoListResponse)

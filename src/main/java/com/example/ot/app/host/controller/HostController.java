@@ -66,7 +66,7 @@ public class HostController {
     }
 
     @Operation(summary = "각 지역의 호스트 목록", security = @SecurityRequirement(name = "bearerAuth"))
-    @GetMapping("")
+    @GetMapping("/list")
     public ResponseEntity<RsData> showHostListByRegion(@RequestParam("regionCode") Integer regionCode,
                                                        @AuthenticationPrincipal MemberContext memberContext){
         List<HostInfoListResponse> hostInfoListResponse = hostService.getHostListByRegion(regionCode);

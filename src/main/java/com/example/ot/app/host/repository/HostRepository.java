@@ -12,5 +12,5 @@ public interface HostRepository extends JpaRepository<Host, Long> {
     Optional<Host> findByMemberId(long id);
 
     @Query("select h from Host h where h.regionCode = :regionCode")
-    Optional<List<Host>> findHostByRegionCode(@Param("regionCode")Integer regionCode);
+    List<Host> findHostByRegionCode(@Param("regionCode")Integer regionCode);
 }
