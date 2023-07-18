@@ -1,6 +1,6 @@
 package com.example.ot.app.member.controller;
 
-import com.example.ot.app.base.rsData.RsData;
+import com.example.ot.base.rsData.RsData;
 import com.example.ot.app.member.dto.request.SignInRequest;
 import com.example.ot.app.member.dto.request.SignUpRequest;
 import com.example.ot.app.member.dto.response.MyPageResponse;
@@ -23,6 +23,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 
+import static com.example.ot.app.member.code.MemberSuccessCode.*;
+
 
 @Tag(name = "로그인 및 회원가입")
 @Slf4j
@@ -39,7 +41,7 @@ public class MemberController {
         memberService.check(signUpRequest);
         memberService.create(signUpRequest);
 
-        return Util.spring.responseEntityOf(RsData.success("회원가입이 완료되었습니다."));
+        return Util.spring.responseEntityOf(RsData.success(SIGNUP_CREATED));
     }
 
     @Operation(summary = "아이디 중복체크")
@@ -47,9 +49,7 @@ public class MemberController {
     public ResponseEntity<RsData> checkUsername(@PathVariable @NotBlank(message = "아이디를 입력해주세요.") String username){
         memberService.checkUsername(username);
 
-        return Util.spring.responseEntityOf(
-                RsData.success("S-1", "%s는 사용가능한 이메일입니다.".formatted(username))
-        );
+        return Util.spring.responseEntityOf(RsData.success(EMAIL_AVAILABLE.formatted(username)));
     }
 
     @Operation(summary = "닉네임 중복체크")
@@ -57,9 +57,7 @@ public class MemberController {
     public ResponseEntity<RsData> checkNickName(@PathVariable @NotBlank(message = "닉네임을 입력해주세요.") String nickName){
         memberService.checkNickName(nickName);
 
-        return Util.spring.responseEntityOf(
-                RsData.success("S-1", "%s는 사용가능한 닉네임입니다.".formatted(nickName))
-        );
+        return Util.spring.responseEntityOf(RsData.success(NICKNAME_AVAILABLE.formatted(nickName)));
     }
 
     @Operation(summary = "로그인")
@@ -71,7 +69,7 @@ public class MemberController {
         String accessToken = memberService.genAccessToken(member);
 
         return Util.spring.responseEntityOf(
-                RsData.success("로그인이 성공적으로 완료되었습니다.",
+                RsData.success(LOGIN_COMPLETED,
                         Util.mapOf(
                                 "access_token", accessToken
                         )
@@ -85,7 +83,7 @@ public class MemberController {
     @GetMapping("")
     public ResponseEntity<RsData> showMyPage(@AuthenticationPrincipal MemberContext memberContext) {
         MyPageResponse myPageResponse = memberService.getMemberInfo(memberContext);
-        return Util.spring.responseEntityOf(RsData.success("마이페이지입니다.", myPageResponse));
+        return Util.spring.responseEntityOf(RsData.success(MY_PAGE, myPageResponse));
     }
 
     @Operation(summary = "프로필 편집 페이지", security = @SecurityRequirement(name = "bearerAuth"))
@@ -93,7 +91,7 @@ public class MemberController {
     @GetMapping("/profile")
     public ResponseEntity<RsData> showProfileEdit(@AuthenticationPrincipal MemberContext memberContext) {
         MyPageResponse myPageResponse = memberService.getMemberInfo(memberContext);
-        return Util.spring.responseEntityOf(RsData.success("프로필 편집페이지 입니다.", myPageResponse));
+        return Util.spring.responseEntityOf(RsData.success(PROFILE_EDIT_PAGE, myPageResponse));
     }
 
     @Operation(summary = "프로필 편집", security = @SecurityRequirement(name = "bearerAuth"))
@@ -102,7 +100,7 @@ public class MemberController {
     public ResponseEntity<RsData> updateProfile(@RequestParam("images")
                                 MultipartFile file, @AuthenticationPrincipal MemberContext memberContext) throws IOException {
         memberService.updateProfile(memberContext.getId(), file);
-        return Util.spring.responseEntityOf(RsData.success("프로필 편집완료"));
+        return Util.spring.responseEntityOf(RsData.success(PROFILE_UPDATED));
     }
 
 }

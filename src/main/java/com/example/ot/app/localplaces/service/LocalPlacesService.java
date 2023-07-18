@@ -1,8 +1,8 @@
 package com.example.ot.app.localplaces.service;
 
-import com.example.ot.app.api.dto.DocumentDTO;
-import com.example.ot.app.api.dto.KakaoApiResponseDTO;
-import com.example.ot.app.api.service.KakaoCategorySearchService;
+import com.example.ot.base.api.dto.DocumentDTO;
+import com.example.ot.base.api.dto.KakaoApiResponseDTO;
+import com.example.ot.base.api.service.KakaoCategorySearchService;
 import com.example.ot.app.localplaces.entity.Hotel;
 import com.example.ot.app.localplaces.entity.Spot;
 import com.example.ot.app.localplaces.repository.HotelRepository;

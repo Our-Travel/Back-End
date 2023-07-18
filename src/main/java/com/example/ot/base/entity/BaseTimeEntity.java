@@ -1,4 +1,4 @@
-package com.example.ot.app.base.entity;
+package com.example.ot.base.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;

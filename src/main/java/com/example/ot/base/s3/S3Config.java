@@ -1,4 +1,4 @@
-package com.example.ot.app.base.s3;
+package com.example.ot.base.s3;
 
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;

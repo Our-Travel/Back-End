@@ -1,6 +1,6 @@
 package com.example.ot.app.hashtag.entity;
 
-import com.example.ot.app.base.entity.BaseTimeEntity;
+import com.example.ot.base.entity.BaseTimeEntity;
 import com.example.ot.app.host.entity.Host;
 import com.example.ot.app.keyword.entity.Keyword;
 import jakarta.persistence.Entity;

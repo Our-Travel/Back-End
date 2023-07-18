@@ -1,6 +1,6 @@
 package com.example.ot.app.keyword.entity;
 
-import com.example.ot.app.base.entity.BaseTimeEntity;
+import com.example.ot.base.entity.BaseTimeEntity;
 import jakarta.persistence.Entity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
