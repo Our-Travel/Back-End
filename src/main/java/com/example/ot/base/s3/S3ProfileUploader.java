@@ -5,6 +5,7 @@ import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.example.ot.app.member.entity.ProfileImage;
+import com.example.ot.base.s3.exception.ProfileUploadException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -14,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -29,8 +31,8 @@ public class S3ProfileUploader {
     private String dir;
 
     public ProfileImage uploadFile(MultipartFile multipartFile) throws IOException {
-        File uploadFile = convert(multipartFile)  // 파일 변환할 수 없으면 에러
-                .orElseThrow(() -> new IllegalArgumentException("error: MultipartFile -> File convert fail"));
+        File uploadFile = convert(multipartFile).orElseThrow(ProfileUploadException::new);  // 파일 변환할 수 없으면 에러
+
         return upload(uploadFile, dir);
     }
 

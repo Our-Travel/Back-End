@@ -19,7 +19,7 @@ public class BoardService {
 
     @Transactional
     public void createBoard(CreateBoardRequest createBoardRequest, Long id) {
-        Member member = memberService.findById(id);
+        Member member = memberService.findByMemberId(id);
         Board board = Board.builder()
                 .title(createBoardRequest.getTitle())
                 .content(createBoardRequest.getContent())

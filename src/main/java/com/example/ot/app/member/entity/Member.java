@@ -1,5 +1,6 @@
 package com.example.ot.app.member.entity;
 
+import com.example.ot.app.member.dto.request.SignUpRequest;
 import com.example.ot.base.entity.BaseTimeEntity;
 import com.example.ot.util.Util;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -62,6 +63,15 @@ public class Member extends BaseTimeEntity {
             authorities.add(new SimpleGrantedAuthority("HOST"));
         }
         return authorities;
+    }
+
+    public static Member of(String providerTypeCode, SignUpRequest signUpRequest, String password){
+        return Member.builder()
+                .username(signUpRequest.getUsername())
+                .password(password)
+                .nickName(signUpRequest.getNickName())
+                .providerTypeCode(providerTypeCode)
+                .build();
     }
 
     public Map<String, Object> getAccessTokenClaims() {

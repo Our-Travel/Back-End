@@ -13,6 +13,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -38,9 +39,7 @@ public class MemberController {
     @Operation(summary = "회원가입")
     @PostMapping("/signup")
     public ResponseEntity<RsData> signUp(@Valid @RequestBody SignUpRequest signUpRequest){
-        memberService.check(signUpRequest);
         memberService.create(signUpRequest);
-
         return Util.spring.responseEntityOf(RsData.success(SIGNUP_CREATED));
     }
 
@@ -48,7 +47,6 @@ public class MemberController {
     @GetMapping("/exists/username/{username}")
     public ResponseEntity<RsData> checkUsername(@PathVariable @NotBlank(message = "아이디를 입력해주세요.") String username){
         memberService.checkUsername(username);
-
         return Util.spring.responseEntityOf(RsData.success(EMAIL_AVAILABLE.formatted(username)));
     }
 
@@ -56,7 +54,6 @@ public class MemberController {
     @GetMapping("/exists/nickName/{nickName}")
     public ResponseEntity<RsData> checkNickName(@PathVariable @NotBlank(message = "닉네임을 입력해주세요.") String nickName){
         memberService.checkNickName(nickName);
-
         return Util.spring.responseEntityOf(RsData.success(NICKNAME_AVAILABLE.formatted(nickName)));
     }
 
@@ -67,9 +64,7 @@ public class MemberController {
         memberService.verifyPassword(member.getPassword(), signInRequest.getPassword());
 
         String accessToken = memberService.genAccessToken(member);
-
-        return Util.spring.responseEntityOf(
-                RsData.success(LOGIN_COMPLETED),
+        return Util.spring.responseEntityOf(RsData.success(LOGIN_COMPLETED),
                 Util.spring.httpHeadersOf("Authentication", accessToken)
         );
     }
