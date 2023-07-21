@@ -69,11 +69,7 @@ public class MemberController {
         String accessToken = memberService.genAccessToken(member);
 
         return Util.spring.responseEntityOf(
-                RsData.success(LOGIN_COMPLETED,
-                        Util.mapOf(
-                                "access_token", accessToken
-                        )
-                ),
+                RsData.success(LOGIN_COMPLETED),
                 Util.spring.httpHeadersOf("Authentication", accessToken)
         );
     }
