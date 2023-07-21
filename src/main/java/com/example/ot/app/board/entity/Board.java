@@ -1,5 +1,6 @@
 package com.example.ot.app.board.entity;
 
+import com.example.ot.app.board.dto.request.CreateBoardRequest;
 import com.example.ot.app.member.entity.Member;
 import com.example.ot.base.entity.BaseTimeEntity;
 import jakarta.persistence.Entity;
@@ -22,4 +23,12 @@ public class Board extends BaseTimeEntity {
 
     @OneToOne(fetch = FetchType.LAZY)
     private Member member;
+
+    public static Board of(CreateBoardRequest createBoardRequest, Member member){
+        return Board.builder()
+                .title(createBoardRequest.getTitle())
+                .content(createBoardRequest.getContent())
+                .member(member)
+                .build();
+    }
 }

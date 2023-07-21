@@ -20,12 +20,7 @@ public class BoardService {
     @Transactional
     public void createBoard(CreateBoardRequest createBoardRequest, Long id) {
         Member member = memberService.findByMemberId(id);
-        Board board = Board.builder()
-                .title(createBoardRequest.getTitle())
-                .content(createBoardRequest.getContent())
-                .member(member)
-                .build();
-
+        Board board = Board.of(createBoardRequest, member);
         boardRepository.save(board);
     }
 }
