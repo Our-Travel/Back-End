@@ -69,18 +69,14 @@ public class MemberController {
         String accessToken = memberService.genAccessToken(member);
 
         return Util.spring.responseEntityOf(
-                RsData.success(LOGIN_COMPLETED,
-                        Util.mapOf(
-                                "access_token", accessToken
-                        )
-                ),
+                RsData.success(LOGIN_COMPLETED),
                 Util.spring.httpHeadersOf("Authentication", accessToken)
         );
     }
 
     @Operation(summary = "마이페이지", security = @SecurityRequirement(name = "bearerAuth"))
     @PreAuthorize("isAuthenticated()")
-    @GetMapping("")
+    @GetMapping
     public ResponseEntity<RsData> showMyPage(@AuthenticationPrincipal MemberContext memberContext) {
         MyPageResponse myPageResponse = memberService.getMemberInfo(memberContext);
         return Util.spring.responseEntityOf(RsData.success(MY_PAGE, myPageResponse));
