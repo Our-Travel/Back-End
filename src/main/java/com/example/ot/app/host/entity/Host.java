@@ -10,12 +10,16 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @SuperBuilder
 @Entity
 @Getter
+@SQLDelete(sql = "UPDATE host SET deleted_date = NOW() where id = ?")
+@Where(clause = "deleted_date is NULL")
 public class Host extends BaseTimeEntity {
 
     private String introduction;
