@@ -19,10 +19,7 @@ public class KeywordService {
             return optKeyword.get();
         }
 
-        Keyword keyword = Keyword
-                .builder()
-                .content(keywordContent)
-                .build();
+        Keyword keyword = Keyword.of(keywordContent);
 
         keywordRepository.save(keyword);
 

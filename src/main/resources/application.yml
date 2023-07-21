@@ -1,8 +1,4 @@
 spring:
-  mvc:
-    hiddenmethod:
-      filter:
-        enabled: true
   profiles:
     active: dev
     include: secret
@@ -52,4 +48,4 @@ logging:
 kakao:
   rest:
     api:
-      key: '카카오 REST API KEY'
+      key: '${kakao.rest.api.key}'
