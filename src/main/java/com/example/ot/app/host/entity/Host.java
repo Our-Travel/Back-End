@@ -1,8 +1,8 @@
 package com.example.ot.app.host.entity;
 
 import com.example.ot.app.host.dto.request.WriteHostInfoRequest;
-import com.example.ot.base.entity.BaseTimeEntity;
 import com.example.ot.app.member.entity.Member;
+import com.example.ot.base.entity.BaseTimeEntity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.OneToOne;

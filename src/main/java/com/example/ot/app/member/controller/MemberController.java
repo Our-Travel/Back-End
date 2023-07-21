@@ -1,11 +1,11 @@
 package com.example.ot.app.member.controller;
 
-import com.example.ot.base.rsData.RsData;
 import com.example.ot.app.member.dto.request.SignInRequest;
 import com.example.ot.app.member.dto.request.SignUpRequest;
 import com.example.ot.app.member.dto.response.MyPageResponse;
 import com.example.ot.app.member.entity.Member;
 import com.example.ot.app.member.service.MemberService;
+import com.example.ot.base.rsData.RsData;
 import com.example.ot.config.security.entity.MemberContext;
 import com.example.ot.util.Util;
 import io.swagger.v3.oas.annotations.Operation;
@@ -13,7 +13,6 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;

@@ -17,7 +17,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.example.ot.app.host.exception.ErrorCode.*;
+import static com.example.ot.app.host.exception.ErrorCode.HOST_NOT_EXISTS;
+import static com.example.ot.app.host.exception.ErrorCode.HOST_NOT_EXISTS_BY_REGION;
 
 @Service
 @RequiredArgsConstructor

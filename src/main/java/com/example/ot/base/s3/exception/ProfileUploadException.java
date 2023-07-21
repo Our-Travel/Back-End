@@ -1,7 +1,5 @@
 package com.example.ot.base.s3.exception;
 
-import com.example.ot.app.member.exception.ErrorCode;
-
 import java.util.NoSuchElementException;
 
 public class ProfileUploadException extends NoSuchElementException {

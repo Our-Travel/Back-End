@@ -2,7 +2,6 @@ package com.example.ot.app.member.dto.response;
 
 import com.example.ot.app.member.entity.Member;
 import com.example.ot.app.member.entity.ProfileImage;
-import com.example.ot.config.security.entity.MemberContext;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

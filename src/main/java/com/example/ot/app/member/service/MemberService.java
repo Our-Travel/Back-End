@@ -1,6 +1,5 @@
 package com.example.ot.app.member.service;
 
-import com.example.ot.base.s3.S3ProfileUploader;
 import com.example.ot.app.member.dto.request.SignUpRequest;
 import com.example.ot.app.member.dto.response.MyPageResponse;
 import com.example.ot.app.member.entity.Member;
@@ -8,8 +7,8 @@ import com.example.ot.app.member.entity.ProfileImage;
 import com.example.ot.app.member.exception.MemberException;
 import com.example.ot.app.member.repository.MemberRepository;
 import com.example.ot.app.member.repository.ProfileImageRepository;
+import com.example.ot.base.s3.S3ProfileUploader;
 import com.example.ot.config.AppConfig;
-import com.example.ot.config.security.entity.MemberContext;
 import com.example.ot.config.security.jwt.JwtProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CachePut;
@@ -23,7 +22,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.Map;
-import java.util.Optional;
 
 import static com.example.ot.app.member.exception.ErrorCode.*;
 

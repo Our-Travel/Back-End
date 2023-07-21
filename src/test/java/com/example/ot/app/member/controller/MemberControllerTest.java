@@ -1,7 +1,6 @@
 package com.example.ot.app.member.controller;
 
 import com.example.ot.app.member.dto.request.SignUpRequest;
-import com.example.ot.app.member.entity.Member;
 import com.example.ot.app.member.service.MemberService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

@@ -1,7 +1,7 @@
 package com.example.ot.app.localplaces.entity;
 
-import com.example.ot.base.entity.BaseTimeEntity;
 import com.example.ot.app.member.entity.Member;
+import com.example.ot.base.entity.BaseTimeEntity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.ManyToOne;
