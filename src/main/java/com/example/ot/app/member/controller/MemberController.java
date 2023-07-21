@@ -73,7 +73,7 @@ public class MemberController {
     @PreAuthorize("isAuthenticated()")
     @GetMapping
     public ResponseEntity<RsData> showMyPage(@AuthenticationPrincipal MemberContext memberContext) {
-        MyPageResponse myPageResponse = memberService.getMemberInfo(memberContext);
+        MyPageResponse myPageResponse = memberService.getMemberInfo(memberContext.getId());
         return Util.spring.responseEntityOf(RsData.success(MY_PAGE, myPageResponse));
     }
 
@@ -81,7 +81,7 @@ public class MemberController {
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/profile")
     public ResponseEntity<RsData> showProfileEdit(@AuthenticationPrincipal MemberContext memberContext) {
-        MyPageResponse myPageResponse = memberService.getMemberInfo(memberContext);
+        MyPageResponse myPageResponse = memberService.getMemberInfo(memberContext.getId());
         return Util.spring.responseEntityOf(RsData.success(PROFILE_EDIT_PAGE, myPageResponse));
     }
 

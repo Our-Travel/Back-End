@@ -124,7 +124,8 @@ public class MemberService {
         return member.toMap();
     }
 
-    public MyPageResponse getMemberInfo(MemberContext member) {
+    public MyPageResponse getMemberInfo(Long memberId) {
+        Member member = findByMemberId(memberId);
         ProfileImage profileImage = getMemberProfileImage(member.getId());
         return MyPageResponse.fromMember(member, profileImage);
     }
