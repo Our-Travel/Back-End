@@ -32,7 +32,7 @@ public class BoardController {
 
     @Operation(summary = "게시판 생성", security = @SecurityRequirement(name = "bearerAuth"))
     @PreAuthorize("isAuthenticated()")
-    @PostMapping("")
+    @PostMapping
     public ResponseEntity<RsData> createBoard(@Valid @RequestBody CreateBoardRequest createBoardRequest,
                                                @AuthenticationPrincipal MemberContext memberContext){
         boardService.createBoard(createBoardRequest, memberContext.getId());

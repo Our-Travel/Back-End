@@ -76,7 +76,7 @@ public class MemberController {
 
     @Operation(summary = "마이페이지", security = @SecurityRequirement(name = "bearerAuth"))
     @PreAuthorize("isAuthenticated()")
-    @GetMapping("")
+    @GetMapping
     public ResponseEntity<RsData> showMyPage(@AuthenticationPrincipal MemberContext memberContext) {
         MyPageResponse myPageResponse = memberService.getMemberInfo(memberContext);
         return Util.spring.responseEntityOf(RsData.success(MY_PAGE, myPageResponse));
