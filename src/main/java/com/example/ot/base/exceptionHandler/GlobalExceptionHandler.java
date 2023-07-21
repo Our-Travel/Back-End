@@ -42,16 +42,6 @@ public class GlobalExceptionHandler {
         return Util.spring.responseEntityOf(RsData.fail(msg, data));
     }
 
-    @ExceptionHandler(RuntimeException.class)
-    @ResponseStatus(INTERNAL_SERVER_ERROR)
-    public RsData<String> errorHandler(RuntimeException exception) {
-        String msg = exception.getClass().toString();
-
-        String data = exception.getMessage();
-
-        return RsData.fail(msg, data);
-    }
-
     @ExceptionHandler(MultipartException.class)
     public  ResponseEntity<RsData> NotExistsFile() {
         return Util.spring.responseEntityOf(RsData.fail(FILE_NOT_EXISTS));

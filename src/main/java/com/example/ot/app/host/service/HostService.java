@@ -31,12 +31,7 @@ public class HostService {
     @Transactional
     public void createHost(WriteHostInfoRequest writeHostInfoRequest, Long id){
         Member member = memberService.findByMemberId(id);
-        Host host = Host
-                .builder()
-                .introduction(writeHostInfoRequest.getIntroduction())
-                .member(member)
-                .regionCode(writeHostInfoRequest.getRegionCode())
-                .build();
+        Host host = Host.of(writeHostInfoRequest, member);
         hostRepository.save(host);
         member.setHostAuthority(true);
 //        memberService.putMemberMapByUsername__cached(member.getId());
@@ -46,7 +41,7 @@ public class HostService {
     public EditHostResponse getHostInfo(Long id) {
         Host host = hostRepository.findByMemberId(id).orElseThrow(() -> new HostException(HOST_NOT_EXISTS));
         String hostHashTag = hashTagService.getHashTag(host.getId());
-        return new EditHostResponse(host.getIntroduction(), hostHashTag, host.getRegionCode());
+        return EditHostResponse.fromHost(host, hostHashTag);
     }
 
     @Transactional
@@ -78,17 +73,7 @@ public class HostService {
 
     private HostInfoListResponse mapToHostInfoListResponse(Host host) {
         String hashTag = hashTagService.getHashTag(host.getId());
-        Long memberId = host.getMember().getId();
-        String nickName = host.getMember().getNickName();
-        String introduction = host.getIntroduction();
-        ProfileImage hostProfileImage = memberService.getMemberProfileImage(memberId);
-
-        return HostInfoListResponse.builder()
-                .memberId(memberId)
-                .hashTag(hashTag)
-                .nickName(nickName)
-                .introduction(introduction)
-                .hostProfileImage(hostProfileImage.getFullPath())
-                .build();
+        ProfileImage hostProfileImage = memberService.getMemberProfileImage(host.getMember().getId());
+        return HostInfoListResponse.fromHost(host, hashTag, hostProfileImage);
     }
 }

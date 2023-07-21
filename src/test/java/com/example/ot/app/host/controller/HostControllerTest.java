@@ -341,7 +341,7 @@ public class HostControllerTest {
 
     @Test
     @DisplayName("각 지역의 호스트들을 불러옵니다.")
-    @WithUserDetails("user2@example.com")
+    @WithUserDetails("user1@example.com")
     void shouldGetHostsByRegionSuccessfully() throws Exception {
         ResultActions resultActions = mvc
                 .perform(
