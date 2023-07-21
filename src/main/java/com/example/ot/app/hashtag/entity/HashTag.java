@@ -22,4 +22,11 @@ public class HashTag extends BaseTimeEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Keyword keyword;
+
+    public static HashTag of(Host host, Keyword keyword){
+        return HashTag.builder()
+                .host(host)
+                .keyword(keyword)
+                .build();
+    }
 }

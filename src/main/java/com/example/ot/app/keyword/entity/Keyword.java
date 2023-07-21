@@ -11,7 +11,10 @@ import lombok.experimental.SuperBuilder;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-@SuperBuilder
 public class Keyword extends BaseTimeEntity {
     private String content;
+
+    public static Keyword of(String keywordContent) {
+        return new Keyword(keywordContent);
+    }
 }
