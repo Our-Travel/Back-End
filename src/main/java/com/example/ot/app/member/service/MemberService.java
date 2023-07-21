@@ -1,6 +1,5 @@
 package com.example.ot.app.member.service;
 
-import com.example.ot.base.s3.S3ProfileUploader;
 import com.example.ot.app.member.dto.request.SignUpRequest;
 import com.example.ot.app.member.dto.response.MyPageResponse;
 import com.example.ot.app.member.entity.Member;
@@ -8,11 +7,10 @@ import com.example.ot.app.member.entity.ProfileImage;
 import com.example.ot.app.member.exception.MemberException;
 import com.example.ot.app.member.repository.MemberRepository;
 import com.example.ot.app.member.repository.ProfileImageRepository;
+import com.example.ot.base.s3.S3ProfileUploader;
 import com.example.ot.config.AppConfig;
-import com.example.ot.config.security.entity.MemberContext;
 import com.example.ot.config.security.jwt.JwtProvider;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -24,12 +22,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.Map;
-import java.util.Optional;
 
 import static com.example.ot.app.member.exception.ErrorCode.*;
 
-
-@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -43,20 +38,15 @@ public class MemberService {
 
     @Transactional
     public void create(SignUpRequest signUpRequest){
+        checkUsernameAndNickName(signUpRequest);
         create("OT", signUpRequest);
     }
 
     // 회원가입 생성.
     private void create(String providerTypeCode, SignUpRequest signUpRequest){
-        Member member = Member.builder()
-                .username(signUpRequest.getUsername())
-                .password(passwordEncoder.encode(signUpRequest.getPassword()))
-                .nickName(signUpRequest.getNickName())
-                .providerTypeCode(providerTypeCode)
-                .build();
-        
+        String password = passwordEncoder.encode(signUpRequest.getPassword());
+        Member member = Member.of(providerTypeCode, signUpRequest, password);
         memberRepository.save(member);
-        log.info("회원가입 완료");
     }
 
     // 아이디 중복체크.
@@ -74,7 +64,7 @@ public class MemberService {
     }
 
     // 아이디 닉네임 동시체크
-    public void check(SignUpRequest signUpRequest) {
+    private void checkUsernameAndNickName(SignUpRequest signUpRequest) {
         checkUsername(signUpRequest.getUsername());
         checkNickName(signUpRequest.getNickName());
     }
@@ -83,7 +73,7 @@ public class MemberService {
         return memberRepository.findByUsername(username).orElseThrow(() -> new MemberException(USERNAME_NOT_EXISTS));
     }
 
-    public Member findById(Long id){
+    public Member findByMemberId(Long id){
         return memberRepository.findById(id).orElseThrow(() -> new MemberException(MEMBER_NOT_EXISTS));
     }
 
@@ -122,49 +112,41 @@ public class MemberService {
 
     @Cacheable("member")
     public Map<String, Object> getMemberMapByMemberId__cached(Long id) {
-        Member member = findById(id);
+        Member member = findByMemberId(id);
         return member.toMap();
     }
 
     @CachePut("member")
     public Map<String, Object> putMemberMapByUsername__cached(Long id) {
-        Member member = findById(id);
+        Member member = findByMemberId(id);
         return member.toMap();
     }
 
-    public MyPageResponse getMemberInfo(MemberContext member) {
-        String profileImage = getMemberProfileImage(member.getId());
-        if(ObjectUtils.isEmpty(profileImage)){
-            return new MyPageResponse(member.getUsername(), member.getNickName(), null);
-        }
-        return new MyPageResponse(member.getUsername(), member.getNickName(), profileImage);
+    public MyPageResponse getMemberInfo(Long memberId) {
+        Member member = findByMemberId(memberId);
+        ProfileImage profileImage = getMemberProfileImage(member.getId());
+        return MyPageResponse.fromMember(member, profileImage);
     }
 
-    public String getMemberProfileImage(Long memberId){
-        ProfileImage profileImage = profileImageRepository.findByMemberId(memberId).orElse(null);
-        if(ObjectUtils.isEmpty(profileImage)){
-            return null;
-        }
-        return profileImage.getFullPath();
+    public ProfileImage getMemberProfileImage(Long memberId){
+        return profileImageRepository.findByMemberId(memberId).orElse(null);
     }
 
     @Transactional
     public void updateProfile(Long id, MultipartFile file) throws IOException {
-        Member member = findById(id);
+        Member member = findByMemberId(id);
 
-        if(!ObjectUtils.isEmpty(file)){
-            //기존에 프로필 이미지가 있으면 기존거 삭제하고 업로드
-            Optional<ProfileImage> findProfileImage = profileImageRepository.findByMember(member);
-            if(findProfileImage.isPresent()){
-                ProfileImage existProfileImage = findProfileImage.get();
-                ProfileImage changeProfile = profileUploader.updateFile(existProfileImage.getStoredFileName(), file);
-                existProfileImage.updateProfile(changeProfile);
-            }
-            else{
-                ProfileImage profileImage = profileUploader.uploadFile(file);
-                profileImage.setMember(member);
-                profileImageRepository.save(profileImage);
-            }
+        //기존에 프로필 이미지가 있으면 기존거 삭제하고 업로드
+        ProfileImage findProfileImage = profileImageRepository.findByMember(member).orElse(null);
+
+        if(!ObjectUtils.isEmpty(findProfileImage)){
+            ProfileImage changeProfile = profileUploader.updateFile(findProfileImage.getStoredFileName(), file);
+            findProfileImage.updateProfile(changeProfile);
+        }
+        else{
+            ProfileImage profileImage = profileUploader.uploadFile(file);
+            profileImage.setMember(member);
+            profileImageRepository.save(profileImage);
         }
     }
 }

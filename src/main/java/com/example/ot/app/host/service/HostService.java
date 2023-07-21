@@ -8,16 +8,17 @@ import com.example.ot.app.host.entity.Host;
 import com.example.ot.app.host.exception.HostException;
 import com.example.ot.app.host.repository.HostRepository;
 import com.example.ot.app.member.entity.Member;
+import com.example.ot.app.member.entity.ProfileImage;
 import com.example.ot.app.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.example.ot.app.host.exception.ErrorCode.*;
+import static com.example.ot.app.host.exception.ErrorCode.HOST_NOT_EXISTS;
+import static com.example.ot.app.host.exception.ErrorCode.HOST_NOT_EXISTS_BY_REGION;
 
 @Service
 @RequiredArgsConstructor
@@ -30,13 +31,8 @@ public class HostService {
 
     @Transactional
     public void createHost(WriteHostInfoRequest writeHostInfoRequest, Long id){
-        Member member = memberService.findById(id);
-        Host host = Host
-                .builder()
-                .introduction(writeHostInfoRequest.getIntroduction())
-                .member(member)
-                .regionCode(writeHostInfoRequest.getRegionCode())
-                .build();
+        Member member = memberService.findByMemberId(id);
+        Host host = Host.of(writeHostInfoRequest, member);
         hostRepository.save(host);
         member.setHostAuthority(true);
 //        memberService.putMemberMapByUsername__cached(member.getId());
@@ -46,7 +42,7 @@ public class HostService {
     public EditHostResponse getHostInfo(Long id) {
         Host host = hostRepository.findByMemberId(id).orElseThrow(() -> new HostException(HOST_NOT_EXISTS));
         String hostHashTag = hashTagService.getHashTag(host.getId());
-        return new EditHostResponse(host.getIntroduction(), hostHashTag, host.getRegionCode());
+        return EditHostResponse.fromHost(host, hostHashTag);
     }
 
     @Transactional
@@ -59,7 +55,7 @@ public class HostService {
     @Transactional
     public void removeHostAuthorize(Long id) {
         Host host = hostRepository.findByMemberId(id).orElseThrow(() -> new HostException(HOST_NOT_EXISTS));
-        memberService.findById(id).setHostAuthority(false);
+        memberService.findByMemberId(id).setHostAuthority(false);
         hashTagService.deleteHashTag(host.getId());
         hostRepository.delete(host);
     }
@@ -78,17 +74,7 @@ public class HostService {
 
     private HostInfoListResponse mapToHostInfoListResponse(Host host) {
         String hashTag = hashTagService.getHashTag(host.getId());
-        Long memberId = host.getMember().getId();
-        String nickName = host.getMember().getNickName();
-        String introduction = host.getIntroduction();
-        String hostProfileImage = memberService.getMemberProfileImage(memberId);
-
-        return HostInfoListResponse.builder()
-                .memberId(memberId)
-                .hashTag(hashTag)
-                .nickName(nickName)
-                .introduction(introduction)
-                .hostProfileImage(hostProfileImage)
-                .build();
+        ProfileImage hostProfileImage = memberService.getMemberProfileImage(host.getMember().getId());
+        return HostInfoListResponse.fromHost(host, hashTag, hostProfileImage);
     }
 }

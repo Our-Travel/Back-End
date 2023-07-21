@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
@@ -341,7 +340,7 @@ public class HostControllerTest {
 
     @Test
     @DisplayName("각 지역의 호스트들을 불러옵니다.")
-    @WithUserDetails("user2@example.com")
+    @WithUserDetails("user1@example.com")
     void shouldGetHostsByRegionSuccessfully() throws Exception {
         ResultActions resultActions = mvc
                 .perform(

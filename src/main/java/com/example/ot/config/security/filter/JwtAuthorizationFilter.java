@@ -39,7 +39,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
                 long id = (int) claims.get("id");
                 // 캐시(레디스) 사용
 //                Member member = memberService.getByMemberId__cached(id);
-                Member member = memberService.findById(id);
+                Member member = memberService.findByMemberId(id);
                 if(memberService.verifyWithWhiteList(member, token)){
                     forceAuthentication(member); // member 찾았으면 인증.
                 }

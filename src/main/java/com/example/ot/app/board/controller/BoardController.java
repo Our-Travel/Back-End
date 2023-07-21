@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import static com.example.ot.app.board.code.BoardSuccessCode.*;
+import static com.example.ot.app.board.code.BoardSuccessCode.BOARD_CREATED;
 
 @Tag(name = "게시판")
 @Slf4j

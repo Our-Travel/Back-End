@@ -29,23 +29,17 @@ public class HashTagService {
         });
     }
 
-    private HashTag saveHashTag(Host host, String keywordContent) {
+    private void saveHashTag(Host host, String keywordContent) {
         Keyword keyword = keywordService.save(keywordContent);
 
         Optional<HashTag> opHashTag = hashTagRepository.findByHostIdAndKeywordId(host.getId(), keyword.getId());
 
         if (opHashTag.isPresent()) {
-            return opHashTag.get();
+            return;
         }
 
-        HashTag hashTag = HashTag.builder()
-                .host(host)
-                .keyword(keyword)
-                .build();
-
+        HashTag hashTag = HashTag.of(host, keyword);
         hashTagRepository.save(hashTag);
-
-        return hashTag;
     }
 
     public String getHashTag(long hostId){

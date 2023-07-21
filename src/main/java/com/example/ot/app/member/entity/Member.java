@@ -1,5 +1,6 @@
 package com.example.ot.app.member.entity;
 
+import com.example.ot.app.member.dto.request.SignUpRequest;
 import com.example.ot.base.entity.BaseTimeEntity;
 import com.example.ot.util.Util;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -12,6 +13,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
@@ -26,6 +29,8 @@ import java.util.Map;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
+@SQLDelete(sql = "UPDATE member SET deleted_date = NOW() where id = ?")
+@Where(clause = "deleted_date is NULL")
 public class Member extends BaseTimeEntity {
 
     @Column(unique = true)
@@ -62,6 +67,15 @@ public class Member extends BaseTimeEntity {
             authorities.add(new SimpleGrantedAuthority("HOST"));
         }
         return authorities;
+    }
+
+    public static Member of(String providerTypeCode, SignUpRequest signUpRequest, String password){
+        return Member.builder()
+                .username(signUpRequest.getUsername())
+                .password(password)
+                .nickName(signUpRequest.getNickName())
+                .providerTypeCode(providerTypeCode)
+                .build();
     }
 
     public Map<String, Object> getAccessTokenClaims() {

@@ -1,11 +1,11 @@
 package com.example.ot.app.member.controller;
 
-import com.example.ot.base.rsData.RsData;
 import com.example.ot.app.member.dto.request.SignInRequest;
 import com.example.ot.app.member.dto.request.SignUpRequest;
 import com.example.ot.app.member.dto.response.MyPageResponse;
 import com.example.ot.app.member.entity.Member;
 import com.example.ot.app.member.service.MemberService;
+import com.example.ot.base.rsData.RsData;
 import com.example.ot.config.security.entity.MemberContext;
 import com.example.ot.util.Util;
 import io.swagger.v3.oas.annotations.Operation;
@@ -38,9 +38,7 @@ public class MemberController {
     @Operation(summary = "회원가입")
     @PostMapping("/signup")
     public ResponseEntity<RsData> signUp(@Valid @RequestBody SignUpRequest signUpRequest){
-        memberService.check(signUpRequest);
         memberService.create(signUpRequest);
-
         return Util.spring.responseEntityOf(RsData.success(SIGNUP_CREATED));
     }
 
@@ -48,7 +46,6 @@ public class MemberController {
     @GetMapping("/exists/username/{username}")
     public ResponseEntity<RsData> checkUsername(@PathVariable @NotBlank(message = "아이디를 입력해주세요.") String username){
         memberService.checkUsername(username);
-
         return Util.spring.responseEntityOf(RsData.success(EMAIL_AVAILABLE.formatted(username)));
     }
 
@@ -56,7 +53,6 @@ public class MemberController {
     @GetMapping("/exists/nickName/{nickName}")
     public ResponseEntity<RsData> checkNickName(@PathVariable @NotBlank(message = "닉네임을 입력해주세요.") String nickName){
         memberService.checkNickName(nickName);
-
         return Util.spring.responseEntityOf(RsData.success(NICKNAME_AVAILABLE.formatted(nickName)));
     }
 
@@ -67,9 +63,7 @@ public class MemberController {
         memberService.verifyPassword(member.getPassword(), signInRequest.getPassword());
 
         String accessToken = memberService.genAccessToken(member);
-
-        return Util.spring.responseEntityOf(
-                RsData.success(LOGIN_COMPLETED),
+        return Util.spring.responseEntityOf(RsData.success(LOGIN_COMPLETED),
                 Util.spring.httpHeadersOf("Authentication", accessToken)
         );
     }
@@ -78,7 +72,7 @@ public class MemberController {
     @PreAuthorize("isAuthenticated()")
     @GetMapping
     public ResponseEntity<RsData> showMyPage(@AuthenticationPrincipal MemberContext memberContext) {
-        MyPageResponse myPageResponse = memberService.getMemberInfo(memberContext);
+        MyPageResponse myPageResponse = memberService.getMemberInfo(memberContext.getId());
         return Util.spring.responseEntityOf(RsData.success(MY_PAGE, myPageResponse));
     }
 
@@ -86,7 +80,7 @@ public class MemberController {
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/profile")
     public ResponseEntity<RsData> showProfileEdit(@AuthenticationPrincipal MemberContext memberContext) {
-        MyPageResponse myPageResponse = memberService.getMemberInfo(memberContext);
+        MyPageResponse myPageResponse = memberService.getMemberInfo(memberContext.getId());
         return Util.spring.responseEntityOf(RsData.success(PROFILE_EDIT_PAGE, myPageResponse));
     }
 
