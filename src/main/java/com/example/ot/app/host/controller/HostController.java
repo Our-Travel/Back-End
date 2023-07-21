@@ -33,7 +33,7 @@ public class HostController {
 
     @Operation(summary = "호스트 등록", security = @SecurityRequirement(name = "bearerAuth"))
     @PreAuthorize("isAuthenticated()")
-    @PostMapping("")
+    @PostMapping
     public ResponseEntity<RsData> registerHost(@Valid @RequestBody WriteHostInfoRequest writeHostInfoRequest,
                                                @AuthenticationPrincipal MemberContext memberContext){
         hostService.createHost(writeHostInfoRequest, memberContext.getId());
@@ -42,7 +42,7 @@ public class HostController {
 
     @Operation(summary = "호스트 수정 페이지", security = @SecurityRequirement(name = "bearerAuth"))
     @PreAuthorize("hasAuthority('host')")
-    @GetMapping("")
+    @GetMapping
     public ResponseEntity<RsData> editHostInfoPage(@AuthenticationPrincipal MemberContext memberContext){
         EditHostResponse hostInfo = hostService.getHostInfo(memberContext.getId());
         return Util.spring.responseEntityOf(RsData.success(HOST_EDIT_PAGE, hostInfo));
@@ -50,7 +50,7 @@ public class HostController {
 
     @Operation(summary = "호스트 정보 수정", security = @SecurityRequirement(name = "bearerAuth"))
     @PreAuthorize("hasAuthority('host')")
-    @PatchMapping("")
+    @PatchMapping
     public ResponseEntity<RsData> editHostInfo(@Valid @RequestBody WriteHostInfoRequest writeHostInfoRequest,
                                                @AuthenticationPrincipal MemberContext memberContext){
         hostService.updateHostInfo(writeHostInfoRequest, memberContext.getId());
@@ -59,7 +59,7 @@ public class HostController {
 
     @Operation(summary = "호스트 권한 삭제", security = @SecurityRequirement(name = "bearerAuth"))
     @PreAuthorize("hasAuthority('host')")
-    @DeleteMapping("")
+    @DeleteMapping
     public ResponseEntity<RsData> unAuthorizeHost(@AuthenticationPrincipal MemberContext memberContext){
         hostService.removeHostAuthorize(memberContext.getId());
         return Util.spring.responseEntityOf(RsData.success(HOST_DELETED));
