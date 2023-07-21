@@ -18,6 +18,7 @@ public class MyPageResponse {
     private String nickName;
     @JsonProperty("image_path")
     private String imagePath;
+    @JsonProperty("host_authority")
     private boolean hostAuthority;
 
     public static MyPageResponse fromMember(Member member, ProfileImage profileImage){
