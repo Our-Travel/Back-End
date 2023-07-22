@@ -1,6 +1,6 @@
 package com.example.ot.config.security.jwt;
 
-import com.example.ot.config.security.CustomOAuth2User;
+import com.example.ot.config.security.oauth2.CustomOAuth2User;
 import com.example.ot.util.Util;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;

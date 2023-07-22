@@ -43,10 +43,11 @@ public class MemberService {
     }
 
     // 회원가입 생성.
-    private void create(String providerTypeCode, SignUpRequest signUpRequest){
+    public Member create(String providerTypeCode, SignUpRequest signUpRequest) {
         String password = passwordEncoder.encode(signUpRequest.getPassword());
         Member member = Member.of(providerTypeCode, signUpRequest, password);
         memberRepository.save(member);
+        return member;
     }
 
     // 아이디 중복체크.
