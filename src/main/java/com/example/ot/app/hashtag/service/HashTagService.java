@@ -42,14 +42,14 @@ public class HashTagService {
         hashTagRepository.save(hashTag);
     }
 
-    public String getHashTag(long hostId){
+    public String getHashTag(Long hostId){
         List<HashTag> hashTags = hashTagRepository.findByHostId(hostId);
         return hashTags.stream()
                 .map(hashTag -> "#" + hashTag.getKeyword().getContent())
                 .collect(Collectors.joining());
     }
 
-    public void updateHashTags(String hashTag, Host host){
+    public void updateHashTag(String hashTag, Host host){
         deleteHashTag(host.getId());
         applyHashTags(host, hashTag);
     }

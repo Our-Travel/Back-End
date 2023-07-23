@@ -49,7 +49,7 @@ public class HostService {
     public void updateHostInfo(WriteHostInfoRequest writeHostInfoRequest, Long memberId) {
         Host host = hostRepository.findByMemberId(memberId).orElseThrow(() -> new HostException(HOST_NOT_EXISTS));
         host.updateHostInfo(writeHostInfoRequest.getIntroduction(), writeHostInfoRequest.getRegionCode());
-        hashTagService.updateHashTags(writeHostInfoRequest.getHashTag(), host);
+        hashTagService.updateHashTag(writeHostInfoRequest.getHashTag(), host);
     }
 
     @Transactional
