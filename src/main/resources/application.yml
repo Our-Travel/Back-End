@@ -49,3 +49,6 @@ kakao:
   rest:
     api:
       key: '${kakao.rest.api.key}'
+
+oauth:
+  login: '{baseUrl]/api/members/auth'

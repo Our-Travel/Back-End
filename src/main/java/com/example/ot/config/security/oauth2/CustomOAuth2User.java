@@ -1,4 +1,4 @@
-package com.example.ot.config.security;
+package com.example.ot.config.security.oauth2;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;

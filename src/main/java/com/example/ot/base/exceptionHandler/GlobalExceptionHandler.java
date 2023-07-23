@@ -8,6 +8,7 @@ import com.example.ot.util.Util;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,6 +19,7 @@ import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 import static com.example.ot.base.code.BasicErrorCode.FILE_NOT_EXISTS;
+import static com.example.ot.base.code.BasicErrorCode.UNAUTHORIZED;
 
 @RestControllerAdvice(annotations = {RestController.class})
 public class GlobalExceptionHandler {
@@ -62,5 +64,11 @@ public class GlobalExceptionHandler {
     public ResponseEntity<RsData> handleNullPointerException(NullPointerException e) {
         RsData response = RsData.fail("로그인이 필요합니다.");
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<RsData> handleAccessDeniedException(AccessDeniedException e) {
+        RsData rsData = RsData.fail(UNAUTHORIZED);
+        return new ResponseEntity<>(rsData, HttpStatus.FORBIDDEN);
     }
 }
