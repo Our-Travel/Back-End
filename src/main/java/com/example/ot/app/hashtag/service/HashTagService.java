@@ -30,7 +30,7 @@ public class HashTagService {
     }
 
     private void saveHashTag(Host host, String keywordContent) {
-        Keyword keyword = keywordService.save(keywordContent);
+        Keyword keyword = keywordService.saveKeyword(keywordContent);
 
         Optional<HashTag> opHashTag = hashTagRepository.findByHostIdAndKeywordId(host.getId(), keyword.getId());
 
