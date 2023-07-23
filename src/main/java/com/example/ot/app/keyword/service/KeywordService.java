@@ -12,7 +12,7 @@ import java.util.Optional;
 public class KeywordService {
     private final KeywordRepository keywordRepository;
 
-    public Keyword save(String keywordContent) {
+    public Keyword saveKeyword(String keywordContent) {
         Optional<Keyword> optKeyword = keywordRepository.findByContent(keywordContent);
 
         if ( optKeyword.isPresent() ) {
