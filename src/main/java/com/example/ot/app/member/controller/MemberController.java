@@ -98,7 +98,7 @@ public class MemberController {
 
     @Operation(summary = "프로필 사진 변경", security = @SecurityRequirement(name = "bearerAuth"))
     @PreAuthorize("isAuthenticated()")
-    @PutMapping("/profile-image")
+    @PostMapping("/profile-image")
     public ResponseEntity<RsData> updateProfileImage(@RequestParam("images")
                                 MultipartFile file, @AuthenticationPrincipal MemberContext memberContext) throws IOException {
         memberService.updateProfileImage(memberContext.getId(), file);

@@ -420,7 +420,7 @@ public class MemberControllerTest {
         // When
         ResultActions resultActions = mvc
                 .perform(
-                        multipart("/api/members/profile")
+                        multipart("/api/members/profile-image")
                                 .file(file)
                 )
                 .andDo(print());
