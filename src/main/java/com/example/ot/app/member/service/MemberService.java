@@ -74,8 +74,8 @@ public class MemberService {
         return memberRepository.findByUsername(username).orElseThrow(() -> new MemberException(USERNAME_NOT_EXISTS));
     }
 
-    public Member findByMemberId(Long id){
-        return memberRepository.findById(id).orElseThrow(() -> new MemberException(MEMBER_NOT_EXISTS));
+    public Member findByMemberId(Long memberId){
+        return memberRepository.findById(memberId).orElseThrow(() -> new MemberException(MEMBER_NOT_EXISTS));
     }
 
     public Member verifyUsername(String username) {
@@ -134,11 +134,8 @@ public class MemberService {
     }
 
     @Transactional
-    public void updateProfile(Long id, MultipartFile file) throws IOException {
-        Member member = findByMemberId(id);
-
-        //기존에 프로필 이미지가 있으면 기존거 삭제하고 업로드
-        ProfileImage findProfileImage = profileImageRepository.findByMember(member).orElse(null);
+    public void updateProfileImage(Long memberId, MultipartFile file) throws IOException {
+        ProfileImage findProfileImage = getMemberProfileImage(memberId);
 
         if(!ObjectUtils.isEmpty(findProfileImage)){
             ProfileImage changeProfile = profileUploader.updateFile(findProfileImage.getStoredFileName(), file);
@@ -146,8 +143,18 @@ public class MemberService {
         }
         else{
             ProfileImage profileImage = profileUploader.uploadFile(file);
+            Member member = findByMemberId(memberId);
             profileImage.setMember(member);
             profileImageRepository.save(profileImage);
+        }
+    }
+
+    @Transactional
+    public void deleteProfileImage(Long memberId) {
+        ProfileImage profileImage = getMemberProfileImage(memberId);
+        if(!ObjectUtils.isEmpty(profileImage)){
+            profileUploader.deleteS3(profileImage.getStoredFileName());
+            profileImageRepository.delete(profileImage);
         }
     }
 }

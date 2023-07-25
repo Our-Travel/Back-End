@@ -95,13 +95,21 @@ public class MemberController {
         return Util.spring.responseEntityOf(RsData.success(PROFILE_EDIT_PAGE, myPageResponse));
     }
 
-    @Operation(summary = "프로필 편집", security = @SecurityRequirement(name = "bearerAuth"))
+    @Operation(summary = "프로필 사진 변경", security = @SecurityRequirement(name = "bearerAuth"))
     @PreAuthorize("isAuthenticated()")
-    @PostMapping("/profile")
-    public ResponseEntity<RsData> updateProfile(@RequestParam("images")
+    @PutMapping("/profile-image")
+    public ResponseEntity<RsData> updateProfileImage(@RequestParam("images")
                                 MultipartFile file, @AuthenticationPrincipal MemberContext memberContext) throws IOException {
-        memberService.updateProfile(memberContext.getId(), file);
-        return Util.spring.responseEntityOf(RsData.success(PROFILE_UPDATED));
+        memberService.updateProfileImage(memberContext.getId(), file);
+        return Util.spring.responseEntityOf(RsData.success(PROFILE_IMAGE_UPDATED));
+    }
+
+    @Operation(summary = "기본 프로필 변경", security = @SecurityRequirement(name = "bearerAuth"))
+    @PreAuthorize("isAuthenticated()")
+    @DeleteMapping("/profile-image")
+    public ResponseEntity<RsData> deleteProfileImage(@AuthenticationPrincipal MemberContext memberContext) {
+        memberService.deleteProfileImage(memberContext.getId());
+        return Util.spring.responseEntityOf(RsData.success(PROFILE_IMAGE_DELETED));
     }
 
 }

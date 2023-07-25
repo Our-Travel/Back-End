@@ -14,7 +14,8 @@ public enum MemberSuccessCode implements Code {
     LOGIN_COMPLETED("로그인 되었습니다."),
     MY_PAGE("마이페이지입니다."),
     PROFILE_EDIT_PAGE("프로필 편집페이지입니다."),
-    PROFILE_UPDATED("프로필사진이 수정되었습니다."),
+    PROFILE_IMAGE_UPDATED("프로필사진이 수정되었습니다."),
+    PROFILE_IMAGE_DELETED("기본 프로필사진으로 적용되었습니다."),
     PASSWORD_CORRECTED("올바른 비밀번호입니다.");
 
     private String message;
