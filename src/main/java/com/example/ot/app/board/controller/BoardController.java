@@ -1,7 +1,7 @@
 package com.example.ot.app.board.controller;
 
 import com.example.ot.app.board.dto.request.CreateBoardRequest;
-import com.example.ot.app.board.service.BoardService;
+import com.example.ot.app.board.service.TravelBoardService;
 import com.example.ot.base.rsData.RsData;
 import com.example.ot.config.security.entity.MemberContext;
 import com.example.ot.util.Util;
@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import static com.example.ot.app.board.code.BoardSuccessCode.BOARD_CREATED;
+import static com.example.ot.app.board.code.TravelBoardSuccessCode.BOARD_CREATED;
 
 @Tag(name = "게시판")
 @Slf4j
@@ -28,14 +28,14 @@ import static com.example.ot.app.board.code.BoardSuccessCode.BOARD_CREATED;
 @RequestMapping("/api/boards")
 public class BoardController {
 
-    private final BoardService boardService;
+    private final TravelBoardService travelBoardService;
 
-    @Operation(summary = "게시판 생성", security = @SecurityRequirement(name = "bearerAuth"))
+    @Operation(summary = "동행 구하기 게시판 생성", security = @SecurityRequirement(name = "bearerAuth"))
     @PreAuthorize("isAuthenticated()")
     @PostMapping
     public ResponseEntity<RsData> createBoard(@Valid @RequestBody CreateBoardRequest createBoardRequest,
                                                @AuthenticationPrincipal MemberContext memberContext){
-        boardService.createBoard(createBoardRequest, memberContext.getId());
+        travelBoardService.createBoard(createBoardRequest, memberContext.getId());
         return Util.spring.responseEntityOf(RsData.success(BOARD_CREATED));
     }
 }

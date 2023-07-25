@@ -1,8 +1,8 @@
 package com.example.ot.app.board.service;
 
 import com.example.ot.app.board.dto.request.CreateBoardRequest;
-import com.example.ot.app.board.entity.Board;
-import com.example.ot.app.board.repository.BoardRepository;
+import com.example.ot.app.board.entity.TravelBoard;
+import com.example.ot.app.board.repository.TravelBoardRepository;
 import com.example.ot.app.member.entity.Member;
 import com.example.ot.app.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
@@ -12,15 +12,15 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
-public class BoardService {
+public class TravelBoardService {
 
     private final MemberService memberService;
-    private final BoardRepository boardRepository;
+    private final TravelBoardRepository travelBoardRepository;
 
     @Transactional
-    public void createBoard(CreateBoardRequest createBoardRequest, Long id) {
-        Member member = memberService.findByMemberId(id);
-        Board board = Board.of(createBoardRequest, member);
-        boardRepository.save(board);
+    public void createBoard(CreateBoardRequest createBoardRequest, Long memberId) {
+        Member member = memberService.findByMemberId(memberId);
+        TravelBoard travelBoard = TravelBoard.of(createBoardRequest, member);
+        travelBoardRepository.save(travelBoard);
     }
 }
