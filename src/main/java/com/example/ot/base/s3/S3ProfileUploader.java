@@ -76,7 +76,7 @@ public class S3ProfileUploader {
         log.info("File delete fail");
     }
 
-    private void deleteS3(String deleteFileName){
+    public void deleteS3(String deleteFileName){
         deleteFileName = dir + "/" + deleteFileName;
         amazonS3Client.deleteObject(new DeleteObjectRequest(bucket, deleteFileName));
     }
