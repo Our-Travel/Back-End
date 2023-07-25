@@ -28,7 +28,7 @@ public class TravelBoardControllerTest {
     private MockMvc mvc;
 
     @Test
-    @DisplayName("게시판 생성")
+    @DisplayName("동행 게시판 생성")
     @WithUserDetails("user1@example.com")
     void shouldCreateBoardSuccessfully() throws Exception {
         // When
@@ -58,15 +58,21 @@ public class TravelBoardControllerTest {
 
     @Test
     @DisplayName("로그인을 하지 않으면 게시판 생성을 못한다.")
-    void shouldFailWithoutLogin() throws Exception {
+    void shouldFailCreateBoardWithoutLogin() throws Exception {
         // When
         ResultActions resultActions = mvc
                 .perform(
                         post("/api/boards")
                                 .content("""
                                     {
-                                        "title": "제목 입니다.",
-                                        "content": "내용 입니다."
+                                        "title": "제목입니다",
+                                        "content": "내용입니다",
+                                        "region_code": 123,
+                                        "number_of_travelers": 3,
+                                        "recruitment_period_start": "2030-08-01",
+                                        "recruitment_period_end": "2030-08-03",
+                                        "journey_period_start": "2030-08-04",
+                                        "journey_period_end": "2030-08-08"
                                     }
                                     """)
                                 .contentType(new MediaType(MediaType.APPLICATION_JSON, StandardCharsets.UTF_8))
@@ -79,15 +85,23 @@ public class TravelBoardControllerTest {
     }
 
     @Test
-    @DisplayName("제목과 내용을 작성하지 않으면 게시판 생성을 못한다.")
-    void shouldFailWithoutTitleOrContent() throws Exception {
+    @DisplayName("모집기간 시작일은 현재 날짜 이후이어야 합니다.")
+    @WithUserDetails("user1@example.com")
+    void shouldFailIfRecruitmentStartsInPast() throws Exception {
         // When
         ResultActions resultActions = mvc
                 .perform(
                         post("/api/boards")
                                 .content("""
                                     {
-                                        "title": "제목 입니다."
+                                        "title": "제목입니다",
+                                        "content": "내용입니다",
+                                        "region_code": 123,
+                                        "number_of_travelers": 3,
+                                        "recruitment_period_start": "2020-08-01",
+                                        "recruitment_period_end": "2030-08-03",
+                                        "journey_period_start": "2030-08-04",
+                                        "journey_period_end": "2030-08-08"
                                     }
                                     """)
                                 .contentType(new MediaType(MediaType.APPLICATION_JSON, StandardCharsets.UTF_8))
@@ -97,13 +111,84 @@ public class TravelBoardControllerTest {
         // Then
         resultActions
                 .andExpect(status().is4xxClientError());
+    }
 
-        resultActions = mvc
+    @Test
+    @DisplayName("모집기간 종료일이 시작일보다 빠르게 설정할 수 없습니다.")
+    @WithUserDetails("user1@example.com")
+    void shouldFailIfRecruitmentEndsBeforeStart() throws Exception {
+        // When
+        ResultActions resultActions = mvc
                 .perform(
                         post("/api/boards")
                                 .content("""
                                     {
-                                        "content": "내용 입니다."
+                                        "title": "제목입니다",
+                                        "content": "내용입니다",
+                                        "region_code": 123,
+                                        "number_of_travelers": 3,
+                                        "recruitment_period_start": "2030-08-05",
+                                        "recruitment_period_end": "2030-08-03",
+                                        "journey_period_start": "2030-08-04",
+                                        "journey_period_end": "2030-08-08"
+                                    }
+                                    """)
+                                .contentType(new MediaType(MediaType.APPLICATION_JSON, StandardCharsets.UTF_8))
+                )
+                .andDo(print());
+
+        // Then
+        resultActions
+                .andExpect(status().is4xxClientError());
+    }
+
+    @Test
+    @DisplayName("여행기간 종료일이 시작일보다 빠르게 설정할 수 없습니다.")
+    @WithUserDetails("user1@example.com")
+    void shouldFailIfJourneyEndsBeforeStart() throws Exception {
+        // When
+        ResultActions resultActions = mvc
+                .perform(
+                        post("/api/boards")
+                                .content("""
+                                    {
+                                        "title": "제목입니다",
+                                        "content": "내용입니다",
+                                        "region_code": 123,
+                                        "number_of_travelers": 3,
+                                        "recruitment_period_start": "2030-08-01",
+                                        "recruitment_period_end": "2030-08-03",
+                                        "journey_period_start": "2030-08-04",
+                                        "journey_period_end": "2030-08-02"
+                                    }
+                                    """)
+                                .contentType(new MediaType(MediaType.APPLICATION_JSON, StandardCharsets.UTF_8))
+                )
+                .andDo(print());
+
+        // Then
+        resultActions
+                .andExpect(status().is4xxClientError());
+    }
+
+    @Test
+    @DisplayName("여행기간 종료일이 시작일보다 빠르게 설정할 수 없습니다.")
+    @WithUserDetails("user1@example.com")
+    void shouldFailIfJourneyStartsBeforeRecruitmentEnds() throws Exception {
+        // When
+        ResultActions resultActions = mvc
+                .perform(
+                        post("/api/boards")
+                                .content("""
+                                    {
+                                        "title": "제목입니다",
+                                        "content": "내용입니다",
+                                        "region_code": 123,
+                                        "number_of_travelers": 3,
+                                        "recruitment_period_start": "2030-08-01",
+                                        "recruitment_period_end": "2030-08-03",
+                                        "journey_period_start": "2030-08-06",
+                                        "journey_period_end": "2030-08-03"
                                     }
                                     """)
                                 .contentType(new MediaType(MediaType.APPLICATION_JSON, StandardCharsets.UTF_8))

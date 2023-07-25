@@ -1,5 +1,6 @@
 package com.example.ot.base.exceptionHandler;
 
+import com.example.ot.app.board.exception.TravelBoardException;
 import com.example.ot.app.host.exception.HostException;
 import com.example.ot.app.member.exception.MemberException;
 import com.example.ot.base.rsData.RsData;
@@ -54,7 +55,8 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler({
             MemberException.class,
-            HostException.class
+            HostException.class,
+            TravelBoardException.class
     })
     public ResponseEntity<RsData> handleNoSuchData(final RuntimeException e) {
         return Util.spring.responseEntityOf(RsData.fail(e.getMessage()));
