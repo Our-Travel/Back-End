@@ -1,5 +1,6 @@
 package com.example.ot.app.member.controller;
 
+import com.example.ot.app.member.dto.request.InputPasswordRequest;
 import com.example.ot.app.member.dto.request.SignInRequest;
 import com.example.ot.app.member.dto.request.SignUpRequest;
 import com.example.ot.app.member.dto.response.MyPageResponse;
@@ -74,6 +75,16 @@ public class MemberController {
     public ResponseEntity<RsData> showMyPage(@AuthenticationPrincipal MemberContext memberContext) {
         MyPageResponse myPageResponse = memberService.getMemberInfo(memberContext.getId());
         return Util.spring.responseEntityOf(RsData.success(MY_PAGE, myPageResponse));
+    }
+
+    @Operation(summary = "비밀번호가 올바른지 검증", security = @SecurityRequirement(name = "bearerAuth"))
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/validate-password")
+    public ResponseEntity<RsData> verifyPassword(@RequestBody InputPasswordRequest inputPasswordRequest,
+                                                 @AuthenticationPrincipal MemberContext memberContext) {
+        Member member = memberService.findByMemberId(memberContext.getId());
+        memberService.verifyPassword(member.getPassword(), inputPasswordRequest.getPassword());
+        return Util.spring.responseEntityOf(RsData.success(PASSWORD_CORRECTED));
     }
 
     @Operation(summary = "프로필 편집 페이지", security = @SecurityRequirement(name = "bearerAuth"))
