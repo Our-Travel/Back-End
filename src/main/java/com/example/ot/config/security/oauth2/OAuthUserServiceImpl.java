@@ -36,7 +36,7 @@ public class OAuthUserServiceImpl extends DefaultOAuth2UserService {
         String username = nickName + "@example.com";
         if (!memberRepository.existsByUsername(username)) {
             SignUpRequest signUp = new SignUpRequest(username, "", nickName);
-            return memberService.create(providerTypeCode, signUp);
+            return memberService.createMember(providerTypeCode, signUp);
         }
         return memberService.findByUsername(username);
     }

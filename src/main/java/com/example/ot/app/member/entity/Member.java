@@ -51,9 +51,6 @@ public class Member extends BaseTimeEntity {
     @Setter
     private boolean hostAuthority = false;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    private ProfileImage profileImage;
-
     // 현재 회원이 가지고 있는 권한들을 List<GrantedAuthority> 형태로 리턴
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<GrantedAuthority> authorities = new ArrayList<>();
@@ -146,5 +143,9 @@ public class Member extends BaseTimeEntity {
 
     public void updateNickName(String nickName) {
         this.nickName = nickName;
+    }
+
+    public void updatePassword(String password) {
+        this.password = password;
     }
 }

@@ -1,7 +1,9 @@
 package com.example.ot.app.member.controller;
 
+import com.example.ot.app.member.dto.request.InputPasswordRequest;
 import com.example.ot.app.member.dto.request.SignInRequest;
 import com.example.ot.app.member.dto.request.SignUpRequest;
+import com.example.ot.app.member.dto.request.UpdateMemberRequest;
 import com.example.ot.app.member.dto.response.MyPageResponse;
 import com.example.ot.app.member.entity.Member;
 import com.example.ot.app.member.service.MemberService;
@@ -38,7 +40,7 @@ public class MemberController {
     @Operation(summary = "회원가입")
     @PostMapping("/signup")
     public ResponseEntity<RsData> signUp(@Valid @RequestBody SignUpRequest signUpRequest){
-        memberService.create(signUpRequest);
+        memberService.createMember(signUpRequest);
         return Util.spring.responseEntityOf(RsData.success(SIGNUP_CREATED));
     }
 
@@ -76,6 +78,16 @@ public class MemberController {
         return Util.spring.responseEntityOf(RsData.success(MY_PAGE, myPageResponse));
     }
 
+    @Operation(summary = "비밀번호가 올바른지 검증", security = @SecurityRequirement(name = "bearerAuth"))
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/validate-password")
+    public ResponseEntity<RsData> verifyPassword(@RequestBody InputPasswordRequest inputPasswordRequest,
+                                                 @AuthenticationPrincipal MemberContext memberContext) {
+        Member member = memberService.findByMemberId(memberContext.getId());
+        memberService.verifyPassword(member.getPassword(), inputPasswordRequest.getPassword());
+        return Util.spring.responseEntityOf(RsData.success(PASSWORD_CORRECTED));
+    }
+
     @Operation(summary = "프로필 편집 페이지", security = @SecurityRequirement(name = "bearerAuth"))
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/profile")
@@ -84,12 +96,30 @@ public class MemberController {
         return Util.spring.responseEntityOf(RsData.success(PROFILE_EDIT_PAGE, myPageResponse));
     }
 
-    @Operation(summary = "프로필 편집", security = @SecurityRequirement(name = "bearerAuth"))
+    @Operation(summary = "프로필 사진 변경", security = @SecurityRequirement(name = "bearerAuth"))
     @PreAuthorize("isAuthenticated()")
-    @PostMapping("/profile")
-    public ResponseEntity<RsData> updateProfile(@RequestParam("images")
+    @PutMapping("/profile-image")
+    public ResponseEntity<RsData> updateProfileImage(@RequestParam("images")
                                 MultipartFile file, @AuthenticationPrincipal MemberContext memberContext) throws IOException {
-        memberService.updateProfile(memberContext.getId(), file);
+        memberService.updateProfileImage(memberContext.getId(), file);
+        return Util.spring.responseEntityOf(RsData.success(PROFILE_IMAGE_UPDATED));
+    }
+
+    @Operation(summary = "기본 프로필 변경", security = @SecurityRequirement(name = "bearerAuth"))
+    @PreAuthorize("isAuthenticated()")
+    @DeleteMapping("/profile-image")
+    public ResponseEntity<RsData> deleteProfileImage(@AuthenticationPrincipal MemberContext memberContext) {
+        memberService.deleteProfileImage(memberContext.getId());
+        return Util.spring.responseEntityOf(RsData.success(PROFILE_IMAGE_DELETED));
+    }
+
+    @Operation(summary = "프로필 정보 변경", security = @SecurityRequirement(name = "bearerAuth"))
+    @PreAuthorize("isAuthenticated()")
+    @PatchMapping("/profile")
+    public ResponseEntity<RsData> updateProfileInfo(@Valid @RequestBody UpdateMemberRequest updateMemberRequest,
+                                                    @AuthenticationPrincipal MemberContext memberContext) {
+        memberService.updatePassword(updateMemberRequest, memberContext.getId());
+        memberService.updateNickName(updateMemberRequest.getNickName(), memberContext.getId());
         return Util.spring.responseEntityOf(RsData.success(PROFILE_UPDATED));
     }
 
