@@ -19,9 +19,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import static com.example.ot.app.board.code.TravelBoardSuccessCode.BOARD_CREATED;
+import static com.example.ot.app.board.code.TravelBoardSuccessCode.*;
 
-@Tag(name = "게시판")
+@Tag(name = "동행 게시판")
 @Slf4j
 @RestController
 @RequiredArgsConstructor

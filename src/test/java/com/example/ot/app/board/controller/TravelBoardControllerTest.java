@@ -37,8 +37,14 @@ public class TravelBoardControllerTest {
                         post("/api/boards")
                                 .content("""
                                     {
-                                        "title": "제목 입니다.",
-                                        "content": "내용 입니다."
+                                        "title": "제목입니다",
+                                        "content": "내용입니다",
+                                        "region_code": 123,
+                                        "number_of_travelers": 3,
+                                        "recruitment_period_start": "2030-08-01",
+                                        "recruitment_period_end": "2030-08-03",
+                                        "journey_period_start": "2030-08-04",
+                                        "journey_period_end": "2030-08-08"
                                     }
                                     """)
                                 .contentType(new MediaType(MediaType.APPLICATION_JSON, StandardCharsets.UTF_8))

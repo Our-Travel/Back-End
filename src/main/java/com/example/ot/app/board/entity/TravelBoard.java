@@ -22,8 +22,10 @@ public class TravelBoard extends BaseTimeEntity {
     private String content;
     private Integer regionCode;
     private Integer numberOfTravelers;
-    private LocalDate recruitmentPeriod;
-    private LocalDate journeyPeriod;
+    private LocalDate recruitmentPeriodStart;
+    private LocalDate recruitmentPeriodEnd;
+    private LocalDate journeyPeriodStart;
+    private LocalDate journeyPeriodEnd;
 
     @Enumerated(EnumType.STRING)
     private RecruitmentStatus recruitmentStatus;
@@ -32,14 +34,16 @@ public class TravelBoard extends BaseTimeEntity {
     private Member member;
 
     public static TravelBoard of(CreateBoardRequest createBoardRequest, Member member){
-        RecruitmentStatus status = getRecruitmentStatus(createBoardRequest.getRecruitmentPeriod());
+        RecruitmentStatus status = getRecruitmentStatus(createBoardRequest.getRecruitmentPeriodStart());
         return TravelBoard.builder()
                 .title(createBoardRequest.getTitle())
                 .content(createBoardRequest.getContent())
                 .regionCode(createBoardRequest.getRegionCode())
                 .numberOfTravelers(createBoardRequest.getNumberOfTravelers())
-                .recruitmentPeriod(createBoardRequest.getRecruitmentPeriod())
-                .journeyPeriod(createBoardRequest.getJourneyPeriod())
+                .recruitmentPeriodStart(createBoardRequest.getRecruitmentPeriodStart())
+                .recruitmentPeriodEnd(createBoardRequest.getRecruitmentPeriodEnd())
+                .journeyPeriodStart(createBoardRequest.getJourneyPeriodStart())
+                .journeyPeriodEnd(createBoardRequest.getJourneyPeriodEnd())
                 .recruitmentStatus(status)
                 .member(member)
                 .build();
