@@ -3,6 +3,7 @@ package com.example.ot.app.member.controller;
 import com.example.ot.app.member.dto.request.InputPasswordRequest;
 import com.example.ot.app.member.dto.request.SignInRequest;
 import com.example.ot.app.member.dto.request.SignUpRequest;
+import com.example.ot.app.member.dto.request.UpdateMemberRequest;
 import com.example.ot.app.member.dto.response.MyPageResponse;
 import com.example.ot.app.member.entity.Member;
 import com.example.ot.app.member.service.MemberService;
@@ -39,7 +40,7 @@ public class MemberController {
     @Operation(summary = "회원가입")
     @PostMapping("/signup")
     public ResponseEntity<RsData> signUp(@Valid @RequestBody SignUpRequest signUpRequest){
-        memberService.create(signUpRequest);
+        memberService.createMember(signUpRequest);
         return Util.spring.responseEntityOf(RsData.success(SIGNUP_CREATED));
     }
 
@@ -110,6 +111,16 @@ public class MemberController {
     public ResponseEntity<RsData> deleteProfileImage(@AuthenticationPrincipal MemberContext memberContext) {
         memberService.deleteProfileImage(memberContext.getId());
         return Util.spring.responseEntityOf(RsData.success(PROFILE_IMAGE_DELETED));
+    }
+
+    @Operation(summary = "프로필 정보 변경", security = @SecurityRequirement(name = "bearerAuth"))
+    @PreAuthorize("isAuthenticated()")
+    @PatchMapping("/profile")
+    public ResponseEntity<RsData> updateProfileInfo(@Valid @RequestBody UpdateMemberRequest updateMemberRequest,
+                                                    @AuthenticationPrincipal MemberContext memberContext) {
+        memberService.updatePassword(updateMemberRequest, memberContext.getId());
+        memberService.updateNickName(updateMemberRequest.getNickName(), memberContext.getId());
+        return Util.spring.responseEntityOf(RsData.success(PROFILE_UPDATED));
     }
 
 }

@@ -1,6 +1,7 @@
 package com.example.ot.app.member.service;
 
 import com.example.ot.app.member.dto.request.SignUpRequest;
+import com.example.ot.app.member.dto.request.UpdateMemberRequest;
 import com.example.ot.app.member.dto.response.MyPageResponse;
 import com.example.ot.app.member.entity.Member;
 import com.example.ot.app.member.entity.ProfileImage;
@@ -37,13 +38,12 @@ public class MemberService {
     private final S3ProfileUploader profileUploader;
 
     @Transactional
-    public void create(SignUpRequest signUpRequest){
+    public void createMember(SignUpRequest signUpRequest){
         checkUsernameAndNickName(signUpRequest);
-        create("OT", signUpRequest);
+        createMember("OT", signUpRequest);
     }
 
-    // 회원가입 생성.
-    public Member create(String providerTypeCode, SignUpRequest signUpRequest) {
+    public Member createMember(String providerTypeCode, SignUpRequest signUpRequest) {
         String password = passwordEncoder.encode(signUpRequest.getPassword());
         Member member = Member.of(providerTypeCode, signUpRequest, password);
         memberRepository.save(member);
@@ -155,6 +155,64 @@ public class MemberService {
         if(!ObjectUtils.isEmpty(profileImage)){
             profileUploader.deleteS3(profileImage.getStoredFileName());
             profileImageRepository.delete(profileImage);
+        }
+    }
+
+    @Transactional
+    public void updatePassword(UpdateMemberRequest updateMemberRequest, Long memberId) {
+        String newPassword = updateMemberRequest.getPassword();
+        String verifyPassword = updateMemberRequest.getVerifyPassword();
+
+        if (!newPassword.isEmpty() && !verifyPassword.isEmpty()) {
+            verifyPasswordsMatch(newPassword, verifyPassword);
+            verifyPassword(newPassword);
+
+            Member member = findByMemberId(memberId);
+            comparePassword(member.getPassword(), newPassword);
+            String encodedPassword = passwordEncoder.encode(newPassword);
+            member.updatePassword(encodedPassword);
+        }
+    }
+
+    private void verifyPasswordsMatch(String password, String verifyPassword) {
+        if (!password.equals(verifyPassword)) {
+            throw new MemberException(PASSWORD_MISMATCH);
+        }
+    }
+
+    private void verifyPassword(String password) {
+        if (password.length() < 8 || password.length() > 16) {
+            throw new MemberException(PASSWORD_LENGTH);
+        }
+
+        String regex = "^(?=.*[0-9])(?=.*[a-zA-Z])(?=.*[@#$%^&+=]).*$";
+        if (!password.matches(regex)) {
+            throw new MemberException(PASSWORD_NOT_CORRECT);
+        }
+    }
+
+    private void comparePassword(String password, String newPassword) {
+        if(passwordEncoder.matches(newPassword, password)){
+            throw new MemberException(PASSWORD_SAME);
+        }
+    }
+
+    @Transactional
+    public void updateNickName(String nickName, Long memberId) {
+        if(!nickName.isEmpty()){
+            verifyNickName(nickName);
+            Member member = findByMemberId(memberId);
+            member.updateNickName(nickName);
+        }
+    }
+
+    private void verifyNickName(String nickName) {
+        if (nickName.length() < 3 || nickName.length() > 8) {
+            throw new MemberException(NICKNAME_LENGTH);
+        }
+        String regex = "^[가-힣a-zA-Z0-9]*$";
+        if (!nickName.matches(regex)) {
+            throw new MemberException(NICKNAME_NOT_CORRECT);
         }
     }
 }

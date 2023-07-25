@@ -144,4 +144,8 @@ public class Member extends BaseTimeEntity {
     public void updateNickName(String nickName) {
         this.nickName = nickName;
     }
+
+    public void updatePassword(String password) {
+        this.password = password;
+    }
 }

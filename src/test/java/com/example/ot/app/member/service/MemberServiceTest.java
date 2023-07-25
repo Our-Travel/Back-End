@@ -5,7 +5,6 @@ import com.example.ot.app.member.dto.response.MyPageResponse;
 import com.example.ot.app.member.entity.Member;
 import com.example.ot.app.member.entity.ProfileImage;
 import com.example.ot.app.member.exception.MemberException;
-import com.example.ot.app.member.repository.MemberRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -72,7 +71,7 @@ public class MemberServiceTest {
         SignUpRequest signUpRequest = new SignUpRequest("testUsername@example.com", "", "testNickName");
 
         // Then
-        assertDoesNotThrow(() -> memberService.create(signUpRequest));
+        assertDoesNotThrow(() -> memberService.createMember(signUpRequest));
     }
 
     @Test
@@ -82,7 +81,7 @@ public class MemberServiceTest {
         SignUpRequest signUpRequest = new SignUpRequest("testUsername@example.com", "", "user123");
 
         // Then
-        assertThrows(MemberException.class, () -> memberService.create(signUpRequest));
+        assertThrows(MemberException.class, () -> memberService.createMember(signUpRequest));
     }
 
     @Test
