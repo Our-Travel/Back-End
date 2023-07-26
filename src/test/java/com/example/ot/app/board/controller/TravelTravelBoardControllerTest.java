@@ -331,4 +331,68 @@ public class TravelTravelBoardControllerTest {
         resultActions
                 .andExpect(status().is4xxClientError());
     }
+
+    @Test
+    @DisplayName("동행 게시판 수정 페이지 조회")
+    @WithUserDetails("user1@example.com")
+    void shouldEditBoardPageSuccessfully() throws Exception {
+        // When
+        ResultActions resultActions = mvc
+                .perform(
+                        get("/api/boards/edit/{boardId}", 1)
+                )
+                .andDo(print());
+
+        // Then
+        resultActions
+                .andExpect(status().is2xxSuccessful());
+    }
+
+    @Test
+    @DisplayName("로그인을 하지 않으면 동행 게시판 수정 페이지 조회 실패")
+    @WithUserDetails("user2@example.com")
+    void shouldEditBoardPageFailWithoutLogin() throws Exception {
+        // When
+        ResultActions resultActions = mvc
+                .perform(
+                        get("/api/boards/edit/{boardId}", 1)
+                )
+                .andDo(print());
+
+        // Then
+        resultActions
+                .andExpect(status().is4xxClientError());
+    }
+
+    @Test
+    @DisplayName("게시글 작성자가 아니라서 동행 게시판 수정 페이지 조회 실패")
+    @WithUserDetails("user2@example.com")
+    void shouldEditBoardPageFailDueToUnauthorized() throws Exception {
+        // When
+        ResultActions resultActions = mvc
+                .perform(
+                        get("/api/boards/edit/{boardId}", 1)
+                )
+                .andDo(print());
+
+        // Then
+        resultActions
+                .andExpect(status().is4xxClientError());
+    }
+
+    @Test
+    @DisplayName("존재하지 않는 게시판은 수정 페이지를 조회할 수 없다.")
+    @WithUserDetails("user2@example.com")
+    void shouldEditBoardPageFailDueToNotExistsBoard() throws Exception {
+        // When
+        ResultActions resultActions = mvc
+                .perform(
+                        get("/api/boards/edit/{boardId}", 1000)
+                )
+                .andDo(print());
+
+        // Then
+        resultActions
+                .andExpect(status().is4xxClientError());
+    }
 }

@@ -59,7 +59,7 @@ public class TravelBoardController {
 
     @Operation(summary = "동행 구하기 게시판 수정 페이지 조회", security = @SecurityRequirement(name = "bearerAuth"))
     @PreAuthorize("isAuthenticated()")
-    @PostMapping("/edit/{boardId}")
+    @GetMapping("/edit/{boardId}")
     public ResponseEntity<RsData> updateBoardPage(@PathVariable Long boardId,
                                             @AuthenticationPrincipal MemberContext memberContext){
         EditBoardResponse editBoardResponse = travelBoardService.getBoardInfoForEdit(boardId, memberContext.getId());
