@@ -30,3 +30,6 @@ INSERT INTO HASH_TAG(host_id, keyword_id) VALUES (6, 1);
 INSERT INTO HASH_TAG(host_id, keyword_id) VALUES (7, 1);
 INSERT INTO HASH_TAG(host_id, keyword_id) VALUES (8, 1);
 INSERT INTO HASH_TAG(host_id, keyword_id) VALUES (9, 1);
+
+INSERT INTO TRAVEL_BOARD(title, content, region_code, number_of_travelers, recruitment_period_start, recruitment_period_end,
+                         journey_period_start, journey_period_end, recruitment_status, member_id) VALUES ('제목입니다.', '내용입니다.', '11020', 3, '2023-08-01', '2024-08-10', '2024-08-15', '2024-08-20', 'OPEN', 1);

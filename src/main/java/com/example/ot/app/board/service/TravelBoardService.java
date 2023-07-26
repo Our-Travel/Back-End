@@ -2,6 +2,7 @@ package com.example.ot.app.board.service;
 
 import com.example.ot.app.board.dto.request.CreateBoardRequest;
 import com.example.ot.app.board.dto.response.ShowBoardResponse;
+import com.example.ot.app.board.entity.LikeBoard;
 import com.example.ot.app.board.entity.TravelBoard;
 import com.example.ot.app.board.exception.ErrorCode;
 import com.example.ot.app.board.exception.TravelBoardException;
@@ -12,6 +13,7 @@ import com.example.ot.app.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.ObjectUtils;
 
 import java.time.LocalDate;
 
@@ -51,7 +53,8 @@ public class TravelBoardService {
     }
 
     private boolean getLikeBoardStatusByMember(Long boardId, Long memberId){
-        return likeBoardRepository.existsByMember(boardId, memberId);
+        LikeBoard likeBoard = likeBoardRepository.findByMemberAndBoard(boardId, memberId).orElse(null);
+        return !ObjectUtils.isEmpty(likeBoard);
     }
 
     public ShowBoardResponse getBoardInfo(Long boardId, Long memberId) {

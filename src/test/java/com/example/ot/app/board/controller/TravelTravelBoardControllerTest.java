@@ -14,8 +14,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.nio.charset.StandardCharsets;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
@@ -198,5 +201,86 @@ public class TravelTravelBoardControllerTest {
         // Then
         resultActions
                 .andExpect(status().is4xxClientError());
+    }
+
+    @Test
+    @DisplayName("동행 게시판 조회")
+    @WithUserDetails("user1@example.com")
+    void shouldShowBoardSuccessfully() throws Exception {
+        // When
+        ResultActions resultActions = mvc
+                .perform(
+                        get("/api/boards/{boardId}", 1)
+                )
+                .andDo(print());
+
+        // Then
+        resultActions
+                .andExpect(status().is2xxSuccessful());
+    }
+
+    @Test
+    @DisplayName("로그인을 하지 않으면 게시판 조회 실패")
+    void shouldShowBoardFailWithoutLogin() throws Exception {
+        // When
+        ResultActions resultActions = mvc
+                .perform(
+                        get("/api/boards/{boardId}", 1)
+                )
+                .andDo(print());
+
+        // Then
+        resultActions
+                .andExpect(status().is4xxClientError());
+    }
+
+    @Test
+    @DisplayName("존재하지 않는 게시판은 조회할 수 없다.")
+    @WithUserDetails("user1@example.com")
+    void shouldShowBoardFailDueToNotExistsBoard() throws Exception {
+        // When
+        ResultActions resultActions = mvc
+                .perform(
+                        get("/api/boards/{boardId}", 100)
+                )
+                .andDo(print());
+
+        // Then
+        resultActions
+                .andExpect(status().is4xxClientError());
+    }
+
+    @Test
+    @DisplayName("작성자가 동행 게시판 조회하면 board-writer는 true이다.")
+    @WithUserDetails("user1@example.com")
+    void shouldShowBoardSuccessfullyWhenWriter() throws Exception {
+        // When
+        ResultActions resultActions = mvc
+                .perform(
+                        get("/api/boards/{boardId}", 1)
+                )
+                .andDo(print());
+
+        // Then
+        resultActions
+                .andExpect(status().is2xxSuccessful())
+                .andExpect(jsonPath("$.data.board_writer").value(true));
+    }
+
+    @Test
+    @DisplayName("작성자가 아닌 유저가 동행 게시판 조회하면 board-writer는 false이다.")
+    @WithUserDetails("user2@example.com")
+    void shouldShowBoardSuccessfullyWhenDoesNotWriter() throws Exception {
+        // When
+        ResultActions resultActions = mvc
+                .perform(
+                        get("/api/boards/{boardId}", 1)
+                )
+                .andDo(print());
+
+        // Then
+        resultActions
+                .andExpect(status().is2xxSuccessful())
+                .andExpect(jsonPath("$.data.board_writer").value(false));
     }
 }
