@@ -10,6 +10,7 @@ import com.example.ot.app.board.repository.LikeBoardRepository;
 import com.example.ot.app.board.repository.TravelBoardRepository;
 import com.example.ot.app.member.entity.Member;
 import com.example.ot.app.member.service.MemberService;
+import com.example.ot.base.code.Code;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,6 +18,7 @@ import org.springframework.util.ObjectUtils;
 
 import java.time.LocalDate;
 
+import static com.example.ot.app.board.code.TravelBoardSuccessCode.*;
 import static com.example.ot.app.board.exception.ErrorCode.*;
 
 @Service
@@ -48,18 +50,35 @@ public class TravelBoardService {
         }
     }
 
+    private TravelBoard findByBoardId(Long boardId){
+        return travelBoardRepository.findById(boardId).orElseThrow(() -> new TravelBoardException(BOARD_NOT_EXISTS));
+    }
+
     private TravelBoard findByBoardIdWithWriter(Long boardId){
         return travelBoardRepository.findByBoardIdWithWriter(boardId).orElseThrow(() -> new TravelBoardException(BOARD_NOT_EXISTS));
     }
 
-    private boolean getLikeBoardStatusByMember(Long boardId, Long memberId){
-        LikeBoard likeBoard = likeBoardRepository.findByMemberAndBoard(boardId, memberId).orElse(null);
-        return !ObjectUtils.isEmpty(likeBoard);
+    private LikeBoard getLikeBoardStatusByMember(Long boardId, Long memberId){
+        return likeBoardRepository.findByMemberAndBoard(boardId, memberId).orElse(null);
     }
 
     public ShowBoardResponse getBoardInfo(Long boardId, Long memberId) {
         TravelBoard travelBoard = findByBoardIdWithWriter(boardId);
-        boolean likeBoardStatusByMember = getLikeBoardStatusByMember(boardId, memberId);
+        boolean likeBoardStatusByMember = !ObjectUtils.isEmpty(getLikeBoardStatusByMember(boardId, memberId));
         return ShowBoardResponse.fromTravelBoard(travelBoard, likeBoardStatusByMember, memberId);
+    }
+
+    @Transactional
+    public Code likeBoard(Long boardId, Long memberId) {
+        LikeBoard verifyLikeBoard = getLikeBoardStatusByMember(boardId, memberId);
+        if(ObjectUtils.isEmpty(verifyLikeBoard)){
+            TravelBoard travelBoard = findByBoardId(boardId);
+            Member member = memberService.findByMemberId(memberId);
+            LikeBoard likeBoard = LikeBoard.of(travelBoard, member);
+            likeBoardRepository.save(likeBoard);
+            return BOARD_LIKED;
+        }
+        likeBoardRepository.delete(verifyLikeBoard);
+        return BOARD_LIKED_CANCELED;
     }
 }

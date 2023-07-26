@@ -14,8 +14,8 @@ import java.time.LocalDateTime;
 
 import static jakarta.persistence.GenerationType.IDENTITY;
 
-@Builder
-@AllArgsConstructor
+
+
 @NoArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
 @Entity
@@ -35,5 +35,14 @@ public class LikeBoard {
     @CreatedDate
     @Column(updatable = false)
     private LocalDateTime createdDate;
+
+    public LikeBoard (TravelBoard travelBoard, Member member){
+        this.travelBoard = travelBoard;
+        this.member = member;
+    }
+
+    public static LikeBoard of(TravelBoard travelBoard, Member member){
+        return new LikeBoard(travelBoard, member);
+    }
 
 }

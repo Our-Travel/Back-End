@@ -3,6 +3,7 @@ package com.example.ot.app.board.controller;
 import com.example.ot.app.board.dto.request.CreateBoardRequest;
 import com.example.ot.app.board.dto.response.ShowBoardResponse;
 import com.example.ot.app.board.service.TravelBoardService;
+import com.example.ot.base.code.Code;
 import com.example.ot.base.rsData.RsData;
 import com.example.ot.config.security.entity.MemberContext;
 import com.example.ot.util.Util;
@@ -44,5 +45,14 @@ public class TravelBoardController {
                                             @AuthenticationPrincipal MemberContext memberContext){
         ShowBoardResponse showBoardResponse = travelBoardService.getBoardInfo(boardId, memberContext.getId());
         return Util.spring.responseEntityOf(RsData.success(BOARD_FOUND, showBoardResponse));
+    }
+
+    @Operation(summary = "동행 구하기 게시판 좋아요", security = @SecurityRequirement(name = "bearerAuth"))
+    @PreAuthorize("isAuthenticated()")
+    @PostMapping("/{boardId}")
+    public ResponseEntity<RsData> likeBoard(@PathVariable Long boardId,
+                                            @AuthenticationPrincipal MemberContext memberContext){
+        Code likeBoardResult = travelBoardService.likeBoard(boardId, memberContext.getId());
+        return Util.spring.responseEntityOf(RsData.success(likeBoardResult));
     }
 }
