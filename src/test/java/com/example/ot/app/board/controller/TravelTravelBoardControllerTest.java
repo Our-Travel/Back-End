@@ -14,8 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.nio.charset.StandardCharsets;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -388,6 +387,92 @@ public class TravelTravelBoardControllerTest {
         ResultActions resultActions = mvc
                 .perform(
                         get("/api/boards/edit/{boardId}", 1000)
+                )
+                .andDo(print());
+
+        // Then
+        resultActions
+                .andExpect(status().is4xxClientError());
+    }
+
+    @Test
+    @DisplayName("동행 게시판 수정")
+    @WithUserDetails("user1@example.com")
+    void shouldEditBoardSuccessfully() throws Exception {
+        // When
+        ResultActions resultActions = mvc
+                .perform(
+                        patch("/api/boards/edit/{boardId}", 1)
+                                .content("""
+                                    {
+                                        "title": "제목수정했습니다.",
+                                        "content": "내용수정했습니다.",
+                                        "region_code": 123,
+                                        "number_of_travelers": 3,
+                                        "recruitment_period_start": "2030-08-01",
+                                        "recruitment_period_end": "2030-08-03",
+                                        "journey_period_start": "2030-08-06",
+                                        "journey_period_end": "2030-08-09"
+                                    }
+                                    """)
+                                .contentType(new MediaType(MediaType.APPLICATION_JSON, StandardCharsets.UTF_8))
+                )
+                .andDo(print());
+
+        // Then
+        resultActions
+                .andExpect(status().is2xxSuccessful());
+    }
+
+    @Test
+    @DisplayName("게시글 작성자가 아니면 동행 게시판 수정 실패")
+    @WithUserDetails("user2@example.com")
+    void shouldEditBoardFailDueToUnauthorized() throws Exception {
+        // When
+        ResultActions resultActions = mvc
+                .perform(
+                        patch("/api/boards/edit/{boardId}", 1)
+                                .content("""
+                                    {
+                                        "title": "제목수정했습니다.",
+                                        "content": "내용수정했습니다.",
+                                        "region_code": 123,
+                                        "number_of_travelers": 3,
+                                        "recruitment_period_start": "2030-08-01",
+                                        "recruitment_period_end": "2030-08-03",
+                                        "journey_period_start": "2030-08-06",
+                                        "journey_period_end": "2030-08-09"
+                                    }
+                                    """)
+                                .contentType(new MediaType(MediaType.APPLICATION_JSON, StandardCharsets.UTF_8))
+                )
+                .andDo(print());
+
+        // Then
+        resultActions
+                .andExpect(status().is4xxClientError());
+    }
+
+    @Test
+    @DisplayName("로그인을 하지 않으면 동행 게시판 수정 실패")
+    void shouldEditBoardFailWithoutLogin() throws Exception {
+        // When
+        ResultActions resultActions = mvc
+                .perform(
+                        patch("/api/boards/edit/{boardId}", 1)
+                                .content("""
+                                    {
+                                        "title": "제목수정했습니다.",
+                                        "content": "내용수정했습니다.",
+                                        "region_code": 123,
+                                        "number_of_travelers": 3,
+                                        "recruitment_period_start": "2030-08-01",
+                                        "recruitment_period_end": "2030-08-03",
+                                        "journey_period_start": "2030-08-06",
+                                        "journey_period_end": "2030-08-09"
+                                    }
+                                    """)
+                                .contentType(new MediaType(MediaType.APPLICATION_JSON, StandardCharsets.UTF_8))
                 )
                 .andDo(print());
 

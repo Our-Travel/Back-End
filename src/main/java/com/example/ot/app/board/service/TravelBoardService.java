@@ -101,6 +101,7 @@ public class TravelBoardService {
     public void updateBoard(EditBoardRequest editBoardRequest, Long boardId, Long memberId) {
         TravelBoard travelBoard = findByBoardIdWithWriter(boardId);
         verifyBoardAuthor(travelBoard, memberId);
+        verifyDate(CreateBoardRequest.fromEditBoardRequest(editBoardRequest));
         travelBoard.update(editBoardRequest);
     }
 }
