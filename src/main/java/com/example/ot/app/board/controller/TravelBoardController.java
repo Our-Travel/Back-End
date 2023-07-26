@@ -1,6 +1,7 @@
 package com.example.ot.app.board.controller;
 
 import com.example.ot.app.board.dto.request.CreateBoardRequest;
+import com.example.ot.app.board.dto.response.ShowBoardResponse;
 import com.example.ot.app.board.service.TravelBoardService;
 import com.example.ot.base.rsData.RsData;
 import com.example.ot.config.security.entity.MemberContext;
@@ -14,10 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import static com.example.ot.app.board.code.TravelBoardSuccessCode.*;
 
@@ -26,7 +24,7 @@ import static com.example.ot.app.board.code.TravelBoardSuccessCode.*;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/boards")
-public class BoardController {
+public class TravelBoardController {
 
     private final TravelBoardService travelBoardService;
 
@@ -37,5 +35,14 @@ public class BoardController {
                                                @AuthenticationPrincipal MemberContext memberContext){
         travelBoardService.createBoard(createBoardRequest, memberContext.getId());
         return Util.spring.responseEntityOf(RsData.success(BOARD_CREATED));
+    }
+
+    @Operation(summary = "동행 구하기 게시판 조회", security = @SecurityRequirement(name = "bearerAuth"))
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/{boardId}")
+    public ResponseEntity<RsData> showBoard(@PathVariable Long boardId,
+                                            @AuthenticationPrincipal MemberContext memberContext){
+        ShowBoardResponse showBoardResponse = travelBoardService.getBoardInfo(boardId, memberContext.getId());
+        return Util.spring.responseEntityOf(RsData.success(BOARD_FOUND, showBoardResponse));
     }
 }

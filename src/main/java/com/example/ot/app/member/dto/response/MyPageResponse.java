@@ -14,10 +14,13 @@ import org.springframework.util.ObjectUtils;
 public class MyPageResponse {
 
     private String username;
+
     @JsonProperty("nick_name")
     private String nickName;
+
     @JsonProperty("image_path")
     private String imagePath;
+
     @JsonProperty("host_authority")
     private boolean hostAuthority;
 
