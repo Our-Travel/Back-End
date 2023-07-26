@@ -6,19 +6,13 @@ import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
 @Getter
 @JsonNaming(value = PropertyNamingStrategy.SnakeCaseStrategy.class)
-public class CreateBoardRequest {
+public class EditBoardRequest {
 
     @NotBlank(message = "제목을 입력해주세요.")
     private String title;
@@ -46,13 +40,4 @@ public class CreateBoardRequest {
 
     @NotNull(message = "여행기간을 입력해주세요.")
     private LocalDate journeyPeriodEnd;
-
-    public static CreateBoardRequest fromEditBoardRequest(EditBoardRequest editBoardRequest) {
-        return CreateBoardRequest.builder()
-                .recruitmentPeriodStart(editBoardRequest.getRecruitmentPeriodStart())
-                .recruitmentPeriodEnd(editBoardRequest.getRecruitmentPeriodEnd())
-                .journeyPeriodStart(editBoardRequest.getJourneyPeriodStart())
-                .journeyPeriodEnd(editBoardRequest.getJourneyPeriodEnd())
-                .build();
-    }
 }

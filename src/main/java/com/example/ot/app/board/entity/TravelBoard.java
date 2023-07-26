@@ -1,6 +1,7 @@
 package com.example.ot.app.board.entity;
 
 import com.example.ot.app.board.dto.request.CreateBoardRequest;
+import com.example.ot.app.board.dto.request.EditBoardRequest;
 import com.example.ot.app.member.entity.Member;
 import com.example.ot.base.entity.BaseTimeEntity;
 import jakarta.persistence.*;
@@ -55,5 +56,18 @@ public class TravelBoard extends BaseTimeEntity {
             return RecruitmentStatus.UPCOMING;
         }
         return RecruitmentStatus.OPEN;
+    }
+
+    public void update(EditBoardRequest editBoardRequest) {
+        TravelBoard.builder()
+                .title(editBoardRequest.getTitle())
+                .content(editBoardRequest.getContent())
+                .regionCode(editBoardRequest.getRegionCode())
+                .numberOfTravelers(editBoardRequest.getNumberOfTravelers())
+                .recruitmentPeriodStart(editBoardRequest.getRecruitmentPeriodStart())
+                .recruitmentPeriodEnd(editBoardRequest.getRecruitmentPeriodEnd())
+                .journeyPeriodStart(editBoardRequest.getJourneyPeriodStart())
+                .journeyPeriodEnd(editBoardRequest.getJourneyPeriodEnd())
+                .build();
     }
 }
