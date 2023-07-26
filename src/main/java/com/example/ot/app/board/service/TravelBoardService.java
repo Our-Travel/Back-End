@@ -1,6 +1,7 @@
 package com.example.ot.app.board.service;
 
 import com.example.ot.app.board.dto.request.CreateBoardRequest;
+import com.example.ot.app.board.dto.response.EditBoardResponse;
 import com.example.ot.app.board.dto.response.ShowBoardResponse;
 import com.example.ot.app.board.entity.LikeBoard;
 import com.example.ot.app.board.entity.TravelBoard;
@@ -80,5 +81,14 @@ public class TravelBoardService {
         }
         likeBoardRepository.delete(verifyLikeBoard);
         return BOARD_LIKED_CANCELED;
+    }
+
+    public EditBoardResponse getBoardInfoForEdit(Long boardId, Long memberId) {
+        TravelBoard travelBoard = findByBoardIdWithWriter(boardId);
+        Long BoardByMemberId = travelBoard.getMember().getId();
+        if(!BoardByMemberId.equals(memberId)){
+            throw new TravelBoardException(BOARD_ACCESS_UNAUTHORIZED);
+        }
+        return EditBoardResponse.fromTravelBoard(travelBoard);
     }
 }
