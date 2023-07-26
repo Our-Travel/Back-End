@@ -283,4 +283,53 @@ public class TravelTravelBoardControllerTest {
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(jsonPath("$.data.board_writer").value(false));
     }
+
+    @Test
+    @DisplayName("좋아요를 누르지 않았다면, 동행 특정 게시판 좋아요 성공.")
+    @WithUserDetails("user1@example.com")
+    void shouldLikeBoardSuccessfully() throws Exception {
+        // When
+        ResultActions resultActions = mvc
+                .perform(
+                        post("/api/boards/{boardId}", 1)
+                )
+                .andDo(print());
+
+        // Then
+        resultActions
+                .andExpect(status().is2xxSuccessful())
+                .andExpect(jsonPath("$.msg").value("'좋아요'를 눌렀습니다."));
+    }
+
+    @Test
+    @DisplayName("좋아요를 눌렀었다면, 동행 특정 게시판 좋아요 취소 성공.")
+    @WithUserDetails("user2@example.com")
+    void shouldLikeBoardSuccessfullyWhenCancelLikeBoard() throws Exception {
+        // When
+        ResultActions resultActions = mvc
+                .perform(
+                        post("/api/boards/{boardId}", 1)
+                )
+                .andDo(print());
+
+        // Then
+        resultActions
+                .andExpect(status().is2xxSuccessful())
+                .andExpect(jsonPath("$.msg").value("'좋아요'를 취소했습니다."));
+    }
+
+    @Test
+    @DisplayName("로그인을 하지 않으면 동행 특정 게시판 좋아요 실패.")
+    void shouldLikeBoardFailWithoutLogin() throws Exception {
+        // When
+        ResultActions resultActions = mvc
+                .perform(
+                        post("/api/boards/{boardId}", 1)
+                )
+                .andDo(print());
+
+        // Then
+        resultActions
+                .andExpect(status().is4xxClientError());
+    }
 }

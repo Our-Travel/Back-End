@@ -47,7 +47,7 @@ public class TravelBoardController {
         return Util.spring.responseEntityOf(RsData.success(BOARD_FOUND, showBoardResponse));
     }
 
-    @Operation(summary = "동행 구하기 게시판 좋아요", security = @SecurityRequirement(name = "bearerAuth"))
+    @Operation(summary = "동행 구하기 게시판 좋아요 및 좋아요 취소", security = @SecurityRequirement(name = "bearerAuth"))
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/{boardId}")
     public ResponseEntity<RsData> likeBoard(@PathVariable Long boardId,
