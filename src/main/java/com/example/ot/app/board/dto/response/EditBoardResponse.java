@@ -17,6 +17,7 @@ import java.time.LocalDate;
 @JsonNaming(value = PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class EditBoardResponse {
 
+    private Long boardId;
     private String title;
     private String content;
     private Integer regionCode;
@@ -28,6 +29,7 @@ public class EditBoardResponse {
 
     public static EditBoardResponse fromTravelBoard(TravelBoard travelBoard) {
         return EditBoardResponse.builder()
+                .boardId(travelBoard.getId())
                 .title(travelBoard.getTitle())
                 .content(travelBoard.getContent())
                 .regionCode(travelBoard.getRegionCode())

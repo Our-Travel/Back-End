@@ -12,7 +12,7 @@ import java.time.LocalDate;
 
 @Getter
 @JsonNaming(value = PropertyNamingStrategy.SnakeCaseStrategy.class)
-public class CreateBoardRequest {
+public class EditBoardRequest {
 
     @NotBlank(message = "제목을 입력해주세요.")
     private String title;

@@ -1,6 +1,7 @@
 package com.example.ot.app.board.controller;
 
 import com.example.ot.app.board.dto.request.CreateBoardRequest;
+import com.example.ot.app.board.dto.request.EditBoardRequest;
 import com.example.ot.app.board.dto.response.EditBoardResponse;
 import com.example.ot.app.board.dto.response.ShowBoardResponse;
 import com.example.ot.app.board.service.TravelBoardService;
@@ -64,5 +65,14 @@ public class TravelBoardController {
                                             @AuthenticationPrincipal MemberContext memberContext){
         EditBoardResponse editBoardResponse = travelBoardService.getBoardInfoForEdit(boardId, memberContext.getId());
         return Util.spring.responseEntityOf(RsData.success(BOARD_EDIT_PAGE, editBoardResponse));
+    }
+
+    @Operation(summary = "동행 구하기 게시판 수정", security = @SecurityRequirement(name = "bearerAuth"))
+    @PreAuthorize("isAuthenticated()")
+    @PatchMapping("/edit/{boardId}")
+    public ResponseEntity<RsData> updateBoard(@Valid @RequestBody EditBoardRequest editBoardRequest, @PathVariable Long boardId,
+                                              @AuthenticationPrincipal MemberContext memberContext){
+        travelBoardService.updateBoard(editBoardRequest, memberContext.getId(), boardId);
+        return Util.spring.responseEntityOf(RsData.success(BOARD_UPDATED));
     }
 }

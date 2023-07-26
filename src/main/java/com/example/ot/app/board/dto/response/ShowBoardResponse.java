@@ -19,6 +19,7 @@ import java.util.Objects;
 @JsonNaming(value = PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class ShowBoardResponse {
 
+    private Long boardId;
     private String title;
     private String content;
     private Integer regionCode;
@@ -34,6 +35,7 @@ public class ShowBoardResponse {
     public static ShowBoardResponse fromTravelBoard(TravelBoard travelBoard, boolean likeBoardStatusByMember, Long memberId) {
         boolean boardWriter = Objects.equals(travelBoard.getMember().getId(), memberId);
         return ShowBoardResponse.builder()
+                .boardId(travelBoard.getId())
                 .title(travelBoard.getTitle())
                 .content(travelBoard.getContent())
                 .regionCode(travelBoard.getRegionCode())
