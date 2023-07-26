@@ -12,7 +12,8 @@ public enum TravelBoardSuccessCode implements Code {
     BOARD_LIKED("'좋아요'를 눌렀습니다."),
     BOARD_LIKED_CANCELED("'좋아요'를 취소했습니다."),
     BOARD_EDIT_PAGE("게시판 수정 페이지를 조회했습니다."),
-    BOARD_UPDATED("게시판이 수정되었습니다.");
+    BOARD_UPDATED("게시판이 수정되었습니다."),
+    BOARD_DELETED("게시판이 삭제되었습니다.");
 
     private String message;
 }

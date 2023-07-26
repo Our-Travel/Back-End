@@ -75,4 +75,13 @@ public class TravelBoardController {
         travelBoardService.updateBoard(editBoardRequest, memberContext.getId(), boardId);
         return Util.spring.responseEntityOf(RsData.success(BOARD_UPDATED));
     }
+
+    @Operation(summary = "동행 구하기 게시판 삭제", security = @SecurityRequirement(name = "bearerAuth"))
+    @PreAuthorize("isAuthenticated()")
+    @DeleteMapping("/{boardId}")
+    public ResponseEntity<RsData> deleteBoard(@PathVariable Long boardId,
+                                              @AuthenticationPrincipal MemberContext memberContext){
+        travelBoardService.deleteBoard(boardId, memberContext.getId());
+        return Util.spring.responseEntityOf(RsData.success(BOARD_DELETED));
+    }
 }

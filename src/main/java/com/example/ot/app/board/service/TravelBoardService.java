@@ -84,6 +84,15 @@ public class TravelBoardService {
         return BOARD_LIKED_CANCELED;
     }
 
+    private TravelBoard getBoardWithValid(Long boardId, Long memberId){
+        TravelBoard travelBoard = findByBoardIdWithWriter(boardId);
+        Long BoardByMemberId = travelBoard.getMember().getId();
+        if(!BoardByMemberId.equals(memberId)){
+            throw new TravelBoardException(BOARD_ACCESS_UNAUTHORIZED);
+        }
+        return travelBoard;
+    }
+
     private void verifyBoardAuthor(TravelBoard travelBoard, Long memberId){
         Long BoardByMemberId = travelBoard.getMember().getId();
         if(!BoardByMemberId.equals(memberId)){
@@ -92,16 +101,20 @@ public class TravelBoardService {
     }
 
     public EditBoardResponse getBoardInfoForEdit(Long boardId, Long memberId) {
-        TravelBoard travelBoard = findByBoardIdWithWriter(boardId);
-        verifyBoardAuthor(travelBoard, memberId);
+        TravelBoard travelBoard = getBoardWithValid(boardId, memberId);
         return EditBoardResponse.fromTravelBoard(travelBoard);
     }
 
     @Transactional
     public void updateBoard(EditBoardRequest editBoardRequest, Long boardId, Long memberId) {
-        TravelBoard travelBoard = findByBoardIdWithWriter(boardId);
-        verifyBoardAuthor(travelBoard, memberId);
+        TravelBoard travelBoard = getBoardWithValid(boardId, memberId);
         verifyDate(CreateBoardRequest.fromEditBoardRequest(editBoardRequest));
         travelBoard.update(editBoardRequest);
+    }
+
+    @Transactional
+    public void deleteBoard(Long boardId, Long memberId) {
+        TravelBoard travelBoard = getBoardWithValid(boardId, memberId);
+        travelBoardRepository.delete(travelBoard);
     }
 }
