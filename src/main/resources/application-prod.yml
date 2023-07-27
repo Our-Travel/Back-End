@@ -1,4 +1,8 @@
 spring:
+  mvc:
+    servlet:
+      path: '${custom.prod.servlet.path}'
+
   datasource:
     driver-class-name: '${custom.prod.database.driver-class-name}'
     url: '${custom.prod.database.url}'
@@ -8,6 +12,10 @@ spring:
     redis:
       host: '${custom.prod.redis.host}'
       port: '${custom.prod.redis.port}'
+
   jpa:
     hibernate:
       ddl-auto: none
+
+server:
+  port: '${custom.prod.server.port}'

@@ -1,18 +1,10 @@
 spring:
   profiles:
-    active: dev
+    active: local
     include: secret
-  datasource:
-    driver-class-name: '${custom.dev.database.driver-class-name}'
-    url: '${custom.dev.database.url}'
-    username: '${custom.dev.database.username}'
-    password: '${custom.dev.database.password}'
+
   cache:
     type: redis
-  data:
-    redis:
-      host: '${custom.dev.redis.host}'
-      port: '${custom.dev.redis.port}'
 
   security:
     oauth2:
@@ -30,25 +22,13 @@ spring:
             token-uri: https://kauth.kakao.com/oauth/token
             user-info-uri: https://kapi.kakao.com/v2/user/me
             user-name-attribute: id
+
   jpa:
-    hibernate:
-      ddl-auto: create
     properties:
       hibernate:
-        show_sql: true
-        format_sql: true
-        use_sql_comments: true
         default_batch_fetch_size: 1000
-logging:
-  level:
-    root: INFO
-    com.example.ot: DEBUG
-    org.hibernate.orm.jdbc.bind: TRACE
-    org.hibernate.orm.jdbc.extract: TRACE
+
 kakao:
   rest:
     api:
       key: '${kakao.rest.api.key}'
-
-oauth:
-  login: '{baseUrl]/api/members/auth'
