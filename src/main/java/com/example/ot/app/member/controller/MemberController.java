@@ -32,7 +32,7 @@ import static com.example.ot.app.member.code.MemberSuccessCode.*;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/members")
+@RequestMapping("/members")
 public class MemberController {
 
     private final MemberService memberService;

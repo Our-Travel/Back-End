@@ -1,0 +1,21 @@
+spring:
+  mvc:
+    servlet:
+      path: '${custom.dev.servlet.path}'
+
+  datasource:
+    driver-class-name: '${custom.dev.database.driver-class-name}'
+    url: '${custom.dev.database.url}'
+    username: '${custom.dev.database.username}'
+    password: '${custom.dev.database.password}'
+  data:
+    redis:
+      host: '${custom.dev.redis.host}'
+      port: '${custom.dev.redis.port}'
+
+  jpa:
+    hibernate:
+      ddl-auto: create
+
+server:
+  port: '${custom.dev.server.port}'

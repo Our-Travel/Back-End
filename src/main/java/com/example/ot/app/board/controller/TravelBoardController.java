@@ -26,13 +26,12 @@ import static com.example.ot.app.board.code.TravelBoardSuccessCode.*;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/boards")
+@RequestMapping("/boards")
 public class TravelBoardController {
 
     private final TravelBoardService travelBoardService;
 
     @Operation(summary = "동행 구하기 게시판 생성", security = @SecurityRequirement(name = "bearerAuth"))
-    @PreAuthorize("isAuthenticated()")
     @PostMapping
     public ResponseEntity<RsData> createBoard(@Valid @RequestBody CreateBoardRequest createBoardRequest,
                                                @AuthenticationPrincipal MemberContext memberContext){
@@ -41,7 +40,6 @@ public class TravelBoardController {
     }
 
     @Operation(summary = "동행 구하기 게시판 조회", security = @SecurityRequirement(name = "bearerAuth"))
-    @PreAuthorize("isAuthenticated()")
     @GetMapping("/{boardId}")
     public ResponseEntity<RsData> showBoard(@PathVariable Long boardId,
                                             @AuthenticationPrincipal MemberContext memberContext){
@@ -50,7 +48,6 @@ public class TravelBoardController {
     }
 
     @Operation(summary = "동행 구하기 게시판 좋아요 및 좋아요 취소", security = @SecurityRequirement(name = "bearerAuth"))
-    @PreAuthorize("isAuthenticated()")
     @PostMapping("/{boardId}")
     public ResponseEntity<RsData> likeBoard(@PathVariable Long boardId,
                                             @AuthenticationPrincipal MemberContext memberContext){
@@ -59,7 +56,6 @@ public class TravelBoardController {
     }
 
     @Operation(summary = "동행 구하기 게시판 수정 페이지 조회", security = @SecurityRequirement(name = "bearerAuth"))
-    @PreAuthorize("isAuthenticated()")
     @GetMapping("/edit/{boardId}")
     public ResponseEntity<RsData> updateBoardPage(@PathVariable Long boardId,
                                             @AuthenticationPrincipal MemberContext memberContext){
@@ -68,7 +64,6 @@ public class TravelBoardController {
     }
 
     @Operation(summary = "동행 구하기 게시판 수정", security = @SecurityRequirement(name = "bearerAuth"))
-    @PreAuthorize("isAuthenticated()")
     @PatchMapping("/edit/{boardId}")
     public ResponseEntity<RsData> updateBoard(@Valid @RequestBody EditBoardRequest editBoardRequest, @PathVariable Long boardId,
                                               @AuthenticationPrincipal MemberContext memberContext){
@@ -77,7 +72,6 @@ public class TravelBoardController {
     }
 
     @Operation(summary = "동행 구하기 게시판 삭제", security = @SecurityRequirement(name = "bearerAuth"))
-    @PreAuthorize("isAuthenticated()")
     @DeleteMapping("/{boardId}")
     public ResponseEntity<RsData> deleteBoard(@PathVariable Long boardId,
                                               @AuthenticationPrincipal MemberContext memberContext){
