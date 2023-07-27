@@ -26,13 +26,12 @@ import static com.example.ot.app.host.code.HostSuccessCode.*;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/hosts")
+@RequestMapping("/hosts")
 public class HostController {
 
     private final HostService hostService;
 
     @Operation(summary = "호스트 등록", security = @SecurityRequirement(name = "bearerAuth"))
-    @PreAuthorize("isAuthenticated()")
     @PostMapping
     public ResponseEntity<RsData> registerHost(@Valid @RequestBody WriteHostInfoRequest writeHostInfoRequest,
                                                @AuthenticationPrincipal MemberContext memberContext){
@@ -41,7 +40,6 @@ public class HostController {
     }
 
     @Operation(summary = "호스트 수정 페이지", security = @SecurityRequirement(name = "bearerAuth"))
-    @PreAuthorize("hasAuthority('host')")
     @GetMapping
     public ResponseEntity<RsData> editHostInfoPage(@AuthenticationPrincipal MemberContext memberContext){
         EditHostResponse hostInfo = hostService.getHostInfo(memberContext.getId());

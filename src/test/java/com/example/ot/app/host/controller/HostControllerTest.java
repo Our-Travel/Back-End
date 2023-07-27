@@ -44,7 +44,7 @@ public class HostControllerTest {
 
         ResultActions resultActions = mvc
                 .perform(
-                        post("/api/hosts")
+                        post("/hosts")
                                 .content("""
                                     {
                                         "introduction": "저는 호스트가 되고싶어요.",
@@ -70,7 +70,7 @@ public class HostControllerTest {
         // When
         ResultActions resultActions = mvc
                 .perform(
-                        post("/api/hosts")
+                        post("/hosts")
                                 .content("""
                                     {
                                         "introduction": "저는 호스트가 되고싶어요.",
@@ -94,7 +94,7 @@ public class HostControllerTest {
         // When
         ResultActions resultActions = mvc
                 .perform(
-                        post("/api/hosts")
+                        post("/hosts")
                                 .content("""
                                     {
                                         "introduction": "아",
@@ -113,7 +113,7 @@ public class HostControllerTest {
         // When
         resultActions = mvc
                 .perform(
-                        post("/api/hosts")
+                        post("/hosts")
                                 .content("""
                                     {
                                         "introduction": "이",
@@ -138,7 +138,7 @@ public class HostControllerTest {
         // When
         ResultActions resultActions = mvc
                 .perform(
-                        post("/api/hosts")
+                        post("/hosts")
                                 .content("""
                                     {
                                         "introduction": "저는 호스트가 되고싶어요.",
@@ -162,7 +162,7 @@ public class HostControllerTest {
         // When
         ResultActions resultActions = mvc
                 .perform(
-                        post("/api/hosts")
+                        post("/hosts")
                                 .content("""
                                     {
                                         "introduction": "저는 호스트가 되고싶어요.",
@@ -186,7 +186,7 @@ public class HostControllerTest {
     void shouldIntoHostEditPageSuccessfullyDueToHavingHostAuthority() throws Exception {
         ResultActions resultActions = mvc
                 .perform(
-                        get("/api/hosts"))
+                        get("/hosts"))
                 .andDo(print());
 
         // Then
@@ -200,7 +200,7 @@ public class HostControllerTest {
     void shouldFailDueToNotExistsHostAuthority() throws Exception {
         ResultActions resultActions = mvc
                 .perform(
-                        get("/api/hosts"))
+                        get("/hosts"))
                 .andDo(print());
 
         // Then
@@ -214,7 +214,7 @@ public class HostControllerTest {
     void shouldEditHostInfoSuccessfully() throws Exception {
         ResultActions resultActions = mvc
                 .perform(
-                        patch("/api/hosts")
+                        patch("/hosts")
                                 .content("""
                                     {
                                         "introduction": "저는 호스트가 되고싶습니다~~!",
@@ -237,7 +237,7 @@ public class HostControllerTest {
     void shouldFailEditHostInfoDueToBlank() throws Exception {
         ResultActions resultActions = mvc
                 .perform(
-                        patch("/api/hosts")
+                        patch("/hosts")
                                 .content("""
                                     {
                                         "hash_tag": "#호스트 #여행 #함께 #서울",
@@ -254,7 +254,7 @@ public class HostControllerTest {
 
         resultActions = mvc
                 .perform(
-                        patch("/api/hosts")
+                        patch("/hosts")
                                 .content("""
                                     {
                                         "introduction": "저는 호스트가 되고싶습니다~~!",
@@ -271,7 +271,7 @@ public class HostControllerTest {
 
         resultActions = mvc
                 .perform(
-                        patch("/api/hosts")
+                        patch("/hosts")
                                 .content("""
                                     {
                                         "introduction": "저는 호스트가 되고싶습니다~~!",
@@ -293,7 +293,7 @@ public class HostControllerTest {
     void shouldFailEditHostInfoDueToNotExistsHostAuthority() throws Exception {
         ResultActions resultActions = mvc
                 .perform(
-                        patch("/api/hosts")
+                        patch("/hosts")
                                 .content("""
                                     {
                                         "introduction": "저는 호스트가 되고싶습니다~~!",
@@ -316,7 +316,7 @@ public class HostControllerTest {
     void shouldRemoveHostAuthoritySuccessfully() throws Exception {
         ResultActions resultActions = mvc
                 .perform(
-                        delete("/api/hosts"))
+                        delete("/hosts"))
                 .andDo(print());
 
         // Then
@@ -330,7 +330,7 @@ public class HostControllerTest {
     void shouldRemoveHostAuthorityFailDueToNotExistsHostAuthority() throws Exception {
         ResultActions resultActions = mvc
                 .perform(
-                        delete("/api/hosts"))
+                        delete("/hosts"))
                 .andDo(print());
 
         // Then
@@ -344,7 +344,7 @@ public class HostControllerTest {
     void shouldGetHostsByRegionSuccessfully() throws Exception {
         ResultActions resultActions = mvc
                 .perform(
-                        get("/api/hosts/list?regionCode=11020"))
+                        get("/hosts/list?regionCode=11020"))
                 .andDo(print());
 
         // Then
@@ -358,7 +358,7 @@ public class HostControllerTest {
     void shouldGetHostsByRegionFailDueToHostsNotExists() throws Exception {
         ResultActions resultActions = mvc
                 .perform(
-                        get("/api/hosts/list?regionCode=11033"))
+                        get("/hosts/list?regionCode=11033"))
                 .andDo(print());
 
         // Then

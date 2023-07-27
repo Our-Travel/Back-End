@@ -35,7 +35,7 @@ public class TravelTravelBoardControllerTest {
         // When
         ResultActions resultActions = mvc
                 .perform(
-                        post("/api/boards")
+                        post("/boards")
                                 .content("""
                                     {
                                         "title": "제목입니다",
@@ -63,7 +63,7 @@ public class TravelTravelBoardControllerTest {
         // When
         ResultActions resultActions = mvc
                 .perform(
-                        post("/api/boards")
+                        post("/boards")
                                 .content("""
                                     {
                                         "title": "제목입니다",
@@ -92,7 +92,7 @@ public class TravelTravelBoardControllerTest {
         // When
         ResultActions resultActions = mvc
                 .perform(
-                        post("/api/boards")
+                        post("/boards")
                                 .content("""
                                     {
                                         "title": "제목입니다",
@@ -121,7 +121,7 @@ public class TravelTravelBoardControllerTest {
         // When
         ResultActions resultActions = mvc
                 .perform(
-                        post("/api/boards")
+                        post("/boards")
                                 .content("""
                                     {
                                         "title": "제목입니다",
@@ -150,7 +150,7 @@ public class TravelTravelBoardControllerTest {
         // When
         ResultActions resultActions = mvc
                 .perform(
-                        post("/api/boards")
+                        post("/boards")
                                 .content("""
                                     {
                                         "title": "제목입니다",
@@ -179,7 +179,7 @@ public class TravelTravelBoardControllerTest {
         // When
         ResultActions resultActions = mvc
                 .perform(
-                        post("/api/boards")
+                        post("/boards")
                                 .content("""
                                     {
                                         "title": "제목입니다",
@@ -208,7 +208,7 @@ public class TravelTravelBoardControllerTest {
         // When
         ResultActions resultActions = mvc
                 .perform(
-                        get("/api/boards/{boardId}", 1)
+                        get("/boards/{boardId}", 1)
                 )
                 .andDo(print());
 
@@ -223,7 +223,7 @@ public class TravelTravelBoardControllerTest {
         // When
         ResultActions resultActions = mvc
                 .perform(
-                        get("/api/boards/{boardId}", 1)
+                        get("/boards/{boardId}", 1)
                 )
                 .andDo(print());
 
@@ -239,7 +239,7 @@ public class TravelTravelBoardControllerTest {
         // When
         ResultActions resultActions = mvc
                 .perform(
-                        get("/api/boards/{boardId}", 100)
+                        get("/boards/{boardId}", 100)
                 )
                 .andDo(print());
 
@@ -255,7 +255,7 @@ public class TravelTravelBoardControllerTest {
         // When
         ResultActions resultActions = mvc
                 .perform(
-                        get("/api/boards/{boardId}", 1)
+                        get("/boards/{boardId}", 1)
                 )
                 .andDo(print());
 
@@ -272,7 +272,7 @@ public class TravelTravelBoardControllerTest {
         // When
         ResultActions resultActions = mvc
                 .perform(
-                        get("/api/boards/{boardId}", 1)
+                        get("/boards/{boardId}", 1)
                 )
                 .andDo(print());
 
@@ -289,7 +289,7 @@ public class TravelTravelBoardControllerTest {
         // When
         ResultActions resultActions = mvc
                 .perform(
-                        post("/api/boards/{boardId}", 1)
+                        post("/boards/{boardId}", 1)
                 )
                 .andDo(print());
 
@@ -306,7 +306,7 @@ public class TravelTravelBoardControllerTest {
         // When
         ResultActions resultActions = mvc
                 .perform(
-                        post("/api/boards/{boardId}", 1)
+                        post("/boards/{boardId}", 1)
                 )
                 .andDo(print());
 
@@ -322,7 +322,7 @@ public class TravelTravelBoardControllerTest {
         // When
         ResultActions resultActions = mvc
                 .perform(
-                        post("/api/boards/{boardId}", 1)
+                        post("/boards/{boardId}", 1)
                 )
                 .andDo(print());
 
@@ -338,7 +338,7 @@ public class TravelTravelBoardControllerTest {
         // When
         ResultActions resultActions = mvc
                 .perform(
-                        get("/api/boards/edit/{boardId}", 1)
+                        get("/boards/edit/{boardId}", 1)
                 )
                 .andDo(print());
 
@@ -353,7 +353,7 @@ public class TravelTravelBoardControllerTest {
         // When
         ResultActions resultActions = mvc
                 .perform(
-                        get("/api/boards/edit/{boardId}", 1)
+                        get("/boards/edit/{boardId}", 1)
                 )
                 .andDo(print());
 
@@ -369,7 +369,7 @@ public class TravelTravelBoardControllerTest {
         // When
         ResultActions resultActions = mvc
                 .perform(
-                        get("/api/boards/edit/{boardId}", 1)
+                        get("/boards/edit/{boardId}", 1)
                 )
                 .andDo(print());
 
@@ -385,7 +385,7 @@ public class TravelTravelBoardControllerTest {
         // When
         ResultActions resultActions = mvc
                 .perform(
-                        get("/api/boards/edit/{boardId}", 1000)
+                        get("/boards/edit/{boardId}", 1000)
                 )
                 .andDo(print());
 
@@ -401,7 +401,7 @@ public class TravelTravelBoardControllerTest {
         // When
         ResultActions resultActions = mvc
                 .perform(
-                        patch("/api/boards/edit/{boardId}", 1)
+                        patch("/boards/edit/{boardId}", 1)
                                 .content("""
                                     {
                                         "title": "제목수정했습니다.",
@@ -430,7 +430,7 @@ public class TravelTravelBoardControllerTest {
         // When
         ResultActions resultActions = mvc
                 .perform(
-                        patch("/api/boards/edit/{boardId}", 1)
+                        patch("/boards/edit/{boardId}", 1)
                                 .content("""
                                     {
                                         "title": "제목수정했습니다.",
@@ -458,7 +458,7 @@ public class TravelTravelBoardControllerTest {
         // When
         ResultActions resultActions = mvc
                 .perform(
-                        patch("/api/boards/edit/{boardId}", 1)
+                        patch("/boards/edit/{boardId}", 1)
                                 .content("""
                                     {
                                         "title": "제목수정했습니다.",
@@ -487,7 +487,7 @@ public class TravelTravelBoardControllerTest {
         // When
         ResultActions resultActions = mvc
                 .perform(
-                        delete("/api/boards/{boardId}", 1)
+                        delete("/boards/{boardId}", 1)
                 )
                 .andDo(print());
 
@@ -502,7 +502,7 @@ public class TravelTravelBoardControllerTest {
         // When
         ResultActions resultActions = mvc
                 .perform(
-                        delete("/api/boards/{boardId}", 1)
+                        delete("/boards/{boardId}", 1)
                 )
                 .andDo(print());
 
@@ -518,7 +518,7 @@ public class TravelTravelBoardControllerTest {
         // When
         ResultActions resultActions = mvc
                 .perform(
-                        delete("/api/boards/{boardId}", 1)
+                        delete("/boards/{boardId}", 1)
                 )
                 .andDo(print());
 
@@ -534,7 +534,7 @@ public class TravelTravelBoardControllerTest {
         // When
         ResultActions resultActions = mvc
                 .perform(
-                        delete("/api/boards/{boardId}", 1000)
+                        delete("/boards/{boardId}", 1000)
                 )
                 .andDo(print());
 
