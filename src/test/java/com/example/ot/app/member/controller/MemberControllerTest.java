@@ -43,7 +43,7 @@ public class MemberControllerTest {
         // When
         ResultActions resultActions = mvc
                 .perform(
-                        post("/api/members/signup")
+                        post("/members/signup")
                                 .content("""
                                         {
                                             "username": "user2222@example.com",
@@ -68,7 +68,7 @@ public class MemberControllerTest {
         // When
         ResultActions resultActions = mvc
                 .perform(
-                        post("/api/members/signup")
+                        post("/members/signup")
                                 .content("""
                                         {
                                             "username": "",
@@ -89,7 +89,7 @@ public class MemberControllerTest {
         // When
         resultActions = mvc
                 .perform(
-                        post("/api/members/signup")
+                        post("/members/signup")
                                 .content("""
                                         {
                                             "username": "user1@naver.com",
@@ -117,7 +117,7 @@ public class MemberControllerTest {
         // When
         ResultActions resultActions = mvc
                 .perform(
-                        get("/api/members/exists/username/{username}", username)
+                        get("/members/exists/username/{username}", username)
                 )
                 .andDo(print());
 
@@ -135,7 +135,7 @@ public class MemberControllerTest {
         // When
         ResultActions resultActions = mvc
                 .perform(
-                        get("/api/members/exists/username/{username}", username)
+                        get("/members/exists/username/{username}", username)
                 )
                 .andDo(print());
 
@@ -153,7 +153,7 @@ public class MemberControllerTest {
         // When
         ResultActions resultActions = mvc
                 .perform(
-                        get("/api/members/exists/nickName/{nickName}", nickName)
+                        get("/members/exists/nickName/{nickName}", nickName)
                 )
                 .andDo(print());
 
@@ -171,7 +171,7 @@ public class MemberControllerTest {
         // When
         ResultActions resultActions = mvc
                 .perform(
-                        get("/api/members/exists/nickName/{nickName}", nickName)
+                        get("/members/exists/nickName/{nickName}", nickName)
                 )
                 .andDo(print());
 
@@ -187,7 +187,7 @@ public class MemberControllerTest {
         // 아이디 유효성 검증
         ResultActions resultActions = mvc
                 .perform(
-                        post("/api/members/signup")
+                        post("/members/signup")
                                 .content("""
                                         {
                                             "username": "user3",
@@ -207,7 +207,7 @@ public class MemberControllerTest {
         // 비밀번호 길이 유효성 검증
         resultActions = mvc
                 .perform(
-                        post("/api/members/signup")
+                        post("/members/signup")
                                 .content("""
                                         {
                                             "username": "user3@example.com",
@@ -227,7 +227,7 @@ public class MemberControllerTest {
         // 비밀번호 특문포함 유효성 검증
         resultActions = mvc
                 .perform(
-                        post("/api/members/signup")
+                        post("/members/signup")
                                 .content("""
                                         {
                                             "username": "user3@example.com",
@@ -247,7 +247,7 @@ public class MemberControllerTest {
         // 비밀번호 영어포함 유효성 검증
         resultActions = mvc
                 .perform(
-                        post("/api/members/signup")
+                        post("/members/signup")
                                 .content("""
                                         {
                                             "username": "user3@example.com",
@@ -267,7 +267,7 @@ public class MemberControllerTest {
         // 닉네임 길이 유효성 검증
         resultActions = mvc
                 .perform(
-                        post("/api/members/signup")
+                        post("/members/signup")
                                 .content("""
                                         {
                                             "username": "user3@example.com",
@@ -293,7 +293,7 @@ public class MemberControllerTest {
         // When
         ResultActions resultActions = mvc
                 .perform(
-                        post("/api/members/login")
+                        post("/members/login")
                                 .content("""
                                         {
                                             "username": "user55@example.com",
@@ -323,7 +323,7 @@ public class MemberControllerTest {
         // When
         ResultActions resultActions = mvc
                 .perform(
-                        post("/api/members/login")
+                        post("/members/login")
                                 .content("""
                                         {
                                             "username": "",
@@ -340,7 +340,7 @@ public class MemberControllerTest {
 
         mvc
                 .perform(
-                        post("/api/members/login")
+                        post("/members/login")
                                 .content("""
                                         {
                                             "username": "user1@example.com",
@@ -362,7 +362,7 @@ public class MemberControllerTest {
     void shouldMyPageSuccessfully() throws Exception {
         ResultActions resultActions = mvc
                 .perform(
-                        get("/api/members"))
+                        get("/members"))
                 .andDo(print());
 
         // Then
@@ -375,7 +375,7 @@ public class MemberControllerTest {
     void shouldFailMyPageDueToNotSignIn() throws Exception {
         ResultActions resultActions = mvc
                 .perform(
-                        get("/api/members"))
+                        get("/members"))
                 .andDo(print());
 
         // Then
@@ -389,7 +389,7 @@ public class MemberControllerTest {
     void shouldProfilePageSuccessfully() throws Exception {
         ResultActions resultActions = mvc
                 .perform(
-                        get("/api/members/profile"))
+                        get("/members/profile"))
                 .andDo(print());
 
         // Then
@@ -402,7 +402,7 @@ public class MemberControllerTest {
     void shouldProfilePageDueToNotSignIn() throws Exception {
         ResultActions resultActions = mvc
                 .perform(
-                        get("/api/members/profile"))
+                        get("/members/profile"))
                 .andDo(print());
 
         // Then
@@ -420,7 +420,7 @@ public class MemberControllerTest {
         // When
         ResultActions resultActions = mvc
                 .perform(
-                        multipart("/api/members/profile-image")
+                        multipart("/members/profile-image")
                                 .file(file)
                 )
                 .andDo(print());
@@ -437,7 +437,7 @@ public class MemberControllerTest {
         // When
         ResultActions resultActions = mvc
                 .perform(
-                        multipart("/api/members/profile")
+                        multipart("/members/profile")
                 )
                 .andDo(print());
 
@@ -455,7 +455,7 @@ public class MemberControllerTest {
         // When
         ResultActions resultActions = mvc
                 .perform(
-                        multipart("/api/members/profile")
+                        multipart("/members/profile")
                                 .file(file)
                 )
                 .andDo(print());
