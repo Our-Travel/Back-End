@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import static com.example.ot.app.board.code.TravelBoardSuccessCode.*;
 import static com.example.ot.app.board.exception.ErrorCode.*;
@@ -116,5 +117,9 @@ public class TravelBoardService {
     public void deleteBoard(Long boardId, Long memberId) {
         TravelBoard travelBoard = getBoardWithValid(boardId, memberId);
         travelBoardRepository.delete(travelBoard);
+    }
+
+    public List<TravelBoard> getMyBoardList(Long memberId) {
+        return travelBoardRepository.getTravelBoardListByMember(memberId);
     }
 }
