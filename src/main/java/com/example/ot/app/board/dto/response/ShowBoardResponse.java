@@ -24,10 +24,10 @@ public class ShowBoardResponse {
     private String content;
     private Integer regionCode;
     private Integer numberOfTravelers;
-    private LocalDate recruitmentPeriodStart;
-    private LocalDate recruitmentPeriodEnd;
-    private LocalDate journeyPeriodStart;
-    private LocalDate journeyPeriodEnd;
+    private String recruitmentPeriodStart;
+    private String recruitmentPeriodEnd;
+    private String journeyPeriodStart;
+    private String journeyPeriodEnd;
     private boolean boardWriter;
     private boolean likeBoardStatus;
     private RecruitmentStatus recruitmentStatus;
@@ -40,10 +40,10 @@ public class ShowBoardResponse {
                 .content(travelBoard.getContent())
                 .regionCode(travelBoard.getRegionCode())
                 .numberOfTravelers(travelBoard.getNumberOfTravelers())
-                .recruitmentPeriodStart(travelBoard.getRecruitmentPeriodStart())
-                .recruitmentPeriodEnd(travelBoard.getRecruitmentPeriodEnd())
-                .journeyPeriodStart(travelBoard.getJourneyPeriodStart())
-                .journeyPeriodEnd(travelBoard.getJourneyPeriodEnd())
+                .recruitmentPeriodStart(String.valueOf(travelBoard.getRecruitmentPeriodStart()))
+                .recruitmentPeriodEnd(String.valueOf(travelBoard.getRecruitmentPeriodEnd()))
+                .journeyPeriodStart(String.valueOf(travelBoard.getJourneyPeriodStart()))
+                .journeyPeriodEnd(String.valueOf(travelBoard.getJourneyPeriodEnd()))
                 .boardWriter(boardWriter)
                 .likeBoardStatus(likeBoardStatusByMember)
                 .recruitmentStatus(travelBoard.getRecruitmentStatus())
