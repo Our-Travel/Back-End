@@ -24,4 +24,4 @@ server:
 logging:
   discord:
     webhook-uri: '{custom.dev.webhook.logBack}'
-  config: classpath:logback-spring.xml
+  config: classpath:log/logback-spring.xml
