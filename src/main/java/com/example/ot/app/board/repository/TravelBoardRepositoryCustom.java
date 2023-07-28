@@ -6,5 +6,7 @@ import org.springframework.data.domain.Slice;
 
 public interface TravelBoardRepositoryCustom {
 
-    Slice<ShowBoardResponse> findAllMyBoardsWithKeysetPaging(Long lastBoardId, Long memberId, Pageable pageable);
+    Slice<ShowBoardResponse> findMyBoardsWithKeysetPaging(Long lastBoardId, Long memberId, Pageable pageable);
+
+    Slice<ShowBoardResponse> findBoardsByRegionWithKeysetPaging(Integer regionCode, Long lastBoardId, Pageable pageable);
 }

@@ -19,7 +19,7 @@ public class TravelBoardRepositoryImpl implements TravelBoardRepositoryCustom {
     private final JPAQueryFactory jpaQueryFactory;
 
     @Override
-    public Slice<ShowBoardResponse> findAllMyBoardsWithKeysetPaging(Long lastBoardId, Long memberId, Pageable pageable) {
+    public Slice<ShowBoardResponse> findMyBoardsWithKeysetPaging(Long lastBoardId, Long memberId, Pageable pageable) {
         BooleanExpression boardIdLt = lastBoardId != null ? travelBoard.id.lt(lastBoardId) : null;
         BooleanExpression boardByMemberEq = memberId != null ? travelBoard.member.id.eq(memberId) : null;
 
@@ -30,6 +30,20 @@ public class TravelBoardRepositoryImpl implements TravelBoardRepositoryCustom {
                 .fetch();
 
         return checkLastPage(pageable, results, memberId);
+    }
+
+    @Override
+    public Slice<ShowBoardResponse> findBoardsByRegionWithKeysetPaging(Integer regionCode, Long lastBoardId, Pageable pageable) {
+        BooleanExpression boardByRegionCodeEq = regionCode != null ? travelBoard.regionCode.eq(regionCode) : null;
+        BooleanExpression boardIdLt = lastBoardId != null ? travelBoard.id.lt(lastBoardId) : null;
+
+        List<TravelBoard> results = jpaQueryFactory.selectFrom(travelBoard)
+                .where(boardIdLt, boardByRegionCodeEq)
+                .orderBy(travelBoard.id.desc())
+                .limit(pageable.getPageSize() + 1)
+                .fetch();
+
+        return checkLastPage(pageable, results, null);
     }
 
     private Slice<ShowBoardResponse> checkLastPage(Pageable pageable, List<TravelBoard> results, Long memberId) {

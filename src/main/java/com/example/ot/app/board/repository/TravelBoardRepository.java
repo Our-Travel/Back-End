@@ -12,7 +12,4 @@ public interface TravelBoardRepository extends JpaRepository<TravelBoard, Long>,
 
     @Query("select t from TravelBoard t join fetch t.member m where t.id = :boardId")
     Optional<TravelBoard> findByBoardIdWithWriter(@Param("boardId") Long boardId);
-
-    @Query("select t from TravelBoard t join fetch t.member m where m.id = :memberId")
-    List<TravelBoard> getTravelBoardListByMember(@Param("memberId") Long memberId);
 }

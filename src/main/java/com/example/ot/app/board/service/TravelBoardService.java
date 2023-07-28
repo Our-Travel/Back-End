@@ -122,6 +122,10 @@ public class TravelBoardService {
     }
 
     public Slice<ShowBoardResponse> getMyBoardList(Long lastBoardId, Long memberId) {
-        return travelBoardRepository.findAllMyBoardsWithKeysetPaging(lastBoardId, memberId, PageRequest.ofSize(pageOfSize));
+        return travelBoardRepository.findMyBoardsWithKeysetPaging(lastBoardId, memberId, PageRequest.ofSize(pageOfSize));
+    }
+
+    public Slice<ShowBoardResponse> getBoardListByRegion(Integer regionCode, Long lastBoardId) {
+        return travelBoardRepository.findBoardsByRegionWithKeysetPaging(regionCode, lastBoardId, PageRequest.ofSize(pageOfSize));
     }
 }
