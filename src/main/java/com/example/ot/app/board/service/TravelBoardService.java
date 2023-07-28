@@ -14,12 +14,13 @@ import com.example.ot.app.member.entity.Member;
 import com.example.ot.app.member.service.MemberService;
 import com.example.ot.base.code.Code;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 
 import java.time.LocalDate;
-import java.util.List;
 
 import static com.example.ot.app.board.code.TravelBoardSuccessCode.*;
 import static com.example.ot.app.board.exception.ErrorCode.*;
@@ -32,6 +33,7 @@ public class TravelBoardService {
     private final MemberService memberService;
     private final TravelBoardRepository travelBoardRepository;
     private final LikeBoardRepository likeBoardRepository;
+    private final static int pageOfSize = 10;
 
     @Transactional
     public void createBoard(CreateBoardRequest createBoardRequest, Long memberId) {
@@ -119,7 +121,7 @@ public class TravelBoardService {
         travelBoardRepository.delete(travelBoard);
     }
 
-    public List<TravelBoard> getMyBoardList(Long memberId) {
-        return travelBoardRepository.getTravelBoardListByMember(memberId);
+    public Slice<ShowBoardResponse> getMyBoardList(Long lastBoardId, Long memberId) {
+        return travelBoardRepository.findAllMyBoardsWithKeysetPaging(lastBoardId, memberId, PageRequest.ofSize(pageOfSize));
     }
 }

@@ -57,6 +57,12 @@ dependencies {
 
     //error log 출력
     implementation 'com.github.napstr:logback-discord-appender:1.0.0'
+
+    //Querydsl
+    implementation "com.querydsl:querydsl-jpa:5.0.0:jakarta"
+    annotationProcessor "com.querydsl:querydsl-apt:5.0.0:jakarta"
+    annotationProcessor "jakarta.annotation:jakarta.annotation-api"
+    annotationProcessor "jakarta.persistence:jakarta.persistence-api"
 }
 
 tasks.named('test') {

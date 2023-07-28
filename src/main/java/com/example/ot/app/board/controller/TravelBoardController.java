@@ -4,7 +4,6 @@ import com.example.ot.app.board.dto.request.CreateBoardRequest;
 import com.example.ot.app.board.dto.request.EditBoardRequest;
 import com.example.ot.app.board.dto.response.EditBoardResponse;
 import com.example.ot.app.board.dto.response.ShowBoardResponse;
-import com.example.ot.app.board.entity.TravelBoard;
 import com.example.ot.app.board.service.TravelBoardService;
 import com.example.ot.base.code.Code;
 import com.example.ot.base.rsData.RsData;
@@ -16,8 +15,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Slice;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -84,8 +83,9 @@ public class TravelBoardController {
 
     @Operation(summary = "내가 작성한 게시글들 조회", security = @SecurityRequirement(name = "bearerAuth"))
     @GetMapping("/my-boards")
-    public ResponseEntity<RsData> showMyBoardList(@AuthenticationPrincipal MemberContext memberContext){
-        List<TravelBoard> myBoardList = travelBoardService.getMyBoardList(memberContext.getId());
-        return Util.spring.responseEntityOf(RsData.success(BOARD_LIST_BY_MEMBER, myBoardList));
+    public ResponseEntity<RsData> showMyBoardList(@RequestParam(value = "lastId", required = false) Long lastBoardId,
+                                                  @AuthenticationPrincipal MemberContext memberContext){
+        Slice<ShowBoardResponse> allMyBoardList = travelBoardService.getMyBoardList(lastBoardId, memberContext.getId());
+        return Util.spring.responseEntityOf(RsData.success(BOARD_LIST_BY_MEMBER, allMyBoardList));
     }
 }
