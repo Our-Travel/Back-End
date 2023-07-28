@@ -19,3 +19,8 @@ spring:
 
 server:
   port: '${custom.prod.server.port}'
+
+logging:
+  discord:
+    webhook-uri: '{custom.prod.webhook.logBack}'
+  config: classpath:logback-spring.xml
