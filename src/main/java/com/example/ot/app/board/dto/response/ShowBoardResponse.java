@@ -49,4 +49,21 @@ public class ShowBoardResponse {
                 .recruitmentStatus(travelBoard.getRecruitmentStatus())
                 .build();
     }
+
+    public static ShowBoardResponse fromTravelBoard(TravelBoard travelBoard, Long memberId) {
+        boolean boardWriter = Objects.equals(travelBoard.getMember().getId(), memberId);
+        return ShowBoardResponse.builder()
+                .boardId(travelBoard.getId())
+                .title(travelBoard.getTitle())
+                .content(travelBoard.getContent())
+                .regionCode(travelBoard.getRegionCode())
+                .numberOfTravelers(travelBoard.getNumberOfTravelers())
+                .recruitmentPeriodStart(String.valueOf(travelBoard.getRecruitmentPeriodStart()))
+                .recruitmentPeriodEnd(String.valueOf(travelBoard.getRecruitmentPeriodEnd()))
+                .journeyPeriodStart(String.valueOf(travelBoard.getJourneyPeriodStart()))
+                .journeyPeriodEnd(String.valueOf(travelBoard.getJourneyPeriodEnd()))
+                .boardWriter(boardWriter)
+                .recruitmentStatus(travelBoard.getRecruitmentStatus())
+                .build();
+    }
 }
