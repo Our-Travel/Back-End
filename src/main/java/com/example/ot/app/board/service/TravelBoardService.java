@@ -17,11 +17,14 @@ import com.example.ot.base.code.Code;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.SliceImpl;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.example.ot.app.board.code.TravelBoardSuccessCode.*;
 import static com.example.ot.app.board.exception.ErrorCode.*;
@@ -120,20 +123,22 @@ public class TravelBoardService {
     }
 
     public Slice<BoardListResponse> getMyBoardList(Long lastBoardId, Long memberId) {
-        Slice<BoardListResponse> boardListResponses = travelBoardRepository.findMyBoardsWithKeysetPaging(lastBoardId, memberId, PageRequest.ofSize(pageOfSize));
-        boardListResponses.getContent()
-                .forEach(boardListResponse ->
-                        boardListResponse.setLikeCounts(getLikeBoardCounts(boardListResponse.getBoardId()))
-                );
-        return boardListResponses;
+        Slice<TravelBoard> travelBoardList = travelBoardRepository.findMyBoardsWithKeysetPaging(lastBoardId, memberId, PageRequest.ofSize(pageOfSize));
+        return getBoardListResponses(memberId, travelBoardList);
     }
 
-    public Slice<BoardListResponse> getBoardListByRegion(Integer regionCode, Long lastBoardId) {
-        Slice<BoardListResponse> boardListResponses = travelBoardRepository.findBoardsByRegionWithKeysetPaging(regionCode, lastBoardId, PageRequest.ofSize(pageOfSize));
-        boardListResponses.getContent()
-                .forEach(boardListResponse ->
-                        boardListResponse.setLikeCounts(getLikeBoardCounts(boardListResponse.getBoardId()))
-                );
-        return boardListResponses;
+    public Slice<BoardListResponse> getBoardListByRegion(Integer regionCode, Long lastBoardId, Long memberId) {
+        Slice<TravelBoard> travelBoardList = travelBoardRepository.findBoardsByRegionWithKeysetPaging(regionCode, lastBoardId, memberId, PageRequest.ofSize(pageOfSize));
+        return getBoardListResponses(memberId, travelBoardList);
+    }
+
+    private Slice<BoardListResponse> getBoardListResponses(Long memberId, Slice<TravelBoard> travelBoardList) {
+        List<BoardListResponse> boardListResponses = new ArrayList<>();
+        for(TravelBoard travelBoard : travelBoardList.getContent()){
+            boolean likeBoardStatus = !ObjectUtils.isEmpty(getLikeBoardStatusByMember(travelBoard.getId(), memberId));
+            long likeCounts = getLikeBoardCounts(travelBoard.getId());
+            boardListResponses.add(BoardListResponse.fromTravelBoard(travelBoard, memberId, likeBoardStatus, likeCounts));
+        }
+        return new SliceImpl<>(boardListResponses, travelBoardList.getPageable(), travelBoardList.hasNext());
     }
 }

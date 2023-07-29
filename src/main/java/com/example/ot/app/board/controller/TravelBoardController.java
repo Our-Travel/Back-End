@@ -37,7 +37,7 @@ public class TravelBoardController {
     public ResponseEntity<RsData> showBoardList(@RequestParam(value = "regionCode", required = false) Integer regionCode,
                                                 @RequestParam(value = "lastId", required = false) Long lastBoardId,
                                                   @AuthenticationPrincipal MemberContext memberContext){
-        Slice<BoardListResponse> BoardList = travelBoardService.getBoardListByRegion(regionCode, lastBoardId);
+        Slice<BoardListResponse> BoardList = travelBoardService.getBoardListByRegion(regionCode, lastBoardId, memberContext.getId());
         return Util.spring.responseEntityOf(RsData.success(BOARD_LIST, BoardList));
     }
 
