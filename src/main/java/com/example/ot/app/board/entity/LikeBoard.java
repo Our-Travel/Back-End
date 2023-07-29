@@ -1,10 +1,7 @@
 package com.example.ot.app.board.entity;
 
 import com.example.ot.app.member.entity.Member;
-import com.example.ot.base.entity.BaseTimeEntity;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;

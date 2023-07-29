@@ -1,6 +1,6 @@
 package com.example.ot.app.board.repository;
 
-import com.example.ot.app.board.dto.response.ShowBoardResponse;
+import com.example.ot.app.board.dto.response.BoardListResponse;
 import com.example.ot.app.board.entity.TravelBoard;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -19,7 +19,7 @@ public class TravelBoardRepositoryImpl implements TravelBoardRepositoryCustom {
     private final JPAQueryFactory jpaQueryFactory;
 
     @Override
-    public Slice<ShowBoardResponse> findMyBoardsWithKeysetPaging(Long lastBoardId, Long memberId, Pageable pageable) {
+    public Slice<BoardListResponse> findMyBoardsWithKeysetPaging(Long lastBoardId, Long memberId, Pageable pageable) {
         BooleanExpression boardIdLt = lastBoardId != null ? travelBoard.id.lt(lastBoardId) : null;
         BooleanExpression boardByMemberEq = memberId != null ? travelBoard.member.id.eq(memberId) : null;
 
@@ -29,11 +29,11 @@ public class TravelBoardRepositoryImpl implements TravelBoardRepositoryCustom {
                 .limit(pageable.getPageSize() + 1)
                 .fetch();
 
-        return checkLastPage(pageable, results, memberId);
+        return checkLastPage(pageable, results);
     }
 
     @Override
-    public Slice<ShowBoardResponse> findBoardsByRegionWithKeysetPaging(Integer regionCode, Long lastBoardId, Pageable pageable) {
+    public Slice<BoardListResponse> findBoardsByRegionWithKeysetPaging(Integer regionCode, Long lastBoardId, Pageable pageable) {
         BooleanExpression boardByRegionCodeEq = regionCode != null ? travelBoard.regionCode.eq(regionCode) : null;
         BooleanExpression boardIdLt = lastBoardId != null ? travelBoard.id.lt(lastBoardId) : null;
 
@@ -43,10 +43,10 @@ public class TravelBoardRepositoryImpl implements TravelBoardRepositoryCustom {
                 .limit(pageable.getPageSize() + 1)
                 .fetch();
 
-        return checkLastPage(pageable, results, null);
+        return checkLastPage(pageable, results);
     }
 
-    private Slice<ShowBoardResponse> checkLastPage(Pageable pageable, List<TravelBoard> results, Long memberId) {
+    private Slice<BoardListResponse> checkLastPage(Pageable pageable, List<TravelBoard> results) {
         boolean hasNext = false;
 
         if (results.size() > pageable.getPageSize()) {
@@ -54,7 +54,7 @@ public class TravelBoardRepositoryImpl implements TravelBoardRepositoryCustom {
             results.remove(pageable.getPageSize());
         }
 
-        List<ShowBoardResponse> BoardList = results.stream().map(e -> ShowBoardResponse.fromTravelBoard(e, memberId)).toList();
+        List<BoardListResponse> BoardList = results.stream().map(BoardListResponse::fromTravelBoard).toList();
         return new SliceImpl<>(BoardList, pageable, hasNext);
     }
 }
