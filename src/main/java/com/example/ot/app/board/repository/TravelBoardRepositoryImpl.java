@@ -19,7 +19,7 @@ public class TravelBoardRepositoryImpl implements TravelBoardRepositoryCustom {
     private final JPAQueryFactory jpaQueryFactory;
 
     @Override
-    public Slice<BoardListResponse> findMyBoardsWithKeysetPaging(Long lastBoardId, Long memberId, Pageable pageable) {
+    public Slice<TravelBoard> findMyBoardsWithKeysetPaging(Long lastBoardId, Long memberId, Pageable pageable) {
         BooleanExpression boardIdLt = lastBoardId != null ? travelBoard.id.lt(lastBoardId) : null;
         BooleanExpression boardByMemberEq = memberId != null ? travelBoard.member.id.eq(memberId) : null;
 
@@ -33,7 +33,7 @@ public class TravelBoardRepositoryImpl implements TravelBoardRepositoryCustom {
     }
 
     @Override
-    public Slice<BoardListResponse> findBoardsByRegionWithKeysetPaging(Integer regionCode, Long lastBoardId, Pageable pageable) {
+    public Slice<TravelBoard> findBoardsByRegionWithKeysetPaging(Integer regionCode, Long lastBoardId, Long memberId, Pageable pageable) {
         BooleanExpression boardByRegionCodeEq = regionCode != null ? travelBoard.regionCode.eq(regionCode) : null;
         BooleanExpression boardIdLt = lastBoardId != null ? travelBoard.id.lt(lastBoardId) : null;
 
@@ -46,7 +46,7 @@ public class TravelBoardRepositoryImpl implements TravelBoardRepositoryCustom {
         return checkLastPage(pageable, results);
     }
 
-    private Slice<BoardListResponse> checkLastPage(Pageable pageable, List<TravelBoard> results) {
+    private Slice<TravelBoard> checkLastPage(Pageable pageable, List<TravelBoard> results) {
         boolean hasNext = false;
 
         if (results.size() > pageable.getPageSize()) {
@@ -54,7 +54,6 @@ public class TravelBoardRepositoryImpl implements TravelBoardRepositoryCustom {
             results.remove(pageable.getPageSize());
         }
 
-        List<BoardListResponse> BoardList = results.stream().map(BoardListResponse::fromTravelBoard).toList();
-        return new SliceImpl<>(BoardList, pageable, hasNext);
+        return new SliceImpl<>(results, pageable, hasNext);
     }
 }
