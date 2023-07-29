@@ -9,14 +9,12 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.util.Objects;
-
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @JsonNaming(value = PropertyNamingStrategy.SnakeCaseStrategy.class)
-public class ShowBoardResponse {
+public class BoardListResponse {
 
     private Long boardId;
     private String title;
@@ -27,13 +25,11 @@ public class ShowBoardResponse {
     private String recruitmentPeriodEnd;
     private String journeyPeriodStart;
     private String journeyPeriodEnd;
-    private boolean boardWriter;
-    private boolean likeBoardStatus;
     private RecruitmentStatus recruitmentStatus;
+    private long likeCounts;
 
-    public static ShowBoardResponse fromTravelBoard(TravelBoard travelBoard, boolean likeBoardStatusByMember, Long memberId) {
-        boolean boardWriter = Objects.equals(travelBoard.getMember().getId(), memberId);
-        return ShowBoardResponse.builder()
+    public static BoardListResponse fromTravelBoard(TravelBoard travelBoard){
+        return BoardListResponse.builder()
                 .boardId(travelBoard.getId())
                 .title(travelBoard.getTitle())
                 .content(travelBoard.getContent())
@@ -43,9 +39,11 @@ public class ShowBoardResponse {
                 .recruitmentPeriodEnd(String.valueOf(travelBoard.getRecruitmentPeriodEnd()))
                 .journeyPeriodStart(String.valueOf(travelBoard.getJourneyPeriodStart()))
                 .journeyPeriodEnd(String.valueOf(travelBoard.getJourneyPeriodEnd()))
-                .boardWriter(boardWriter)
-                .likeBoardStatus(likeBoardStatusByMember)
                 .recruitmentStatus(travelBoard.getRecruitmentStatus())
                 .build();
+    }
+
+    public void setLikeCounts(long likeCounts){
+        this.likeCounts = likeCounts;
     }
 }

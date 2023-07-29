@@ -2,6 +2,7 @@ package com.example.ot.app.board.controller;
 
 import com.example.ot.app.board.dto.request.CreateBoardRequest;
 import com.example.ot.app.board.dto.request.EditBoardRequest;
+import com.example.ot.app.board.dto.response.BoardListResponse;
 import com.example.ot.app.board.dto.response.EditBoardResponse;
 import com.example.ot.app.board.dto.response.ShowBoardResponse;
 import com.example.ot.app.board.service.TravelBoardService;
@@ -36,15 +37,15 @@ public class TravelBoardController {
     public ResponseEntity<RsData> showBoardList(@RequestParam(value = "regionCode", required = false) Integer regionCode,
                                                 @RequestParam(value = "lastId", required = false) Long lastBoardId,
                                                   @AuthenticationPrincipal MemberContext memberContext){
-        Slice<ShowBoardResponse> BoardList = travelBoardService.getBoardListByRegion(regionCode, lastBoardId);
+        Slice<BoardListResponse> BoardList = travelBoardService.getBoardListByRegion(regionCode, lastBoardId);
         return Util.spring.responseEntityOf(RsData.success(BOARD_LIST, BoardList));
     }
 
     @Operation(summary = "내가 작성한 게시글들 조회", security = @SecurityRequirement(name = "bearerAuth"))
-    @GetMapping("/my-boards")
+    @GetMapping("/my")
     public ResponseEntity<RsData> showMyBoardList(@RequestParam(value = "lastId", required = false) Long lastBoardId,
                                                   @AuthenticationPrincipal MemberContext memberContext){
-        Slice<ShowBoardResponse> allMyBoardList = travelBoardService.getMyBoardList(lastBoardId, memberContext.getId());
+        Slice<BoardListResponse> allMyBoardList = travelBoardService.getMyBoardList(lastBoardId, memberContext.getId());
         return Util.spring.responseEntityOf(RsData.success(BOARD_LIST_BY_MEMBER, allMyBoardList));
     }
 
@@ -89,7 +90,7 @@ public class TravelBoardController {
     }
 
     @Operation(summary = "동행 구하기 게시판 좋아요 및 좋아요 취소", security = @SecurityRequirement(name = "bearerAuth"))
-    @PostMapping("/{boardId}")
+    @PostMapping("/{boardId}/likes")
     public ResponseEntity<RsData> likeBoard(@PathVariable Long boardId,
                                             @AuthenticationPrincipal MemberContext memberContext){
         Code likeBoardResult = travelBoardService.likeBoard(boardId, memberContext.getId());
