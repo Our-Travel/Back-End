@@ -16,3 +16,6 @@ spring:
     init:
       data-locations: classpath:test_data_h2.sql
       mode: always
+
+custom:
+  url: '${custom.local.url}'
