@@ -31,3 +31,6 @@ logging:
 
 server:
   port: '${custom.local.server.port}'
+
+custom:
+  url: '${custom.local.url}'

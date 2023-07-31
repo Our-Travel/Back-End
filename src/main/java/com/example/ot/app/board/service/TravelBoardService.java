@@ -110,7 +110,7 @@ public class TravelBoardService {
     }
 
     @Transactional
-    public void updateBoard(EditBoardRequest editBoardRequest, Long boardId, Long memberId) {
+    public void updateBoard(EditBoardRequest editBoardRequest, Long memberId, Long boardId) {
         TravelBoard travelBoard = getBoardWithValid(boardId, memberId);
         verifyDate(CreateBoardRequest.fromEditBoardRequest(editBoardRequest));
         travelBoard.update(editBoardRequest);
