@@ -13,7 +13,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @SpringBootApplication
 @EnableJpaAuditing
 @EnableCaching
-@OpenAPIDefinition
 public class OtApplication {
 
     public static void main(String[] args) {
