@@ -14,6 +14,7 @@ import com.example.ot.app.board.repository.TravelBoardRepository;
 import com.example.ot.app.member.entity.Member;
 import com.example.ot.app.member.service.MemberService;
 import com.example.ot.base.code.Code;
+import com.example.ot.config.security.entity.MemberContext;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Slice;
@@ -127,10 +128,16 @@ public class TravelBoardService {
         return getBoardListResponses(memberId, travelBoardList);
     }
 
-    public Slice<BoardListResponse> getBoardListByRegion(Integer regionCode, Long lastBoardId, Long memberId) {
-        Slice<TravelBoard> travelBoardList = travelBoardRepository.findBoardsByRegionWithKeysetPaging(regionCode, lastBoardId, memberId, PageRequest.ofSize(pageOfSize));
+    public Slice<BoardListResponse> getBoardListByRegion(Integer regionCode, Long lastBoardId, MemberContext memberContext) {
+        Slice<TravelBoard> travelBoardList = travelBoardRepository.findBoardsByRegionWithKeysetPaging(regionCode, lastBoardId, PageRequest.ofSize(pageOfSize));
+        Long memberId = 0L;
+        if(!ObjectUtils.isEmpty(memberContext)){
+            memberId = memberContext.getId();
+        }
         return getBoardListResponses(memberId, travelBoardList);
     }
+
+
 
     private Slice<BoardListResponse> getBoardListResponses(Long memberId, Slice<TravelBoard> travelBoardList) {
         List<BoardListResponse> boardListResponses = new ArrayList<>();

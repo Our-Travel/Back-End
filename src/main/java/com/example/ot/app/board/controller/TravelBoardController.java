@@ -33,11 +33,11 @@ public class TravelBoardController {
     private final TravelBoardService travelBoardService;
 
     @Operation(summary = "게시글들 조회", security = @SecurityRequirement(name = "bearerAuth"))
-    @GetMapping
+    @GetMapping("/list")
     public ResponseEntity<RsData> showBoardList(@RequestParam(value = "regionCode", required = false) Integer regionCode,
                                                 @RequestParam(value = "lastId", required = false) Long lastBoardId,
                                                   @AuthenticationPrincipal MemberContext memberContext){
-        Slice<BoardListResponse> BoardList = travelBoardService.getBoardListByRegion(regionCode, lastBoardId, memberContext.getId());
+        Slice<BoardListResponse> BoardList = travelBoardService.getBoardListByRegion(regionCode, lastBoardId, memberContext);
         return Util.spring.responseEntityOf(RsData.success(BOARD_LIST, BoardList));
     }
 
