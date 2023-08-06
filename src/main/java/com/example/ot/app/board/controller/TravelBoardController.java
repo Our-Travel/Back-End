@@ -96,4 +96,12 @@ public class TravelBoardController {
         Code likeBoardResult = travelBoardService.likeBoard(boardId, memberContext.getId());
         return Util.spring.responseEntityOf(RsData.success(likeBoardResult));
     }
+
+    @Operation(summary = "동해 구하기 게시판 모집 마감", security = @SecurityRequirement(name = "bearerAuth"))
+    @PatchMapping("/{boardId}")
+    public ResponseEntity<RsData> closeRecruitment(@PathVariable Long boardId,
+                                                   @AuthenticationPrincipal MemberContext memberContext){
+        travelBoardService.closeRecruitment(boardId, memberContext.getId());
+        return Util.spring.responseEntityOf(RsData.success(RECRUITMENT_CLOSED));
+    }
 }

@@ -68,4 +68,8 @@ public class TravelBoard extends BaseTimeEntity {
         this.journeyPeriodStart = editBoardRequest.getJourneyPeriodStart();
         this.journeyPeriodEnd = editBoardRequest.getJourneyPeriodEnd();
     }
+
+    public void setClosingRecruitment(){
+        this.recruitmentStatus = RecruitmentStatus.CLOSED;
+    }
 }

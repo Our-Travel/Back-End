@@ -137,8 +137,6 @@ public class TravelBoardService {
         return getBoardListResponses(memberId, travelBoardList);
     }
 
-
-
     private Slice<BoardListResponse> getBoardListResponses(Long memberId, Slice<TravelBoard> travelBoardList) {
         List<BoardListResponse> boardListResponses = new ArrayList<>();
         for(TravelBoard travelBoard : travelBoardList.getContent()){
@@ -147,5 +145,11 @@ public class TravelBoardService {
             boardListResponses.add(BoardListResponse.fromTravelBoard(travelBoard, memberId, likeBoardStatus, likeCounts));
         }
         return new SliceImpl<>(boardListResponses, travelBoardList.getPageable(), travelBoardList.hasNext());
+    }
+
+    @Transactional
+    public void closeRecruitment(Long boardId, Long memberId) {
+        TravelBoard travelBoard = getBoardWithValid(boardId, memberId);
+        travelBoard.setClosingRecruitment();
     }
 }
