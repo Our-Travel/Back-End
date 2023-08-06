@@ -2,6 +2,7 @@ package com.example.ot.app.chat.entity;
 
 import com.example.ot.app.board.entity.TravelBoard;
 import com.example.ot.app.host.entity.Host;
+import com.example.ot.app.member.entity.Member;
 import com.example.ot.base.entity.BaseTimeEntity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -30,5 +31,14 @@ public class ChatRoom extends BaseTimeEntity {
     private Host host;
 
     private Integer numberOfTravelers;
-    private final Integer currentNumber = 1;
+    private Integer currentNumber;
+
+    public static ChatRoom of(TravelBoard travelBoard){
+        return ChatRoom.builder()
+                .travelBoard(travelBoard)
+                .numberOfTravelers(travelBoard.getNumberOfTravelers())
+                .currentNumber(1)
+                .build();
+
+    }
 }
