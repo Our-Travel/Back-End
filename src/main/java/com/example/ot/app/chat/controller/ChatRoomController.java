@@ -10,10 +10,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@Tag(name = "채팅")
+@Tag(name = "채팅방")
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/room")
@@ -21,9 +22,15 @@ public class ChatRoomController {
 
     private final ChatRoomService chatRoomService;
 
-//    @Operation(summary = "나의 채팅방들 조회", security = @SecurityRequirement(name = "bearerAuth"))
+//    @Operation(summary = "채팅방 조회", security = @SecurityRequirement(name = "bearerAuth"))
+//    @GetMapping("{roomId}")
+//    public ResponseEntity<RsData> showChatRoom(@PathVariable Long roomId, @AuthenticationPrincipal MemberContext memberContext){
+//        chatRoomService.getChatRoom(roomId, memberContext.getId());
+//    }
+//
+//    @Operation(summary = "채팅 목록 조회", security = @SecurityRequirement(name = "bearerAuth"))
 //    @GetMapping
-//    public ResponseEntity<RsData> showMyChatRoom(@AuthenticationPrincipal MemberContext memberContext){
+//    public ResponseEntity<RsData> showMyChatRooms(@AuthenticationPrincipal MemberContext memberContext){
 //
 //    }
 }

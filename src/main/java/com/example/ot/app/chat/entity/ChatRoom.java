@@ -24,17 +24,19 @@ import org.hibernate.annotations.Where;
 @Where(clause = "deleted_date is NULL")
 public class ChatRoom extends BaseTimeEntity {
 
+    private String title;
+    private Integer numberOfTravelers;
+    private Integer currentNumber;
+
     @OneToOne(fetch = FetchType.LAZY)
     private TravelBoard travelBoard;
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Host host;
 
-    private Integer numberOfTravelers;
-    private Integer currentNumber;
-
     public static ChatRoom of(TravelBoard travelBoard){
         return ChatRoom.builder()
+                .title(travelBoard.getTitle())
                 .travelBoard(travelBoard)
                 .numberOfTravelers(travelBoard.getNumberOfTravelers())
                 .currentNumber(1)

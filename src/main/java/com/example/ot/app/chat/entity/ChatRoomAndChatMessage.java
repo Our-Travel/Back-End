@@ -25,4 +25,11 @@ public class ChatRoomAndChatMessage extends BaseTimeEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     private ChatMessage chatMessage;
+
+    public static ChatRoomAndChatMessage of(ChatRoom chatRoom, ChatMessage chatMessage) {
+        return ChatRoomAndChatMessage.builder()
+                .chatRoom(chatRoom)
+                .chatMessage(chatMessage)
+                .build();
+    }
 }

@@ -11,7 +11,7 @@ import com.example.ot.app.board.exception.ErrorCode;
 import com.example.ot.app.board.exception.TravelBoardException;
 import com.example.ot.app.board.repository.LikeBoardRepository;
 import com.example.ot.app.board.repository.TravelBoardRepository;
-import com.example.ot.app.chat.event.ChatRoomCreateEvent;
+import com.example.ot.app.chat.event.CreateChatRoomEvent;
 import com.example.ot.app.member.entity.Member;
 import com.example.ot.app.member.service.MemberService;
 import com.example.ot.base.code.Code;
@@ -49,7 +49,7 @@ public class TravelBoardService {
         Member member = memberService.findByMemberId(memberId);
         TravelBoard travelBoard = TravelBoard.of(createBoardRequest, member);
         travelBoardRepository.save(travelBoard);
-        publisher.publishEvent(new ChatRoomCreateEvent(travelBoard, member));
+        publisher.publishEvent(new CreateChatRoomEvent(travelBoard, member));
     }
 
     private void verifyDate(CreateBoardRequest createBoardRequest) {
