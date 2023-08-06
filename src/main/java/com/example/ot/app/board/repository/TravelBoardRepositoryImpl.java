@@ -33,7 +33,7 @@ public class TravelBoardRepositoryImpl implements TravelBoardRepositoryCustom {
     }
 
     @Override
-    public Slice<TravelBoard> findBoardsByRegionWithKeysetPaging(Integer regionCode, Long lastBoardId, Long memberId, Pageable pageable) {
+    public Slice<TravelBoard> findBoardsByRegionWithKeysetPaging(Integer regionCode, Long lastBoardId, Pageable pageable) {
         BooleanExpression boardByRegionCodeEq = regionCode != null ? travelBoard.regionCode.eq(regionCode) : null;
         BooleanExpression boardIdLt = lastBoardId != null ? travelBoard.id.lt(lastBoardId) : null;
 

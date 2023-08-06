@@ -59,15 +59,17 @@ public class TravelBoard extends BaseTimeEntity {
     }
 
     public void update(EditBoardRequest editBoardRequest) {
-        TravelBoard.builder()
-                .title(editBoardRequest.getTitle())
-                .content(editBoardRequest.getContent())
-                .regionCode(editBoardRequest.getRegionCode())
-                .numberOfTravelers(editBoardRequest.getNumberOfTravelers())
-                .recruitmentPeriodStart(editBoardRequest.getRecruitmentPeriodStart())
-                .recruitmentPeriodEnd(editBoardRequest.getRecruitmentPeriodEnd())
-                .journeyPeriodStart(editBoardRequest.getJourneyPeriodStart())
-                .journeyPeriodEnd(editBoardRequest.getJourneyPeriodEnd())
-                .build();
+        this.title = editBoardRequest.getTitle();
+        this.content = editBoardRequest.getContent();
+        this.regionCode = editBoardRequest.getRegionCode();
+        this.numberOfTravelers = editBoardRequest.getNumberOfTravelers();
+        this.recruitmentPeriodStart = editBoardRequest.getRecruitmentPeriodStart();
+        this.recruitmentPeriodEnd = editBoardRequest.getRecruitmentPeriodEnd();
+        this.journeyPeriodStart = editBoardRequest.getJourneyPeriodStart();
+        this.journeyPeriodEnd = editBoardRequest.getJourneyPeriodEnd();
+    }
+
+    public void setClosingRecruitment(){
+        this.recruitmentStatus = RecruitmentStatus.CLOSED;
     }
 }

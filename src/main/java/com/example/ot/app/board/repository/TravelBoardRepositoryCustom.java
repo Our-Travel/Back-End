@@ -8,5 +8,5 @@ public interface TravelBoardRepositoryCustom {
 
     Slice<TravelBoard> findMyBoardsWithKeysetPaging(Long lastBoardId, Long memberId, Pageable pageable);
 
-    Slice<TravelBoard> findBoardsByRegionWithKeysetPaging(Integer regionCode, Long lastBoardId, Long memberId, Pageable pageable);
+    Slice<TravelBoard> findBoardsByRegionWithKeysetPaging(Integer regionCode, Long lastBoardId, Pageable pageable);
 }
