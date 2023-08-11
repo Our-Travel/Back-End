@@ -1,11 +1,10 @@
 package com.example.ot.config.security.jwt;
 
-import com.example.ot.config.security.oauth2.CustomOAuth2User;
 import com.example.ot.util.Util;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.Authentication;
+import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
@@ -14,14 +13,14 @@ import java.util.Map;
 
 @Component
 @RequiredArgsConstructor
-public class JwtProvider {
+public class JwtUtils {
+
     private final SecretKey jwtSecretKey;
 
     private SecretKey getSecretKey() {
         return jwtSecretKey;
     }
 
-    // 토큰 생성
     public String generateAccessToken(Map<String, Object> claims, long seconds) {
         long now = new Date().getTime();
         Date accessTokenExpiresIn = new Date(now + 1000L * seconds);
@@ -32,20 +31,7 @@ public class JwtProvider {
                 .signWith(getSecretKey(), SignatureAlgorithm.HS512)
                 .compact();
     }
-    public String generateAccessToken(Authentication authentication){
-        CustomOAuth2User customOAuth2User = (CustomOAuth2User) authentication.getPrincipal();
-        long now = new Date().getTime();
-        long seconds = 60L * 60 * 24 * 365 * 100;
-        Date accessTokenExpiresIn = new Date(now + 1000L * seconds);
 
-        return Jwts.builder()
-                .claim("body", customOAuth2User)
-                .setExpiration(accessTokenExpiresIn)
-                .signWith(getSecretKey(), SignatureAlgorithm.HS512)
-                .compact();
-    }
-
-    // 토큰 검증
     public boolean verify(String token) {
         try {
             Jwts.parserBuilder()
@@ -57,6 +43,15 @@ public class JwtProvider {
         }
 
         return true;
+    }
+
+    public String getMemberIdFromToken(String token){
+        Map<String, Object> claims = getClaims(token);
+        return String.valueOf(claims.get("id"));
+    }
+
+    public String extractJwt(final StompHeaderAccessor accessor) {
+        return accessor.getFirstNativeHeader("Authorization");
     }
 
     public Map<String, Object> getClaims(String token) {

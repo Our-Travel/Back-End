@@ -11,11 +11,13 @@ import com.example.ot.app.board.exception.ErrorCode;
 import com.example.ot.app.board.exception.TravelBoardException;
 import com.example.ot.app.board.repository.LikeBoardRepository;
 import com.example.ot.app.board.repository.TravelBoardRepository;
+import com.example.ot.app.chat.event.CreateChatRoomEvent;
 import com.example.ot.app.member.entity.Member;
 import com.example.ot.app.member.service.MemberService;
 import com.example.ot.base.code.Code;
 import com.example.ot.config.security.entity.MemberContext;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.SliceImpl;
@@ -38,6 +40,7 @@ public class TravelBoardService {
     private final MemberService memberService;
     private final TravelBoardRepository travelBoardRepository;
     private final LikeBoardRepository likeBoardRepository;
+    private final ApplicationEventPublisher publisher;
     private final static int pageOfSize = 10;
 
     @Transactional
@@ -46,6 +49,7 @@ public class TravelBoardService {
         Member member = memberService.findByMemberId(memberId);
         TravelBoard travelBoard = TravelBoard.of(createBoardRequest, member);
         travelBoardRepository.save(travelBoard);
+        publisher.publishEvent(new CreateChatRoomEvent(travelBoard, member));
     }
 
     private void verifyDate(CreateBoardRequest createBoardRequest) {
@@ -60,7 +64,7 @@ public class TravelBoardService {
         }
     }
 
-    private TravelBoard findByBoardId(Long boardId){
+    public TravelBoard findByBoardId(Long boardId){
         return travelBoardRepository.findById(boardId).orElseThrow(() -> new TravelBoardException(BOARD_NOT_EXISTS));
     }
 

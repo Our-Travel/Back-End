@@ -25,4 +25,11 @@ public class ChatMessage extends BaseTimeEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Member writer;
+
+    public static ChatMessage of(String message, Member member) {
+        return ChatMessage.builder()
+                .message(message)
+                .writer(member)
+                .build();
+    }
 }
