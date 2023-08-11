@@ -3,7 +3,7 @@ package com.example.ot.config.security.filter;
 import com.example.ot.app.member.entity.Member;
 import com.example.ot.app.member.service.MemberService;
 import com.example.ot.config.security.entity.MemberContext;
-import com.example.ot.config.security.jwt.JwtProvider;
+import com.example.ot.config.security.jwt.JwtUtils;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -23,7 +23,7 @@ import java.util.Map;
 @Component
 @RequiredArgsConstructor
 public class JwtAuthorizationFilter extends OncePerRequestFilter {
-    private final JwtProvider jwtProvider;
+    private final JwtUtils jwtUtils;
     private final MemberService memberService;
 
     @Override
@@ -34,8 +34,8 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
             String token = bearerToken.substring("Bearer ".length()); // 토큰을 받아온다.
 
             // 토큰이 유효한지 체크
-            if (jwtProvider.verify(token)) {
-                Map<String, Object> claims = jwtProvider.getClaims(token);
+            if (jwtUtils.verify(token)) {
+                Map<String, Object> claims = jwtUtils.getClaims(token);
                 long id = (int) claims.get("id");
                 // 캐시(레디스) 사용
 //                Member member = memberService.getByMemberId__cached(id);

@@ -2,7 +2,6 @@ package com.example.ot.app.chat.entity;
 
 import com.example.ot.app.board.entity.TravelBoard;
 import com.example.ot.app.host.entity.Host;
-import com.example.ot.app.member.entity.Member;
 import com.example.ot.base.entity.BaseTimeEntity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -25,7 +24,6 @@ import org.hibernate.annotations.Where;
 public class ChatRoom extends BaseTimeEntity {
 
     private String title;
-    private Integer numberOfTravelers;
     private Integer currentNumber;
 
     @OneToOne(fetch = FetchType.LAZY)
@@ -38,7 +36,6 @@ public class ChatRoom extends BaseTimeEntity {
         return ChatRoom.builder()
                 .title(travelBoard.getTitle())
                 .travelBoard(travelBoard)
-                .numberOfTravelers(travelBoard.getNumberOfTravelers())
                 .currentNumber(1)
                 .build();
 

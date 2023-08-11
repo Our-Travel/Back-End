@@ -10,7 +10,7 @@ import com.example.ot.app.member.repository.MemberRepository;
 import com.example.ot.app.member.repository.ProfileImageRepository;
 import com.example.ot.base.s3.S3ProfileUploader;
 import com.example.ot.config.AppConfig;
-import com.example.ot.config.security.jwt.JwtProvider;
+import com.example.ot.config.security.jwt.JwtUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
@@ -33,7 +33,7 @@ public class MemberService {
 
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
-    private final JwtProvider jwtProvider;
+    private final JwtUtils jwtUtils;
     private final ProfileImageRepository profileImageRepository;
     private final S3ProfileUploader profileUploader;
 
@@ -93,7 +93,7 @@ public class MemberService {
         String accessToken = member.getAccessToken();
 
         if (!StringUtils.hasLength(accessToken)) {
-            accessToken = jwtProvider.generateAccessToken(member.getAccessTokenClaims(), 60L * 60 * 24 * 365 * 100);
+            accessToken = jwtUtils.generateAccessToken(member.getAccessTokenClaims(), 60L * 60 * 24 * 365 * 100);
             member.setAccessToken(accessToken);
         }
 
