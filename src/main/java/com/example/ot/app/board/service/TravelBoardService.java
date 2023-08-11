@@ -64,7 +64,7 @@ public class TravelBoardService {
         }
     }
 
-    private TravelBoard findByBoardId(Long boardId){
+    public TravelBoard findByBoardId(Long boardId){
         return travelBoardRepository.findById(boardId).orElseThrow(() -> new TravelBoardException(BOARD_NOT_EXISTS));
     }
 

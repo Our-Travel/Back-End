@@ -24,7 +24,6 @@ import org.hibernate.annotations.Where;
 public class ChatRoom extends BaseTimeEntity {
 
     private String title;
-    private Integer currentNumber;
 
     @OneToOne(fetch = FetchType.LAZY)
     private TravelBoard travelBoard;
@@ -36,8 +35,8 @@ public class ChatRoom extends BaseTimeEntity {
         return ChatRoom.builder()
                 .title(travelBoard.getTitle())
                 .travelBoard(travelBoard)
-                .currentNumber(1)
                 .build();
 
     }
+
 }

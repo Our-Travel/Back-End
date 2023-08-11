@@ -26,7 +26,7 @@ public class ChatRoomController {
 
     private final ChatRoomService chatRoomService;
 
-    @Operation(summary = "채팅방 조회", security = @SecurityRequirement(name = "bearerAuth"))
+    @Operation(summary = "채팅방 입장", security = @SecurityRequirement(name = "bearerAuth"))
     @GetMapping("{roomId}")
     public ResponseEntity<RsData> showChatRoom(@PathVariable Long roomId,
                                                @AuthenticationPrincipal MemberContext memberContext){
