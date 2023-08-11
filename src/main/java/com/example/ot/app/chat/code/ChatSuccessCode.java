@@ -7,8 +7,9 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum ChatSuccessCode implements Code {
-    CHAT_ROOM_ENTERED("채팅방에 입장하였습니다."),
-    CHAT_ROOM_LIST("채팅 목록을 불러옵니다.");
+    CHATROOM_ENTERED("채팅방에 입장하였습니다."),
+    CHATROOM_LIST("채팅 목록을 불러옵니다."),
+    HOST_CHATROOM_CREATED("채팅방을 생성하였습니다.");
 
     private String message;
 }

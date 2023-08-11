@@ -39,22 +39,26 @@ public class HostService {
         hashTagService.applyHashTags(host, writeHostInfoRequest.getHashTag());
     }
 
+    public Host findByMemberId(Long memberId){
+        return hostRepository.findByMemberId(memberId).orElseThrow(() -> new HostException(HOST_NOT_EXISTS));
+    }
+
     public EditHostResponse getHostInfo(Long memberId) {
-        Host host = hostRepository.findByMemberId(memberId).orElseThrow(() -> new HostException(HOST_NOT_EXISTS));
+        Host host = findByMemberId(memberId);
         String hostHashTag = hashTagService.getHashTag(host.getId());
         return EditHostResponse.fromHost(host, hostHashTag);
     }
 
     @Transactional
     public void updateHostInfo(WriteHostInfoRequest writeHostInfoRequest, Long memberId) {
-        Host host = hostRepository.findByMemberId(memberId).orElseThrow(() -> new HostException(HOST_NOT_EXISTS));
+        Host host = findByMemberId(memberId);
         host.updateHostInfo(writeHostInfoRequest.getIntroduction(), writeHostInfoRequest.getRegionCode());
         hashTagService.updateHashTag(writeHostInfoRequest.getHashTag(), host);
     }
 
     @Transactional
     public void removeHostAuthorize(Long memberId) {
-        Host host = hostRepository.findByMemberId(memberId).orElseThrow(() -> new HostException(HOST_NOT_EXISTS));
+        Host host = findByMemberId(memberId);
         memberService.findByMemberId(memberId).setHostAuthority(false);
         hashTagService.deleteHashTag(host.getId());
         hostRepository.delete(host);

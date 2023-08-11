@@ -18,11 +18,13 @@ import java.util.List;
 public class ShowChatRoomResponse {
 
     private Long myMemberId;
+    private Long chatRoomId;
     private List<ChatRoomMessageDto> chatRoomMessageDtoList;
 
-    public static ShowChatRoomResponse of(Long memberId, List<ChatRoomMessageDto> messageDtoList) {
+    public static ShowChatRoomResponse of(Long memberId, Long roomId, List<ChatRoomMessageDto> messageDtoList) {
         return ShowChatRoomResponse.builder()
                 .myMemberId(memberId)
+                .chatRoomId(roomId)
                 .chatRoomMessageDtoList(messageDtoList)
                 .build();
     }
