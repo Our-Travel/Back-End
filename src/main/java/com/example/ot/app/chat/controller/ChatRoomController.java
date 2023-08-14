@@ -23,6 +23,7 @@ import static com.example.ot.app.chat.code.ChatSuccessCode.*;
 public class ChatRoomController {
 
     private final ChatRoomService chatRoomService;
+    private final ChatMessageController chatMessageController;
 
     @Operation(summary = "채팅방 입장", security = @SecurityRequirement(name = "bearerAuth"))
     @GetMapping("/{roomId}")
@@ -47,4 +48,12 @@ public class ChatRoomController {
 //        List<ShowMyChatRoomsResponse> showMyChatRoomsResponseList = chatRoomService.getMyChatRooms(memberContext.getId());
 //        return Util.spring.responseEntityOf(RsData.success(CHAT_ROOM_LIST, showMyChatRoomsResponseList));
 //    }
+
+    @Operation(summary = "채팅방 나가기", security = @SecurityRequirement(name = "bearerAuth"))
+    @DeleteMapping("/{roomId}")
+    public ResponseEntity<RsData> exitChatRoom(@PathVariable Long roomId,
+                                                     @AuthenticationPrincipal MemberContext memberContext){
+        chatRoomService.exitChatRoom(roomId, memberContext.getId());
+        return Util.spring.responseEntityOf(RsData.success(CHATROOM_EXITED));
+    }
 }
