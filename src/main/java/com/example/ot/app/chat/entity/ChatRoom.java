@@ -46,4 +46,8 @@ public class ChatRoom extends BaseTimeEntity {
                 .host(host)
                 .build();
     }
+
+    public Member getBoardWriter(){
+        return travelBoard.getMember();
+    }
 }

@@ -9,6 +9,8 @@ import com.example.ot.app.chat.dto.response.ShowChatRoomResponse;
 import com.example.ot.app.chat.entity.ChatMessage;
 import com.example.ot.app.chat.entity.ChatRoom;
 import com.example.ot.app.chat.entity.ChatRoomAndMember;
+import com.example.ot.app.chat.event.CreateChatRoomEvent;
+import com.example.ot.app.chat.event.SendExitMessageEvent;
 import com.example.ot.app.chat.exception.ChatException;
 import com.example.ot.app.chat.repository.ChatMessageRepository;
 import com.example.ot.app.chat.repository.ChatRoomAndChatMessageRepository;
@@ -19,6 +21,7 @@ import com.example.ot.app.host.service.HostService;
 import com.example.ot.app.member.entity.Member;
 import com.example.ot.app.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
@@ -41,6 +44,7 @@ public class ChatRoomService {
     private final TravelBoardService travelBoardService;
     private final MemberService memberService;
     private final HostService hostService;
+    private final ApplicationEventPublisher publisher;
 
     @Transactional
     public void createChatRoomByTravelBoard(TravelBoard travelBoard, Member member) {
@@ -54,8 +58,12 @@ public class ChatRoomService {
         return chatRoomRepository.findById(roomId).orElseThrow(() -> new ChatException(CHATROOM_NOT_EXISTS));
     }
 
-    public ChatRoom findByChatRoomIdWithTravelBoard(Long roomId){
+    private ChatRoom findByChatRoomIdWithTravelBoard(Long roomId){
         return chatRoomRepository.findByChatRoomIdWithTravelBoard(roomId).orElseThrow(() -> new ChatException(CHATROOM_NOT_EXISTS));
+    }
+
+    private int getChatMembersCount(Long roomId){
+        return chatRoomAndMemberRepository.countByRoomId(roomId);
     }
 
     public ShowChatRoomResponse getChatRoom(Long roomId, Long memberId) {
@@ -74,7 +82,7 @@ public class ChatRoomService {
         }
         Long boardId = chatRoom.getTravelBoard().getId();
         TravelBoard travelBoard = travelBoardService.findByBoardId(boardId);
-        int currentNumber = chatRoomAndMemberRepository.countByRoomId(roomId);
+        int currentNumber = getChatMembersCount(roomId);
         if(Objects.equals(travelBoard.getNumberOfTravelers(), currentNumber)){
             throw new ChatException(CHATROOM_FULL);
         }
@@ -117,6 +125,30 @@ public class ChatRoomService {
         chatRoomAndMemberRepository.save(chatRoomAndMemberByHost);
         chatRoomAndMemberRepository.save(chatRoomAndMemberByUser);
         return ChatRoomIdResponse.ofChatRoomId(chatRoom);
+    }
+
+    @Transactional
+    public void exitChatRoom(Long roomId, Long memberId) {
+        ChatRoom chatRoom = findByChatRoomId(roomId);
+        Member member = memberService.findByMemberId(memberId);
+        int chatMembersCount = getChatMembersCount(roomId);
+        if(!ObjectUtils.isEmpty(chatRoom.getTravelBoard())){
+            canWriterLeaveChatRoom(chatRoom, member, chatMembersCount);
+        }
+        ChatRoomAndMember chatRoomAndMember = ChatRoomAndMember.of(chatRoom, member);
+        chatRoomAndMemberRepository.delete(chatRoomAndMember);
+        publisher.publishEvent(new SendExitMessageEvent(roomId, member.getNickName()));
+        if(chatMembersCount == 0){
+            chatRoomAndChatMessageRepository.deleteAllByChatRoomId(roomId);
+            chatRoomRepository.delete(chatRoom);
+        }
+    }
+
+    private void canWriterLeaveChatRoom(ChatRoom chatRoom, Member member, int chatMembersCount){
+        Member boardWriter = chatRoom.getBoardWriter();
+        if(Objects.equals(member, boardWriter) && chatMembersCount > 1){
+            throw new ChatException(CHATROOM_CANNOT_EXISTED);
+        }
     }
 
 //    public List<ShowMyChatRoomsResponse> getMyChatRooms(Long memberId) {

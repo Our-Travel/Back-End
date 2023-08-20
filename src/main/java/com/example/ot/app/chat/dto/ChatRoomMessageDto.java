@@ -20,14 +20,14 @@ public class ChatRoomMessageDto {
     private Long memberId;
     private String nickname;
     private String message;
-    private LocalDateTime createdDate;
+    private String createdDate;
 
     public static ChatRoomMessageDto fromChatMessage(ChatMessage chatMessage) {
         return ChatRoomMessageDto.builder()
                 .memberId(chatMessage.getWriter().getId())
                 .nickname(chatMessage.getWriter().getNickName())
                 .message(chatMessage.getMessage())
-                .createdDate(chatMessage.getCreatedDate())
+                .createdDate(String.valueOf(chatMessage.getCreatedDate()))
                 .build();
     }
 }
