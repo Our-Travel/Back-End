@@ -151,6 +151,11 @@ public class ChatRoomService {
         }
     }
 
+    public Long getChatRoomIdByBoardId(Long boardId) {
+        return chatRoomRepository.findByBoardId(boardId).orElse(null);
+//        return chatRoomRepository.findByBoardId(boardId).orElseThrow(() -> new ChatException());
+    }
+
 //    public List<ShowMyChatRoomsResponse> getMyChatRooms(Long memberId) {
 //
 //    }

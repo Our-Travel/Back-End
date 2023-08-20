@@ -19,6 +19,7 @@ import java.util.Objects;
 public class ShowBoardResponse {
 
     private Long boardId;
+    private Long roomId;
     private String title;
     private String content;
     private Integer regionCode;
@@ -31,10 +32,11 @@ public class ShowBoardResponse {
     private boolean likeBoardStatus;
     private RecruitmentStatus recruitmentStatus;
 
-    public static ShowBoardResponse fromTravelBoard(TravelBoard travelBoard, boolean likeBoardStatusByMember, Long memberId) {
+    public static ShowBoardResponse fromTravelBoard(TravelBoard travelBoard, boolean likeBoardStatusByMember, Long memberId, Long roomId) {
         boolean boardWriter = Objects.equals(travelBoard.getMember().getId(), memberId);
         return ShowBoardResponse.builder()
                 .boardId(travelBoard.getId())
+                .roomId(roomId)
                 .title(travelBoard.getTitle())
                 .content(travelBoard.getContent())
                 .regionCode(travelBoard.getRegionCode())
