@@ -1,11 +1,13 @@
 package com.example.ot.app.chat.repository;
 
+import com.example.ot.app.chat.entity.ChatMessage;
 import com.example.ot.app.chat.entity.ChatRoomAndChatMessage;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface ChatRoomAndChatMessageRepository extends JpaRepository<ChatRoomAndChatMessage, Long> {
 
@@ -15,4 +17,8 @@ public interface ChatRoomAndChatMessageRepository extends JpaRepository<ChatRoom
 
     @Query("delete from ChatRoomAndChatMessage c where c.chatRoom.id = :roomId")
     void deleteAllByChatRoomId(@Param("roomId") Long roomId);
+
+    @Query("select m from ChatRoomAndChatMessage c join c.chatMessage m join c.chatRoom r " +
+            "where r.id = :roomId order by m.createdDate desc, m.id desc")
+    Optional<ChatMessage> findLastByChatRoomId(@Param("roomId") Long roomId);
 }

@@ -23,7 +23,7 @@ public class ChatMessageService {
     private final ChatRoomAndChatMessageRepository chatRoomAndChatMessageRepository;
     private final SimpMessagingTemplate messagingTemplate;
 
-    @Transactional(readOnly = true)
+    @Transactional
     public void sendMessage(MessageRequest messageRequest, Long memberId) {
         Member member = memberService.findByMemberId(memberId);
         ChatMessage chatMessage = ChatMessage.of(messageRequest.getMessage(), member);
@@ -37,7 +37,6 @@ public class ChatMessageService {
         messagingTemplate.convertAndSend("/sub/room/%d".formatted(roomId), noticeMessage);
     }
 
-    @Transactional
     public void saveMessage(ChatMessage chatMessage, Long roomId){
         ChatRoom chatRoom = chatRoomService.findByChatRoomId(roomId);
         ChatRoomAndChatMessage chatRoomAndChatMessage = ChatRoomAndChatMessage.of(chatRoom, chatMessage);

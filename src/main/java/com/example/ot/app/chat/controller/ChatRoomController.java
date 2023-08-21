@@ -2,6 +2,7 @@ package com.example.ot.app.chat.controller;
 
 import com.example.ot.app.chat.dto.response.ChatRoomIdResponse;
 import com.example.ot.app.chat.dto.response.ShowChatRoomResponse;
+import com.example.ot.app.chat.dto.response.ShowMyChatRoomsResponse;
 import com.example.ot.app.chat.service.ChatRoomService;
 import com.example.ot.base.rsData.RsData;
 import com.example.ot.config.security.entity.MemberContext;
@@ -14,6 +15,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 import static com.example.ot.app.chat.code.ChatSuccessCode.*;
 
 @Tag(name = "채팅방")
@@ -23,7 +26,6 @@ import static com.example.ot.app.chat.code.ChatSuccessCode.*;
 public class ChatRoomController {
 
     private final ChatRoomService chatRoomService;
-    private final ChatMessageController chatMessageController;
 
     @Operation(summary = "채팅방 입장", security = @SecurityRequirement(name = "bearerAuth"))
     @GetMapping("/{roomId}")
@@ -42,12 +44,12 @@ public class ChatRoomController {
         return Util.spring.responseEntityOf(RsData.success(HOST_CHATROOM_CREATED, chatRoomIdResponse));
     }
 
-//    @Operation(summary = "채팅 목록 조회", security = @SecurityRequirement(name = "bearerAuth"))
-//    @GetMapping
-//    public ResponseEntity<RsData> showMyChatRooms(@AuthenticationPrincipal MemberContext memberContext){
-//        List<ShowMyChatRoomsResponse> showMyChatRoomsResponseList = chatRoomService.getMyChatRooms(memberContext.getId());
-//        return Util.spring.responseEntityOf(RsData.success(CHAT_ROOM_LIST, showMyChatRoomsResponseList));
-//    }
+    @Operation(summary = "채팅 목록 조회", security = @SecurityRequirement(name = "bearerAuth"))
+    @GetMapping
+    public ResponseEntity<RsData> showMyChatRooms(@AuthenticationPrincipal MemberContext memberContext){
+        List<ShowMyChatRoomsResponse> showMyChatRoomsResponseList = chatRoomService.getMyChatRooms(memberContext.getId());
+        return Util.spring.responseEntityOf(RsData.success(CHATROOM_LIST, showMyChatRoomsResponseList));
+    }
 
     @Operation(summary = "채팅방 나가기", security = @SecurityRequirement(name = "bearerAuth"))
     @DeleteMapping("/{roomId}")
