@@ -18,7 +18,7 @@ public interface ChatRoomAndChatMessageRepository extends JpaRepository<ChatRoom
     @Query("delete from ChatRoomAndChatMessage c where c.chatRoom.id = :roomId")
     void deleteAllByChatRoomId(@Param("roomId") Long roomId);
 
-    @Query("select m from ChatRoomAndChatMessage c join c.chatMessage m join c.chatRoom r " +
-            "where r.id = :roomId order by m.createdDate desc, m.id desc")
+    @Query("select m, w from ChatRoomAndChatMessage c join c.chatMessage m " +
+            " join m.writer w where c.chatRoom.id = :roomId order by c.createdDate desc, c.id desc")
     Optional<ChatMessage> findLastByChatRoomId(@Param("roomId") Long roomId);
 }
