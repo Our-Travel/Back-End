@@ -6,10 +6,10 @@ import com.example.ot.app.board.service.TravelBoardService;
 import com.example.ot.app.chat.dto.ChatRoomMessageDto;
 import com.example.ot.app.chat.dto.response.ChatRoomIdResponse;
 import com.example.ot.app.chat.dto.response.ShowChatRoomResponse;
+import com.example.ot.app.chat.dto.response.ShowMyChatRoomsResponse;
 import com.example.ot.app.chat.entity.ChatMessage;
 import com.example.ot.app.chat.entity.ChatRoom;
 import com.example.ot.app.chat.entity.ChatRoomAndMember;
-import com.example.ot.app.chat.event.CreateChatRoomEvent;
 import com.example.ot.app.chat.event.SendExitMessageEvent;
 import com.example.ot.app.chat.exception.ChatException;
 import com.example.ot.app.chat.repository.ChatMessageRepository;
@@ -26,6 +26,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -151,7 +152,15 @@ public class ChatRoomService {
         }
     }
 
-//    public List<ShowMyChatRoomsResponse> getMyChatRooms(Long memberId) {
-//
-//    }
+    public List<ShowMyChatRoomsResponse> getMyChatRooms(Long memberId) {
+        List<ChatRoom> myChatRoomList = chatRoomAndMemberRepository.findByMemberId(memberId);
+        List<ShowMyChatRoomsResponse> showMyChatRoomsResponses = new ArrayList<>();
+        for(ChatRoom chatRoom : myChatRoomList){
+            ChatMessage chatMessage = chatRoomAndChatMessageRepository.findLastByChatRoomId(chatRoom.getId()).orElse(null);
+            ShowMyChatRoomsResponse showMyChatRoomsResponse = ShowMyChatRoomsResponse.of(chatRoom, chatMessage);
+            showMyChatRoomsResponses.add(showMyChatRoomsResponse);
+        }
+        return showMyChatRoomsResponses;
+    }
+
 }

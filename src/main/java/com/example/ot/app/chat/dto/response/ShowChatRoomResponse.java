@@ -10,7 +10,6 @@ import lombok.NoArgsConstructor;
 
 import java.util.List;
 
-@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
@@ -22,10 +21,6 @@ public class ShowChatRoomResponse {
     private List<ChatRoomMessageDto> chatRoomMessageDtoList;
 
     public static ShowChatRoomResponse of(Long memberId, Long roomId, List<ChatRoomMessageDto> messageDtoList) {
-        return ShowChatRoomResponse.builder()
-                .myMemberId(memberId)
-                .chatRoomId(roomId)
-                .chatRoomMessageDtoList(messageDtoList)
-                .build();
+        return new ShowChatRoomResponse(memberId, roomId, messageDtoList);
     }
 }
