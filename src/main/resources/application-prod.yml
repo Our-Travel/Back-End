@@ -1,8 +1,4 @@
 spring:
-  mvc:
-    servlet:
-      path: '${custom.prod.servlet.path}'
-
   datasource:
     driver-class-name: '${custom.prod.database.driver-class-name}'
     url: '${custom.prod.database.url}'
@@ -18,6 +14,8 @@ spring:
       ddl-auto: none
 
 server:
+  servlet:
+    context-path: '${custom.prod.servlet.path}'
   port: '${custom.prod.server.port}'
 
 logging:

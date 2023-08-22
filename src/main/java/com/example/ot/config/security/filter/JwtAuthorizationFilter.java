@@ -28,20 +28,19 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        String bearerToken = request.getHeader("Authorization"); // 헤더에서 Authorization를 가져옴.
+        String bearerToken = request.getHeader("Authorization");
 
         if (bearerToken != null) {
-            String token = bearerToken.substring("Bearer ".length()); // 토큰을 받아온다.
+            String token = bearerToken.substring("Bearer ".length());
 
-            // 토큰이 유효한지 체크
             if (jwtUtils.verify(token)) {
                 Map<String, Object> claims = jwtUtils.getClaims(token);
                 long id = (int) claims.get("id");
-                // 캐시(레디스) 사용
+                // todo: 캐시(레디스) 사용
 //                Member member = memberService.getByMemberId__cached(id);
                 Member member = memberService.findByMemberId(id);
                 if(memberService.verifyWithWhiteList(member, token)){
-                    forceAuthentication(member); // member 찾았으면 인증.
+                    forceAuthentication(member);
                 }
             }
         }
@@ -49,7 +48,6 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
         filterChain.doFilter(request, response);
     }
 
-    // 인가
     private void forceAuthentication(Member member) throws IOException {
         MemberContext memberContext = new MemberContext(member);
 

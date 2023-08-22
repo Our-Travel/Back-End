@@ -55,6 +55,9 @@ public class SecurityConfig implements WebMvcConfigurer {
                         AbstractHttpConfigurer::disable
                 )
                 .oauth2Login(oauth2 -> oauth2
+                        .redirectionEndpoint()
+                        .baseUri("/oauth2/callback/*")
+                        .and()
                         .successHandler(oAuth2MemberSuccessHandler)
                         .userInfoEndpoint()
                         .userService(oAuthUserService))
@@ -69,10 +72,11 @@ public class SecurityConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedOrigins("http://localhost:3000")
-                .allowedMethods("GET", "POST", "PUT", "PATCH","DELETE")
+                .allowedOrigins("*")
+                .allowedMethods("*")
                 .allowedHeaders("*")
+                .exposedHeaders("Authentication")
                 .allowCredentials(true)
-                .exposedHeaders("Authentication");
+                .maxAge(3600);
     }
 }
