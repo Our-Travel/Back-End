@@ -1,8 +1,4 @@
 spring:
-  mvc:
-    servlet:
-      path: '${custom.dev.servlet.path}'
-
   datasource:
     driver-class-name: '${custom.dev.database.driver-class-name}'
     url: '${custom.dev.database.url}'
@@ -18,8 +14,9 @@ spring:
       ddl-auto: create
 
 server:
+  servlet:
+    context-path: '${custom.dev.servlet.path}'
   port: '${custom.dev.server.port}'
-
 
 logging:
   discord:
