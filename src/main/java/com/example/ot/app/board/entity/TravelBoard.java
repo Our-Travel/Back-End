@@ -5,6 +5,7 @@ import com.example.ot.app.board.dto.request.EditBoardRequest;
 import com.example.ot.app.member.entity.Member;
 import com.example.ot.base.entity.BaseTimeEntity;
 import jakarta.persistence.*;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,7 +14,7 @@ import lombok.experimental.SuperBuilder;
 import java.time.LocalDate;
 
 @AllArgsConstructor
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SuperBuilder
 @Entity
 @Getter
