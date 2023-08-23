@@ -34,7 +34,7 @@ public class HostService {
         Member member = memberService.findByMemberId(memberId);
         Host host = Host.of(writeHostInfoRequest, member);
         hostRepository.save(host);
-        member.setHostAuthority(true);
+        member.assignHostRole();
 //        memberService.putMemberMapByUsername__cached(member.getId());
         hashTagService.applyHashTags(host, writeHostInfoRequest.getHashTag());
     }
@@ -59,7 +59,7 @@ public class HostService {
     @Transactional
     public void removeHostAuthorize(Long memberId) {
         Host host = findByMemberId(memberId);
-        memberService.findByMemberId(memberId).setHostAuthority(false);
+        memberService.findByMemberId(memberId).removeHostRole();
         hashTagService.deleteHashTag(host.getId());
         hostRepository.delete(host);
     }

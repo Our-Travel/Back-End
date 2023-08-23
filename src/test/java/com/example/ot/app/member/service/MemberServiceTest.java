@@ -128,7 +128,7 @@ public class MemberServiceTest {
     @DisplayName("로그인할 때 username을 먼저 검증한다. 존재하는 username을 통해 Member를 얻을 수 있습니다.")
     void shouldVerifyUsernameSuccessfully() throws Exception {
         // Given
-        String username = "user1@example.com";
+        String username = "user2@example.com";
 
         // Then
         assertDoesNotThrow(() -> memberService.verifyUsername(username));

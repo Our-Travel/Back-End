@@ -45,7 +45,6 @@ public class Member extends BaseTimeEntity {
 
     private String providerTypeCode;
 
-    @Setter
     private boolean hostAuthority = false;
 
     // 현재 회원이 가지고 있는 권한들을 List<GrantedAuthority> 형태로 리턴
@@ -144,5 +143,17 @@ public class Member extends BaseTimeEntity {
 
     public void updatePassword(String password) {
         this.password = password;
+    }
+
+    public void assignHostRole(){
+        this.hostAuthority = true;
+    }
+
+    public void removeHostRole(){
+        this.hostAuthority = false;
+    }
+
+    public void generateAccessToken(String accessToken){
+        this.accessToken = accessToken;
     }
 }

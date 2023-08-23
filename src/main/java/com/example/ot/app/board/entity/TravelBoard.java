@@ -59,7 +59,7 @@ public class TravelBoard extends BaseTimeEntity {
         return RecruitmentStatus.OPEN;
     }
 
-    public void update(EditBoardRequest editBoardRequest) {
+    public void updateBoard(EditBoardRequest editBoardRequest) {
         this.title = editBoardRequest.getTitle();
         this.content = editBoardRequest.getContent();
         this.regionCode = editBoardRequest.getRegionCode();
@@ -70,7 +70,7 @@ public class TravelBoard extends BaseTimeEntity {
         this.journeyPeriodEnd = editBoardRequest.getJourneyPeriodEnd();
     }
 
-    public void setClosingRecruitment(){
+    public void updateClosingRecruitment(){
         this.recruitmentStatus = RecruitmentStatus.CLOSED;
     }
 }
