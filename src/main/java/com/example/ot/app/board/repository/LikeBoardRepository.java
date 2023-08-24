@@ -9,7 +9,7 @@ import java.util.Optional;
 
 public interface LikeBoardRepository extends JpaRepository<LikeBoard, Long> {
 
-    @Query("select l.id from LikeBoard l join l.member m join l.travelBoard t " +
+    @Query("select l from LikeBoard l join l.member m join l.travelBoard t " +
             "where m.id = :memberId and t.id = :boardId")
     Optional<LikeBoard> findByMemberAndBoard(@Param("boardId") Long boardId, @Param("memberId") Long memberId);
 
