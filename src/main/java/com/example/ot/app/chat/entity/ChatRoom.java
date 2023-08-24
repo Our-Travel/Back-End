@@ -48,6 +48,10 @@ public class ChatRoom extends BaseTimeEntity {
                 .build();
     }
 
+    public Long getBoardId(){
+        return travelBoard.getId();
+    }
+
     public Member getBoardWriter(){
         return travelBoard.getMember();
     }

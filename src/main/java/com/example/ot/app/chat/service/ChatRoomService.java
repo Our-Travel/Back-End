@@ -62,15 +62,11 @@ public class ChatRoomService {
                 .orElseThrow(() -> new ChatException(CHATROOM_NOT_EXISTS));
     }
 
-    private ChatRoom findByChatRoomIdWithTravelBoard(Long roomId){
-        return chatRoomRepository.findByChatRoomIdWithTravelBoard(roomId)
-                .orElseThrow(() -> new ChatException(CHATROOM_NOT_EXISTS));
-    }
-
     private int getChatMembersCount(Long roomId){
         return chatRoomAndMemberRepository.countByRoomId(roomId);
     }
 
+    @Transactional
     public ShowChatRoomResponse getChatRoom(Long roomId, Long memberId) {
         if(!verifyChatRoomByMember(roomId, memberId)){
             verifyEnterChatRoom(roomId, memberId);
@@ -81,11 +77,11 @@ public class ChatRoomService {
     }
 
     private void verifyEnterChatRoom(Long roomId, Long memberId){
-        ChatRoom chatRoom = findByChatRoomIdWithTravelBoard(roomId);
+        ChatRoom chatRoom = findByChatRoomId(roomId);
         if(!ObjectUtils.isEmpty(chatRoom.getHost())){
             throw new ChatException(CHATROOM_ACCESS_UNAUTHORIZED);
         }
-        Long boardId = chatRoom.getTravelBoard().getId();
+        Long boardId = chatRoom.getBoardId();
         TravelBoard travelBoard = travelBoardRepository.findByBoardId(boardId);
         int currentNumber = getChatMembersCount(roomId);
         if(Objects.equals(travelBoard.getNumberOfTravelers(), currentNumber)){
@@ -97,7 +93,6 @@ public class ChatRoomService {
         enterChatRoom(chatRoom, memberId);
     }
 
-    @Transactional
     public void enterChatRoom(ChatRoom chatRoom, Long memberId){
         Member member = memberRepository.findByMemberId(memberId);
         ChatRoomAndMember chatRoomAndMember = ChatRoomAndMember.of(chatRoom, member);
@@ -123,7 +118,7 @@ public class ChatRoomService {
         Host host = hostRepository.findHostByMember_Id(hostMemberId)
                 .orElseThrow(() -> new HostException(HOST_NOT_EXISTS));;
         Member hostMember = memberRepository.findByMemberId(hostMemberId);
-        Member userMember = memberRepository.findByMemberId(hostMemberId);
+        Member userMember = memberRepository.findByMemberId(memberId);
         ChatRoom chatRoom = ChatRoom.ofHost(host, hostMember, userMember);
         ChatRoomAndMember chatRoomAndMemberByHost = ChatRoomAndMember.of(chatRoom, hostMember);
         ChatRoomAndMember chatRoomAndMemberByUser = ChatRoomAndMember.of(chatRoom, userMember);

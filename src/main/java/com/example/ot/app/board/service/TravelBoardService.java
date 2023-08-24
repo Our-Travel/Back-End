@@ -15,7 +15,6 @@ import com.example.ot.app.chat.event.CreateChatRoomEvent;
 import com.example.ot.app.chat.repository.ChatRoomRepository;
 import com.example.ot.app.member.entity.Member;
 import com.example.ot.app.member.repository.MemberRepository;
-import com.example.ot.app.member.service.MemberService;
 import com.example.ot.base.code.Code;
 import com.example.ot.config.security.entity.MemberContext;
 import lombok.RequiredArgsConstructor;
@@ -67,8 +66,9 @@ public class TravelBoardService {
         }
     }
 
-    private TravelBoard findByBoardIdWithWriter(Long boardId){
-        return travelBoardRepository.findByBoardIdWithWriter(boardId).orElseThrow(() -> new TravelBoardException(BOARD_NOT_EXISTS));
+    private TravelBoard findByBoardId(Long boardId){
+        return travelBoardRepository.findById(boardId)
+                .orElseThrow(() -> new TravelBoardException(BOARD_NOT_EXISTS));
     }
 
     private LikeBoard getLikeBoardStatusByMember(Long boardId, Long memberId){
@@ -76,9 +76,9 @@ public class TravelBoardService {
     }
 
     public ShowBoardResponse getBoardInfo(Long boardId, Long memberId) {
-        TravelBoard travelBoard = findByBoardIdWithWriter(boardId);
+        TravelBoard travelBoard = findByBoardId(boardId);
         boolean likeBoardStatusByMember = !ObjectUtils.isEmpty(getLikeBoardStatusByMember(boardId, memberId));
-        Long roomId = chatRoomRepository.findByBoardId(boardId).orElse(null);
+        Long roomId = chatRoomRepository.findChatRoomByBoardId(boardId).orElse(null);
         return ShowBoardResponse.fromTravelBoard(travelBoard, likeBoardStatusByMember, memberId, roomId);
     }
 
@@ -101,11 +101,12 @@ public class TravelBoardService {
     }
 
     private TravelBoard getBoardWithValid(Long boardId, Long memberId){
-        TravelBoard travelBoard = findByBoardIdWithWriter(boardId);
-        Long BoardByMemberId = travelBoard.getMember().getId();
-        if(!BoardByMemberId.equals(memberId)){
+        TravelBoard travelBoard = findByBoardId(boardId);
+        Long MemberIdByBoard = travelBoard.getMemberId();
+        if(!MemberIdByBoard.equals(memberId)){
             throw new TravelBoardException(BOARD_ACCESS_UNAUTHORIZED);
         }
+
         return travelBoard;
     }
 

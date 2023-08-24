@@ -70,6 +70,10 @@ public class TravelBoard extends BaseTimeEntity {
         this.journeyPeriodEnd = editBoardRequest.getJourneyPeriodEnd();
     }
 
+    public Long getMemberId(){
+        return member.getId();
+    }
+
     public void updateClosingRecruitment(){
         this.recruitmentStatus = RecruitmentStatus.CLOSED;
     }
