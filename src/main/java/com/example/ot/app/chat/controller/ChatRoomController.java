@@ -35,7 +35,6 @@ public class ChatRoomController {
         return Util.spring.responseEntityOf(RsData.success(CHATROOM_ENTERED, showChatRoomResponseList));
     }
 
-
     @Operation(summary = "호스트 채팅방 생성", security = @SecurityRequirement(name = "bearerAuth"))
     @PostMapping("/host/{hostMemberId}")
     public ResponseEntity<RsData> createHostChatRoom(@PathVariable Long hostMemberId,
