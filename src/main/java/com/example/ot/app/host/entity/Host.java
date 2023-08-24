@@ -42,4 +42,8 @@ public class Host extends BaseTimeEntity {
         this.introduction = introduction;
         this.regionCode = regionCode;
     }
+
+    public Long getMemberId(){
+        return member.getId();
+    }
 }

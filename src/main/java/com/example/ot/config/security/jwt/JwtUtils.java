@@ -21,9 +21,9 @@ public class JwtUtils {
         return jwtSecretKey;
     }
 
-    public String generateAccessToken(Map<String, Object> claims, long seconds) {
+    public String generateAccessToken(Map<String, Object> claims) {
         long now = new Date().getTime();
-        Date accessTokenExpiresIn = new Date(now + 1000L * seconds);
+        Date accessTokenExpiresIn = new Date(now + 1000L * 60L * 60 * 24 * 365 * 100);
 
         return Jwts.builder()
                 .claim("body", Util.json.toStr(claims))

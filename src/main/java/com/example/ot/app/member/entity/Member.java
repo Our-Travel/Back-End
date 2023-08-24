@@ -6,8 +6,6 @@ import com.example.ot.util.Util;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.OneToOne;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.SQLDelete;
@@ -62,7 +60,7 @@ public class Member extends BaseTimeEntity {
         return authorities;
     }
 
-    public static Member of(String providerTypeCode, SignUpRequest signUpRequest, String password){
+    public static Member create(String providerTypeCode, SignUpRequest signUpRequest, String password){
         return Member.builder()
                 .username(signUpRequest.getUsername())
                 .password(password)

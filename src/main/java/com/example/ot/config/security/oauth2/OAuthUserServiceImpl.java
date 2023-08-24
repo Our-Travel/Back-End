@@ -2,6 +2,7 @@ package com.example.ot.config.security.oauth2;
 
 import com.example.ot.app.member.dto.request.SignUpRequest;
 import com.example.ot.app.member.entity.Member;
+import com.example.ot.app.member.exception.MemberException;
 import com.example.ot.app.member.repository.MemberRepository;
 import com.example.ot.app.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
@@ -11,6 +12,8 @@ import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import static com.example.ot.app.member.exception.ErrorCode.USERNAME_NOT_EXISTS;
 
 @RequiredArgsConstructor
 @Service
@@ -38,7 +41,8 @@ public class OAuthUserServiceImpl extends DefaultOAuth2UserService {
             SignUpRequest signUp = new SignUpRequest(username, "", nickName);
             return memberService.createMember(providerTypeCode, signUp);
         }
-        return memberService.findByUsername(username);
+        return memberRepository.findByUsername(username)
+                .orElseThrow(() -> new MemberException(USERNAME_NOT_EXISTS));
     }
 
 }

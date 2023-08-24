@@ -85,26 +85,6 @@ public class MemberServiceTest {
     }
 
     @Test
-    @DisplayName("username을 통해 Member를 얻을 수 있습니다.")
-    void shouldFindByUsernameSuccessfully() throws Exception {
-        // Given
-        String username = "user1@example.com";
-
-        // Then
-        assertDoesNotThrow(() -> memberService.findByUsername(username));
-    }
-
-    @Test
-    @DisplayName("존재하지 않는 username으로 Member를 찾는다면 실패.")
-    void shouldFindByUsernameFailNotExistsUsername() throws Exception {
-        // Given
-        String username = "testUsername@example.com";
-
-        // Then
-        assertThrows(MemberException.class, () -> memberService.findByUsername(username));
-    }
-
-    @Test
     @DisplayName("Member 번호를 통해 Member를 얻을 수 있습니다.")
     void shouldFindByMemberIdSuccessfully() throws Exception {
         // Given
@@ -122,26 +102,6 @@ public class MemberServiceTest {
 
         // Then
         assertThrows(MemberException.class, () -> memberService.findByMemberId(memberId));
-    }
-
-    @Test
-    @DisplayName("로그인할 때 username을 먼저 검증한다. 존재하는 username을 통해 Member를 얻을 수 있습니다.")
-    void shouldVerifyUsernameSuccessfully() throws Exception {
-        // Given
-        String username = "user2@example.com";
-
-        // Then
-        assertDoesNotThrow(() -> memberService.verifyUsername(username));
-    }
-
-    @Test
-    @DisplayName("로그인할 때 username을 먼저 검증한다. 존재하지 않는 username으로 Member를 찾는다면 실패.")
-    void shouldVerifyUsernameFailNotExistsUsername() throws Exception {
-        // Given
-        String username = "testUsername@example.com";
-
-        // Then
-        assertThrows(MemberException.class, () -> memberService.verifyUsername(username));
     }
 
     @Test

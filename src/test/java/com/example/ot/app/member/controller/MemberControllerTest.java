@@ -288,7 +288,7 @@ public class MemberControllerTest {
     @DisplayName("올바른 username과 password가 제공되었을 때 JWT 키를 성공적으로 발급해야 한다")
     void successfulLoginAndJwtIssuance() throws Exception {
         // Given
-        memberService.createMember(new SignUpRequest("user55@example.com", "@a123456", "user551"));
+        memberService.createMember(new SignUpRequest("user55@example.com", "@a12345666", "user551"));
 
         // When
         ResultActions resultActions = mvc
@@ -297,7 +297,7 @@ public class MemberControllerTest {
                                 .content("""
                                         {
                                             "username": "user55@example.com",
-                                            "password": "@a123456"
+                                            "password": "@a12345666"
                                         }
                                         """.stripIndent())
                                 .contentType(new MediaType(MediaType.APPLICATION_JSON, StandardCharsets.UTF_8))

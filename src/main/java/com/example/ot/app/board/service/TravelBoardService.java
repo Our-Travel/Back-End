@@ -14,6 +14,7 @@ import com.example.ot.app.board.repository.TravelBoardRepository;
 import com.example.ot.app.chat.event.CreateChatRoomEvent;
 import com.example.ot.app.chat.repository.ChatRoomRepository;
 import com.example.ot.app.member.entity.Member;
+import com.example.ot.app.member.repository.MemberRepository;
 import com.example.ot.app.member.service.MemberService;
 import com.example.ot.base.code.Code;
 import com.example.ot.config.security.entity.MemberContext;
@@ -38,7 +39,7 @@ import static com.example.ot.app.board.exception.ErrorCode.*;
 @Transactional(readOnly = true)
 public class TravelBoardService {
 
-    private final MemberService memberService;
+    private final MemberRepository memberRepository;
     private final TravelBoardRepository travelBoardRepository;
     private final LikeBoardRepository likeBoardRepository;
     private final ChatRoomRepository chatRoomRepository;
@@ -48,7 +49,7 @@ public class TravelBoardService {
     @Transactional
     public void createBoard(CreateBoardRequest createBoardRequest, Long memberId) {
         verifyDate(createBoardRequest);
-        Member member = memberService.findByMemberId(memberId);
+        Member member = memberRepository.findByMemberId(memberId);
         TravelBoard travelBoard = TravelBoard.of(createBoardRequest, member);
         travelBoardRepository.save(travelBoard);
         publisher.publishEvent(new CreateChatRoomEvent(travelBoard, member));
@@ -64,10 +65,6 @@ public class TravelBoardService {
         if (endDate.isBefore(startDate)) {
             throw new TravelBoardException(errorCode);
         }
-    }
-
-    public TravelBoard findByBoardId(Long boardId){
-        return travelBoardRepository.findById(boardId).orElseThrow(() -> new TravelBoardException(BOARD_NOT_EXISTS));
     }
 
     private TravelBoard findByBoardIdWithWriter(Long boardId){
@@ -89,8 +86,8 @@ public class TravelBoardService {
     public Code likeBoard(Long boardId, Long memberId) {
         LikeBoard verifyLikeBoard = getLikeBoardStatusByMember(boardId, memberId);
         if(ObjectUtils.isEmpty(verifyLikeBoard)){
-            TravelBoard travelBoard = findByBoardId(boardId);
-            Member member = memberService.findByMemberId(memberId);
+            TravelBoard travelBoard = travelBoardRepository.findByBoardId(boardId);
+            Member member = memberRepository.findByMemberId(memberId);
             LikeBoard likeBoard = LikeBoard.of(travelBoard, member);
             likeBoardRepository.save(likeBoard);
             return BOARD_LIKED;

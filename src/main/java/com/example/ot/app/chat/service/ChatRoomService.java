@@ -2,7 +2,7 @@ package com.example.ot.app.chat.service;
 
 import com.example.ot.app.board.entity.RecruitmentStatus;
 import com.example.ot.app.board.entity.TravelBoard;
-import com.example.ot.app.board.service.TravelBoardService;
+import com.example.ot.app.board.repository.TravelBoardRepository;
 import com.example.ot.app.chat.dto.ChatRoomMessageDto;
 import com.example.ot.app.chat.dto.response.ChatRoomIdResponse;
 import com.example.ot.app.chat.dto.response.ShowChatRoomResponse;
@@ -17,9 +17,10 @@ import com.example.ot.app.chat.repository.ChatRoomAndChatMessageRepository;
 import com.example.ot.app.chat.repository.ChatRoomAndMemberRepository;
 import com.example.ot.app.chat.repository.ChatRoomRepository;
 import com.example.ot.app.host.entity.Host;
-import com.example.ot.app.host.service.HostService;
+import com.example.ot.app.host.exception.HostException;
+import com.example.ot.app.host.repository.HostRepository;
 import com.example.ot.app.member.entity.Member;
-import com.example.ot.app.member.service.MemberService;
+import com.example.ot.app.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
@@ -32,6 +33,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 import static com.example.ot.app.chat.exception.ErrorCode.*;
+import static com.example.ot.app.host.exception.ErrorCode.HOST_NOT_EXISTS;
 
 @Service
 @RequiredArgsConstructor
@@ -42,9 +44,9 @@ public class ChatRoomService {
     private final ChatRoomAndMemberRepository chatRoomAndMemberRepository;
     private final ChatRoomAndChatMessageRepository chatRoomAndChatMessageRepository;
     private final ChatMessageRepository chatMessageRepository;
-    private final TravelBoardService travelBoardService;
-    private final MemberService memberService;
-    private final HostService hostService;
+    private final TravelBoardRepository travelBoardRepository;
+    private final MemberRepository memberRepository;
+    private final HostRepository hostRepository;
     private final ApplicationEventPublisher publisher;
 
     @Transactional
@@ -56,11 +58,13 @@ public class ChatRoomService {
     }
 
     public ChatRoom findByChatRoomId(Long roomId){
-        return chatRoomRepository.findById(roomId).orElseThrow(() -> new ChatException(CHATROOM_NOT_EXISTS));
+        return chatRoomRepository.findById(roomId)
+                .orElseThrow(() -> new ChatException(CHATROOM_NOT_EXISTS));
     }
 
     private ChatRoom findByChatRoomIdWithTravelBoard(Long roomId){
-        return chatRoomRepository.findByChatRoomIdWithTravelBoard(roomId).orElseThrow(() -> new ChatException(CHATROOM_NOT_EXISTS));
+        return chatRoomRepository.findByChatRoomIdWithTravelBoard(roomId)
+                .orElseThrow(() -> new ChatException(CHATROOM_NOT_EXISTS));
     }
 
     private int getChatMembersCount(Long roomId){
@@ -82,7 +86,7 @@ public class ChatRoomService {
             throw new ChatException(CHATROOM_ACCESS_UNAUTHORIZED);
         }
         Long boardId = chatRoom.getTravelBoard().getId();
-        TravelBoard travelBoard = travelBoardService.findByBoardId(boardId);
+        TravelBoard travelBoard = travelBoardRepository.findByBoardId(boardId);
         int currentNumber = getChatMembersCount(roomId);
         if(Objects.equals(travelBoard.getNumberOfTravelers(), currentNumber)){
             throw new ChatException(CHATROOM_FULL);
@@ -95,7 +99,7 @@ public class ChatRoomService {
 
     @Transactional
     public void enterChatRoom(ChatRoom chatRoom, Long memberId){
-        Member member = memberService.findByMemberId(memberId);
+        Member member = memberRepository.findByMemberId(memberId);
         ChatRoomAndMember chatRoomAndMember = ChatRoomAndMember.of(chatRoom, member);
         chatRoomAndMemberRepository.save(chatRoomAndMember);
     }
@@ -116,9 +120,10 @@ public class ChatRoomService {
         if(Objects.equals(hostMemberId, memberId)){
             throw new ChatException(CHATROOM_HOST_CANNOT_CREATE_OWN);
         }
-        Host host = hostService.findByMemberId(hostMemberId);
-        Member hostMember = memberService.findByMemberId(hostMemberId);
-        Member userMember = memberService.findByMemberId(hostMemberId);
+        Host host = hostRepository.findHostByMember_Id(hostMemberId)
+                .orElseThrow(() -> new HostException(HOST_NOT_EXISTS));;
+        Member hostMember = memberRepository.findByMemberId(hostMemberId);
+        Member userMember = memberRepository.findByMemberId(hostMemberId);
         ChatRoom chatRoom = ChatRoom.ofHost(host, hostMember, userMember);
         ChatRoomAndMember chatRoomAndMemberByHost = ChatRoomAndMember.of(chatRoom, hostMember);
         ChatRoomAndMember chatRoomAndMemberByUser = ChatRoomAndMember.of(chatRoom, userMember);
@@ -131,7 +136,7 @@ public class ChatRoomService {
     @Transactional
     public void exitChatRoom(Long roomId, Long memberId) {
         ChatRoom chatRoom = findByChatRoomId(roomId);
-        Member member = memberService.findByMemberId(memberId);
+        Member member = memberRepository.findByMemberId(memberId);
         int chatMembersCount = getChatMembersCount(roomId);
         if(!ObjectUtils.isEmpty(chatRoom.getTravelBoard())){
             canWriterLeaveChatRoom(chatRoom, member, chatMembersCount);
@@ -156,7 +161,8 @@ public class ChatRoomService {
         List<ChatRoom> myChatRoomList = chatRoomAndMemberRepository.findByMemberId(memberId);
         List<ShowMyChatRoomsResponse> showMyChatRoomsResponses = new ArrayList<>();
         for(ChatRoom chatRoom : myChatRoomList){
-            ChatMessage chatMessage = chatRoomAndChatMessageRepository.findLastByChatRoomId(chatRoom.getId()).orElse(null);
+            ChatMessage chatMessage = chatRoomAndChatMessageRepository
+                    .findLastByChatRoomId(chatRoom.getId()).orElse(null);
             ShowMyChatRoomsResponse showMyChatRoomsResponse = ShowMyChatRoomsResponse.of(chatRoom, chatMessage);
             showMyChatRoomsResponses.add(showMyChatRoomsResponse);
         }
