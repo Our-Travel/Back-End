@@ -14,13 +14,11 @@ import lombok.NoArgsConstructor;
 @JsonNaming(value = PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class MessageRequest {
 
-    private Long roomId;
     private String message;
     private String writerNickname;
 
-    public static MessageRequest notice(Long roomId, String noticeMessage) {
+    public static MessageRequest notice(String noticeMessage) {
         return MessageRequest.builder()
-                .roomId(roomId)
                 .message(noticeMessage)
                 .writerNickname(null)
                 .build();

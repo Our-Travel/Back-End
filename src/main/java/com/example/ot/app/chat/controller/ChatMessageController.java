@@ -21,6 +21,6 @@ public class ChatMessageController {
     @MessageMapping("/message")
     @SendTo("/message")
     public void sendMessage(MessageRequest messageRequest, @Header(value = "memberId", required = false) Long memberId){
-        chatMessageService.sendMessage(messageRequest, memberId);
+        chatMessageService.sendMessage(1L, messageRequest, memberId);
     }
 }
