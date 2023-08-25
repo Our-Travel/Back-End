@@ -4,7 +4,6 @@ import com.example.ot.app.chat.dto.request.MessageRequest;
 import com.example.ot.app.chat.entity.ChatMessage;
 import com.example.ot.app.chat.entity.ChatRoom;
 import com.example.ot.app.chat.entity.ChatRoomAndChatMessage;
-import com.example.ot.app.chat.exception.ChatException;
 import com.example.ot.app.chat.repository.ChatMessageRepository;
 import com.example.ot.app.chat.repository.ChatRoomAndChatMessageRepository;
 import com.example.ot.app.chat.repository.ChatRoomRepository;
@@ -14,8 +13,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import static com.example.ot.app.chat.exception.ErrorCode.CHATROOM_NOT_EXISTS;
 
 @Service
 @RequiredArgsConstructor

@@ -13,6 +13,13 @@ spring:
     hibernate:
       ddl-auto: create
 
+  security:
+    oauth2:
+      client:
+        registration:
+          kakao:
+            redirect-uri: '${custom.dev.kakao-redirect-url}'
+
 server:
   servlet:
     context-path: '${custom.dev.servlet.path}'
