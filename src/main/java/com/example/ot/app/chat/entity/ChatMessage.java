@@ -39,4 +39,10 @@ public class ChatMessage extends BaseTimeEntity {
                 .message("[알림]\n" + exitMemberNickname + " 님이 채팅방을 나가셨습니다.")
                 .build();
     }
+
+    public static ChatMessage enterMessage(String enterMemberNickname) {
+        return ChatMessage.builder()
+                .message("[알림]\n" + enterMemberNickname + " 님이 채팅방에 입장하셨습니다.")
+                .build();
+    }
 }
