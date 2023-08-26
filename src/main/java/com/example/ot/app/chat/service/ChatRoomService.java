@@ -10,6 +10,7 @@ import com.example.ot.app.chat.dto.response.ShowMyChatRoomsResponse;
 import com.example.ot.app.chat.entity.ChatMessage;
 import com.example.ot.app.chat.entity.ChatRoom;
 import com.example.ot.app.chat.entity.ChatRoomAndMember;
+import com.example.ot.app.chat.event.SendEnterMessageEvent;
 import com.example.ot.app.chat.event.SendExitMessageEvent;
 import com.example.ot.app.chat.exception.ChatException;
 import com.example.ot.app.chat.repository.ChatMessageRepository;
@@ -97,6 +98,7 @@ public class ChatRoomService {
         Member member = memberRepository.findByMemberId(memberId);
         ChatRoomAndMember chatRoomAndMember = ChatRoomAndMember.of(chatRoom, member);
         chatRoomAndMemberRepository.save(chatRoomAndMember);
+        publisher.publishEvent(new SendEnterMessageEvent(chatRoom.getId(), member.getNickName()));
     }
 
     private List<ChatRoomMessageDto> convertToMessageDtoList(List<Long> chatMessageIdList) {

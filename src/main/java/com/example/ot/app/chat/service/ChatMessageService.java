@@ -38,12 +38,18 @@ public class ChatMessageService {
         messagingTemplate.convertAndSend("/sub/room/%d".formatted(roomId), noticeMessage);
     }
 
+    public void sendEnterMessage(Long roomId, String enterMemberNickname) {
+        ChatMessage chatMessage = ChatMessage.enterMessage(enterMemberNickname);
+        saveMessage(chatMessage, roomId);
+        MessageRequest noticeMessage = MessageRequest.notice(roomId, chatMessage.getMessage());
+        messagingTemplate.convertAndSend("/sub/room/%d".formatted(roomId), noticeMessage);
+    }
+
     public void saveMessage(ChatMessage chatMessage, Long roomId){
         ChatRoom chatRoom = chatRoomRepository.findByChatRoomId(roomId);
         ChatRoomAndChatMessage chatRoomAndChatMessage = ChatRoomAndChatMessage.of(chatRoom, chatMessage);
         chatMessageRepository.save(chatMessage);
         chatRoomAndChatMessageRepository.save(chatRoomAndChatMessage);
     }
-
 
 }
