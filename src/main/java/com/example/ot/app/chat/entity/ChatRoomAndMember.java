@@ -2,6 +2,7 @@ package com.example.ot.app.chat.entity;
 
 import com.example.ot.app.member.entity.Member;
 import com.example.ot.base.entity.BaseTimeEntity;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.ManyToOne;
@@ -22,10 +23,10 @@ import org.hibernate.annotations.Where;
 @Where(clause = "deleted_date is NULL")
 public class ChatRoomAndMember extends BaseTimeEntity {
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     private Member member;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     private ChatRoom chatRoom;
 
     public static ChatRoomAndMember of(ChatRoom chatRoomByTravelBoard, Member member){

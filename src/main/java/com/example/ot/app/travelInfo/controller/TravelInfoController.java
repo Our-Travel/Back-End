@@ -1,17 +1,17 @@
-//package com.example.ot.app.travelInfo.controller;
-//
-//import io.swagger.v3.oas.annotations.tags.Tag;
-//import lombok.RequiredArgsConstructor;
-//import lombok.extern.slf4j.Slf4j;
-//import org.springframework.web.bind.annotation.RequestMapping;
-//import org.springframework.web.bind.annotation.RestController;
-//
-//@Tag(name = "주변 관광지, 숙박")
-//@Slf4j
-//@RestController
-//@RequiredArgsConstructor
-//@RequestMapping("/local-place")
-//public class TravelInfoController {
+package com.example.ot.app.travelInfo.controller;
+
+import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@Tag(name = "주변 관광지, 숙박")
+@Slf4j
+@RestController
+@RequiredArgsConstructor
+@RequestMapping("/local-place")
+public class TravelInfoController {
 //
 //    private final LocalPlacesService localPlacesService;
 //    private static final String SPOT_CATEGORY = "AT4";
@@ -51,4 +51,4 @@
 //        return Util.spring.responseEntityOf(RsData.successOf(hotel));
 //    }
 //
-//}
+}

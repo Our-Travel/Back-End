@@ -1,6 +1,7 @@
 package com.example.ot.app.chat.entity;
 
 import com.example.ot.base.entity.BaseTimeEntity;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.ManyToOne;
@@ -21,10 +22,10 @@ import org.hibernate.annotations.Where;
 @Where(clause = "deleted_date is NULL")
 public class ChatRoomAndChatMessage extends BaseTimeEntity {
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private ChatRoom chatRoom;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private ChatMessage chatMessage;
 
     public static ChatRoomAndChatMessage of(ChatRoom chatRoom, ChatMessage chatMessage) {

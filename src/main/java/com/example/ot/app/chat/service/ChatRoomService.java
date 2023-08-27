@@ -54,7 +54,6 @@ public class ChatRoomService {
     public void createChatRoomByTravelBoard(TravelBoard travelBoard, Member member) {
         ChatRoom chatRoomByTravelBoard = ChatRoom.ofBoard(travelBoard);
         ChatRoomAndMember chatRoomAndMember = ChatRoomAndMember.of(chatRoomByTravelBoard, member);
-        chatRoomRepository.save(chatRoomByTravelBoard);
         chatRoomAndMemberRepository.save(chatRoomAndMember);
     }
 
@@ -138,13 +137,15 @@ public class ChatRoomService {
         if(!ObjectUtils.isEmpty(chatRoom.getTravelBoard())){
             canWriterLeaveChatRoom(chatRoom, member, chatMembersCount);
         }
-        ChatRoomAndMember chatRoomAndMember = ChatRoomAndMember.of(chatRoom, member);
+        ChatRoomAndMember chatRoomAndMember = chatRoomAndMemberRepository.findByRoomIdAndMemberId(roomId, memberId);
+
         chatRoomAndMemberRepository.delete(chatRoomAndMember);
-        publisher.publishEvent(new SendExitMessageEvent(roomId, member.getNickName()));
-        if(chatMembersCount == 0){
+
+        if(chatMembersCount == 1){
             chatRoomAndChatMessageRepository.deleteAllByChatRoomId(roomId);
             chatRoomRepository.delete(chatRoom);
         }
+        publisher.publishEvent(new SendExitMessageEvent(roomId, member.getNickName()));
     }
 
     private void canWriterLeaveChatRoom(ChatRoom chatRoom, Member member, int chatMembersCount){
