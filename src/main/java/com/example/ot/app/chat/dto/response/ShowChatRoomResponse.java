@@ -11,7 +11,6 @@ import lombok.NoArgsConstructor;
 import java.util.List;
 
 @AllArgsConstructor
-@NoArgsConstructor
 @Getter
 @JsonNaming(value = PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class ShowChatRoomResponse {
@@ -19,8 +18,4 @@ public class ShowChatRoomResponse {
     private Long myMemberId;
     private Long chatRoomId;
     private List<ChatRoomMessageDto> chatRoomMessageDtoList;
-
-    public static ShowChatRoomResponse of(Long memberId, Long roomId, List<ChatRoomMessageDto> messageDtoList) {
-        return new ShowChatRoomResponse(memberId, roomId, messageDtoList);
-    }
 }
