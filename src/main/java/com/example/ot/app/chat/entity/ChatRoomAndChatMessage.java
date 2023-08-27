@@ -9,29 +9,20 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
 @Getter
 @Entity
-@SuperBuilder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @SQLDelete(sql = "UPDATE chat_room_and_chat_message SET deleted_date = NOW() where id = ?")
 @Where(clause = "deleted_date is NULL")
 public class ChatRoomAndChatMessage extends BaseTimeEntity {
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
     private ChatRoom chatRoom;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     private ChatMessage chatMessage;
-
-    public static ChatRoomAndChatMessage of(ChatRoom chatRoom, ChatMessage chatMessage) {
-        return ChatRoomAndChatMessage.builder()
-                .chatRoom(chatRoom)
-                .chatMessage(chatMessage)
-                .build();
-    }
 }
