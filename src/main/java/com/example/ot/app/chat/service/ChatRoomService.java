@@ -145,6 +145,7 @@ public class ChatRoomService {
         if(chatMembersCount == 1){
             chatRoomAndChatMessageRepository.deleteAllByChatRoomId(roomId);
             chatRoomRepository.delete(chatRoom);
+            return;
         }
         publisher.publishEvent(new SendExitMessageEvent(roomId, member.getNickName()));
     }
