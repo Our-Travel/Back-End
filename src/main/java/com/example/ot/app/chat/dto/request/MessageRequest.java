@@ -7,8 +7,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Builder
-@AllArgsConstructor
+
 @NoArgsConstructor
 @Getter
 @JsonNaming(value = PropertyNamingStrategy.SnakeCaseStrategy.class)
@@ -18,11 +17,8 @@ public class MessageRequest {
     private String message;
     private String writerNickname;
 
-    public static MessageRequest notice(Long roomId, String noticeMessage) {
-        return MessageRequest.builder()
-                .roomId(roomId)
-                .message(noticeMessage)
-                .writerNickname(null)
-                .build();
+    public MessageRequest(Long roomId, String noticeMessage){
+        this.roomId = roomId;
+        this.message = noticeMessage;
     }
 }

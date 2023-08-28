@@ -1,5 +1,6 @@
 package com.example.ot.app.chat.entity;
 
+import com.example.ot.app.chat.dto.request.MessageRequest;
 import com.example.ot.app.member.entity.Member;
 import com.example.ot.base.entity.BaseTimeEntity;
 import jakarta.persistence.Entity;
@@ -15,9 +16,7 @@ import org.hibernate.annotations.Where;
 
 @Getter
 @Entity
-@SuperBuilder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor
 @SQLDelete(sql = "UPDATE chat_message SET deleted_date = NOW() where id = ?")
 @Where(clause = "deleted_date is NULL")
 public class ChatMessage extends BaseTimeEntity {
@@ -27,22 +26,20 @@ public class ChatMessage extends BaseTimeEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     private Member writer;
 
-    public static ChatMessage of(String message, Member member) {
-        return ChatMessage.builder()
-                .message(message)
-                .writer(member)
-                .build();
+    public ChatMessage(MessageRequest messageRequest, Member member){
+        this.message = messageRequest.getMessage();
+        this.writer = member;
+    }
+
+    public ChatMessage(String message){
+        this.message = message;
     }
 
     public static ChatMessage exitMessage(String exitMemberNickname) {
-        return ChatMessage.builder()
-                .message("[알림]\n" + exitMemberNickname + " 님이 채팅방을 나가셨습니다.")
-                .build();
+        return new ChatMessage("[알림]\n" + exitMemberNickname + " 님이 채팅방을 나가셨습니다.");
     }
 
     public static ChatMessage enterMessage(String enterMemberNickname) {
-        return ChatMessage.builder()
-                .message("[알림]\n" + enterMemberNickname + " 님이 채팅방에 입장하셨습니다.")
-                .build();
+        return new ChatMessage("[알림]\n" + enterMemberNickname + " 님이 채팅방에 입장하셨습니다.");
     }
 }

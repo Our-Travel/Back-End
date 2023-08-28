@@ -52,9 +52,9 @@ public class ChatRoomService {
 
     @Transactional
     public void createChatRoomByTravelBoard(TravelBoard travelBoard, Member member) {
-        ChatRoom chatRoomByTravelBoard = ChatRoom.ofBoard(travelBoard);
-        ChatRoomAndMember chatRoomAndMember = ChatRoomAndMember.of(chatRoomByTravelBoard, member);
-        chatRoomRepository.save(chatRoomByTravelBoard);
+        ChatRoom chatRoomByBoard = new ChatRoom(travelBoard);
+        chatRoomRepository.save(chatRoomByBoard);
+        ChatRoomAndMember chatRoomAndMember = new ChatRoomAndMember(chatRoomByBoard, member);
         chatRoomAndMemberRepository.save(chatRoomAndMember);
     }
 
@@ -74,7 +74,7 @@ public class ChatRoomService {
         }
         List<Long> chatMessageIdList = chatRoomAndChatMessageRepository.findAllChatMessageIdByChatRoomId(roomId);
         List<ChatRoomMessageDto> messageDtoList = convertToMessageDtoList(chatMessageIdList);
-        return ShowChatRoomResponse.of(memberId, roomId, messageDtoList);
+        return new ShowChatRoomResponse(memberId, roomId, messageDtoList);
     }
 
     private void verifyEnterChatRoom(Long roomId, Long memberId){
@@ -96,7 +96,7 @@ public class ChatRoomService {
 
     public void enterChatRoom(ChatRoom chatRoom, Long memberId){
         Member member = memberRepository.findByMemberId(memberId);
-        ChatRoomAndMember chatRoomAndMember = ChatRoomAndMember.of(chatRoom, member);
+        ChatRoomAndMember chatRoomAndMember = new ChatRoomAndMember(chatRoom, member);
         chatRoomAndMemberRepository.save(chatRoomAndMember);
         publisher.publishEvent(new SendEnterMessageEvent(chatRoom.getId(), member.getNickName()));
     }
@@ -121,13 +121,13 @@ public class ChatRoomService {
                 .orElseThrow(() -> new HostException(HOST_NOT_EXISTS));;
         Member hostMember = memberRepository.findByMemberId(hostMemberId);
         Member userMember = memberRepository.findByMemberId(memberId);
-        ChatRoom chatRoom = ChatRoom.ofHost(host, hostMember, userMember);
-        ChatRoomAndMember chatRoomAndMemberByHost = ChatRoomAndMember.of(chatRoom, hostMember);
-        ChatRoomAndMember chatRoomAndMemberByUser = ChatRoomAndMember.of(chatRoom, userMember);
+        ChatRoom chatRoom = new ChatRoom(host, hostMember, userMember);
+        ChatRoomAndMember chatRoomAndMemberByHost = new ChatRoomAndMember(chatRoom, hostMember);
+        ChatRoomAndMember chatRoomAndMemberByUser = new ChatRoomAndMember(chatRoom, userMember);
         chatRoomRepository.save(chatRoom);
         chatRoomAndMemberRepository.save(chatRoomAndMemberByHost);
         chatRoomAndMemberRepository.save(chatRoomAndMemberByUser);
-        return ChatRoomIdResponse.ofChatRoomId(chatRoom);
+        return new ChatRoomIdResponse(chatRoom.getId());
     }
 
     @Transactional
@@ -138,13 +138,15 @@ public class ChatRoomService {
         if(!ObjectUtils.isEmpty(chatRoom.getTravelBoard())){
             canWriterLeaveChatRoom(chatRoom, member, chatMembersCount);
         }
-        ChatRoomAndMember chatRoomAndMember = ChatRoomAndMember.of(chatRoom, member);
+        ChatRoomAndMember chatRoomAndMember = chatRoomAndMemberRepository.findByRoomIdAndMemberId(roomId, memberId);
+
         chatRoomAndMemberRepository.delete(chatRoomAndMember);
-        publisher.publishEvent(new SendExitMessageEvent(roomId, member.getNickName()));
-        if(chatMembersCount == 0){
+
+        if(chatMembersCount == 1){
             chatRoomAndChatMessageRepository.deleteAllByChatRoomId(roomId);
             chatRoomRepository.delete(chatRoom);
         }
+        publisher.publishEvent(new SendExitMessageEvent(roomId, member.getNickName()));
     }
 
     private void canWriterLeaveChatRoom(ChatRoom chatRoom, Member member, int chatMembersCount){
