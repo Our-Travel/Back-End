@@ -16,3 +16,12 @@ spring:
     init:
       data-locations: classpath:test_data_h2.sql
       mode: always
+
+  security:
+    oauth2:
+      client:
+        registration:
+          kakao:
+            redirect-uri: '${custom.local.kakao-redirect-url}'
+custom:
+  url: '${custom.local.url}'

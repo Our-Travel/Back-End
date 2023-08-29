@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface HostRepository extends JpaRepository<Host, Long> {
-    Optional<Host> findByMemberId(long id);
+    Optional<Host> findHostByMember_Id(Long id);
 
     @Query("select h from Host h where h.regionCode = :regionCode")
     List<Host> findHostByRegionCode(@Param("regionCode")Integer regionCode);

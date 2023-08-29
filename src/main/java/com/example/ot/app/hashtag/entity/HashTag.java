@@ -6,6 +6,7 @@ import com.example.ot.base.entity.BaseTimeEntity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.ManyToOne;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,7 +17,7 @@ import org.hibernate.annotations.Where;
 @Entity
 @Getter
 @AllArgsConstructor
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SuperBuilder
 @SQLDelete(sql = "UPDATE hash_tag SET deleted_date = NOW() where id = ?")
 @Where(clause = "deleted_date is NULL")

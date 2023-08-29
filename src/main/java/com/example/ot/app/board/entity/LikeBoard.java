@@ -1,10 +1,8 @@
 package com.example.ot.app.board.entity;
 
 import com.example.ot.app.member.entity.Member;
-import com.example.ot.base.entity.BaseTimeEntity;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
@@ -16,7 +14,7 @@ import static jakarta.persistence.GenerationType.IDENTITY;
 
 
 
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @EntityListeners(AuditingEntityListener.class)
 @Entity
 @Getter

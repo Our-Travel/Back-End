@@ -13,8 +13,8 @@ spring:
           kakao:
             scope:
             client-name: Kakao
+            client-id: '${kakao.rest.api.key}'
             authorization-grant-type: authorization_code
-            redirect-uri: '{baseUrl}/{action}/oauth2/code/{registrationId}'
             client-authentication-method: POST
         provider:
           kakao:
@@ -22,11 +22,6 @@ spring:
             token-uri: https://kauth.kakao.com/oauth/token
             user-info-uri: https://kapi.kakao.com/v2/user/me
             user-name-attribute: id
-
-  jpa:
-    properties:
-      hibernate:
-        default_batch_fetch_size: 1000
 
 kakao:
   rest:

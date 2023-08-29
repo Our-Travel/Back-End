@@ -61,10 +61,7 @@ public class MemberController {
     @Operation(summary = "로그인")
     @PostMapping("/login")
     public ResponseEntity<RsData> signIn(@Valid @RequestBody SignInRequest signInRequest){
-        Member member = memberService.verifyUsername(signInRequest.getUsername());
-        memberService.verifyPassword(member.getPassword(), signInRequest.getPassword());
-
-        String accessToken = memberService.genAccessToken(member);
+        String accessToken = memberService.validSignInAndGetAccessToken(signInRequest);
         return Util.spring.responseEntityOf(RsData.success(LOGIN_COMPLETED),
                 Util.spring.httpHeadersOf("Authentication", accessToken)
         );

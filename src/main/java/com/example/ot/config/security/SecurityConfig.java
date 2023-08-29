@@ -37,7 +37,7 @@ public class SecurityConfig implements WebMvcConfigurer {
                 )
                 .authorizeHttpRequests(
                         authorizeRequests -> authorizeRequests
-                                .requestMatchers("/members/**", "/oauth2/**",
+                                .requestMatchers("/members/**", "/oauth2/**", "/boards/list/**","/ws/chat/**","/**",
                                         "/swagger-ui/**", "/swagger-resources/**",
                                         "/v2/api-docs/**", "/v3/api-docs/**", "/webjars/**")
                                 .permitAll()
@@ -55,6 +55,9 @@ public class SecurityConfig implements WebMvcConfigurer {
                         AbstractHttpConfigurer::disable
                 )
                 .oauth2Login(oauth2 -> oauth2
+                        .redirectionEndpoint()
+                        .baseUri("/oauth2/callback/*")
+                        .and()
                         .successHandler(oAuth2MemberSuccessHandler)
                         .userInfoEndpoint()
                         .userService(oAuthUserService))
@@ -69,10 +72,9 @@ public class SecurityConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedOrigins("http://localhost:3000")
+                .allowedOriginPatterns("*")
                 .allowedMethods("*")
                 .allowedHeaders("*")
-                .exposedHeaders("Authentication")
-                .allowCredentials(true);
+                .exposedHeaders("Authentication");
     }
 }

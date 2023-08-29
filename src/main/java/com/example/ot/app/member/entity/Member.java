@@ -6,12 +6,7 @@ import com.example.ot.util.Util;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.OneToOne;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
@@ -27,7 +22,7 @@ import java.util.Map;
 @Getter
 @Entity
 @SuperBuilder
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @SQLDelete(sql = "UPDATE member SET deleted_date = NOW() where id = ?")
 @Where(clause = "deleted_date is NULL")
@@ -48,7 +43,6 @@ public class Member extends BaseTimeEntity {
 
     private String providerTypeCode;
 
-    @Setter
     private boolean hostAuthority = false;
 
     // 현재 회원이 가지고 있는 권한들을 List<GrantedAuthority> 형태로 리턴
@@ -66,7 +60,7 @@ public class Member extends BaseTimeEntity {
         return authorities;
     }
 
-    public static Member of(String providerTypeCode, SignUpRequest signUpRequest, String password){
+    public static Member create(String providerTypeCode, SignUpRequest signUpRequest, String password){
         return Member.builder()
                 .username(signUpRequest.getUsername())
                 .password(password)
@@ -147,5 +141,17 @@ public class Member extends BaseTimeEntity {
 
     public void updatePassword(String password) {
         this.password = password;
+    }
+
+    public void assignHostRole(){
+        this.hostAuthority = true;
+    }
+
+    public void removeHostRole(){
+        this.hostAuthority = false;
+    }
+
+    public void generateAccessToken(String accessToken){
+        this.accessToken = accessToken;
     }
 }

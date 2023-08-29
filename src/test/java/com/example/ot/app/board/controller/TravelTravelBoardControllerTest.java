@@ -289,7 +289,7 @@ public class TravelTravelBoardControllerTest {
         // When
         ResultActions resultActions = mvc
                 .perform(
-                        post("/boards/{boardId}", 1)
+                        post("/boards/{boardId}/likes", 1)
                 )
                 .andDo(print());
 
@@ -306,7 +306,7 @@ public class TravelTravelBoardControllerTest {
         // When
         ResultActions resultActions = mvc
                 .perform(
-                        post("/boards/{boardId}", 1)
+                        post("/boards/{boardId}/likes", 1)
                 )
                 .andDo(print());
 
@@ -322,7 +322,7 @@ public class TravelTravelBoardControllerTest {
         // When
         ResultActions resultActions = mvc
                 .perform(
-                        post("/boards/{boardId}", 1)
+                        post("/boards/{boardId}/likes", 1)
                 )
                 .andDo(print());
 

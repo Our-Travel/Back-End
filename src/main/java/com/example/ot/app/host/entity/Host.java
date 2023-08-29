@@ -6,6 +6,7 @@ import com.example.ot.base.entity.BaseTimeEntity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.OneToOne;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,7 +14,7 @@ import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @SuperBuilder
 @Entity
@@ -40,5 +41,9 @@ public class Host extends BaseTimeEntity {
     public void updateHostInfo(String introduction, Integer regionCode){
         this.introduction = introduction;
         this.regionCode = regionCode;
+    }
+
+    public Long getMemberId(){
+        return member.getId();
     }
 }

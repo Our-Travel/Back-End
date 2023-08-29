@@ -5,6 +5,7 @@ import com.example.ot.app.board.dto.request.EditBoardRequest;
 import com.example.ot.app.member.entity.Member;
 import com.example.ot.base.entity.BaseTimeEntity;
 import jakarta.persistence.*;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,7 +14,7 @@ import lombok.experimental.SuperBuilder;
 import java.time.LocalDate;
 
 @AllArgsConstructor
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SuperBuilder
 @Entity
 @Getter
@@ -58,16 +59,22 @@ public class TravelBoard extends BaseTimeEntity {
         return RecruitmentStatus.OPEN;
     }
 
-    public void update(EditBoardRequest editBoardRequest) {
-        TravelBoard.builder()
-                .title(editBoardRequest.getTitle())
-                .content(editBoardRequest.getContent())
-                .regionCode(editBoardRequest.getRegionCode())
-                .numberOfTravelers(editBoardRequest.getNumberOfTravelers())
-                .recruitmentPeriodStart(editBoardRequest.getRecruitmentPeriodStart())
-                .recruitmentPeriodEnd(editBoardRequest.getRecruitmentPeriodEnd())
-                .journeyPeriodStart(editBoardRequest.getJourneyPeriodStart())
-                .journeyPeriodEnd(editBoardRequest.getJourneyPeriodEnd())
-                .build();
+    public void updateBoard(EditBoardRequest editBoardRequest) {
+        this.title = editBoardRequest.getTitle();
+        this.content = editBoardRequest.getContent();
+        this.regionCode = editBoardRequest.getRegionCode();
+        this.numberOfTravelers = editBoardRequest.getNumberOfTravelers();
+        this.recruitmentPeriodStart = editBoardRequest.getRecruitmentPeriodStart();
+        this.recruitmentPeriodEnd = editBoardRequest.getRecruitmentPeriodEnd();
+        this.journeyPeriodStart = editBoardRequest.getJourneyPeriodStart();
+        this.journeyPeriodEnd = editBoardRequest.getJourneyPeriodEnd();
+    }
+
+    public Long getMemberId(){
+        return member.getId();
+    }
+
+    public void updateClosingRecruitment(){
+        this.recruitmentStatus = RecruitmentStatus.CLOSED;
     }
 }

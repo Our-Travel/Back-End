@@ -1,8 +1,4 @@
 spring:
-  mvc:
-    servlet:
-      path: '${custom.dev.servlet.path}'
-
   datasource:
     driver-class-name: '${custom.dev.database.driver-class-name}'
     url: '${custom.dev.database.url}'
@@ -17,5 +13,22 @@ spring:
     hibernate:
       ddl-auto: create
 
+  security:
+    oauth2:
+      client:
+        registration:
+          kakao:
+            redirect-uri: '${custom.dev.kakao-redirect-url}'
+
 server:
+  servlet:
+    context-path: '${custom.dev.servlet.path}'
   port: '${custom.dev.server.port}'
+
+logging:
+  discord:
+    webhook-uri: '${custom.dev.webhook.logBack}'
+  config: classpath:log/logback-spring.xml
+
+custom:
+  url: '${custom.dev.url}'
