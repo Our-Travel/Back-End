@@ -7,6 +7,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.ManyToOne;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.SQLDelete;
@@ -15,6 +16,7 @@ import org.hibernate.annotations.Where;
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @SQLDelete(sql = "UPDATE chat_room_and_member SET deleted_date = NOW() where id = ?")
 @Where(clause = "deleted_date is NULL")
 public class ChatRoomAndMember extends BaseTimeEntity {
@@ -25,8 +27,7 @@ public class ChatRoomAndMember extends BaseTimeEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     private Member member;
 
-    public ChatRoomAndMember(ChatRoom chatRoom, Member member){
-        this.chatRoom = chatRoom;
-        this.member = member;
+    public static ChatRoomAndMember of(ChatRoom chatRoom, Member member){
+        return new ChatRoomAndMember(chatRoom, member);
     }
 }

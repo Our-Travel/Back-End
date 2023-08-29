@@ -52,9 +52,9 @@ public class ChatRoomService {
 
     @Transactional
     public void createChatRoomByTravelBoard(TravelBoard travelBoard, Member member) {
-        ChatRoom chatRoomByBoard = new ChatRoom(travelBoard);
+        ChatRoom chatRoomByBoard = ChatRoom.createChatRoomByBoard(travelBoard);
         chatRoomRepository.save(chatRoomByBoard);
-        ChatRoomAndMember chatRoomAndMember = new ChatRoomAndMember(chatRoomByBoard, member);
+        ChatRoomAndMember chatRoomAndMember = ChatRoomAndMember.of(chatRoomByBoard, member);
         chatRoomAndMemberRepository.save(chatRoomAndMember);
     }
 
@@ -96,7 +96,7 @@ public class ChatRoomService {
 
     public void enterChatRoom(ChatRoom chatRoom, Long memberId){
         Member member = memberRepository.findByMemberId(memberId);
-        ChatRoomAndMember chatRoomAndMember = new ChatRoomAndMember(chatRoom, member);
+        ChatRoomAndMember chatRoomAndMember = ChatRoomAndMember.of(chatRoom, member);
         chatRoomAndMemberRepository.save(chatRoomAndMember);
         publisher.publishEvent(new SendEnterMessageEvent(chatRoom.getId(), member.getNickName()));
     }
@@ -121,13 +121,13 @@ public class ChatRoomService {
                 .orElseThrow(() -> new HostException(HOST_NOT_EXISTS));;
         Member hostMember = memberRepository.findByMemberId(hostMemberId);
         Member userMember = memberRepository.findByMemberId(memberId);
-        ChatRoom chatRoom = new ChatRoom(host, hostMember, userMember);
-        ChatRoomAndMember chatRoomAndMemberByHost = new ChatRoomAndMember(chatRoom, hostMember);
-        ChatRoomAndMember chatRoomAndMemberByUser = new ChatRoomAndMember(chatRoom, userMember);
+        ChatRoom chatRoom = ChatRoom.createChatRoomByHost(host, hostMember, userMember);
+        ChatRoomAndMember chatRoomAndMemberByHost = ChatRoomAndMember.of(chatRoom, hostMember);
+        ChatRoomAndMember chatRoomAndMemberByUser = ChatRoomAndMember.of(chatRoom, userMember);
         chatRoomRepository.save(chatRoom);
         chatRoomAndMemberRepository.save(chatRoomAndMemberByHost);
         chatRoomAndMemberRepository.save(chatRoomAndMemberByUser);
-        return new ChatRoomIdResponse(chatRoom.getId());
+        return ChatRoomIdResponse.from(chatRoom.getId());
     }
 
     @Transactional
