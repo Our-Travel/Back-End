@@ -26,9 +26,13 @@ public class ChatMessage extends BaseTimeEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     private Member writer;
 
-    public ChatMessage(MessageRequest messageRequest, Member member){
+    private ChatMessage(MessageRequest messageRequest, Member member){
         this.message = messageRequest.getMessage();
         this.writer = member;
+    }
+
+    public static ChatMessage CreateMessageByMember(MessageRequest messageRequest, Member member){
+        return new ChatMessage(messageRequest, member);
     }
 
     public ChatMessage(String message){

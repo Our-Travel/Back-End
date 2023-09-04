@@ -15,7 +15,7 @@ import org.hibernate.annotations.Where;
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @SQLDelete(sql = "UPDATE chat_room_and_chat_message SET deleted_date = NOW() where id = ?")
 @Where(clause = "deleted_date is NULL")
 public class ChatRoomAndChatMessage extends BaseTimeEntity {
@@ -25,4 +25,8 @@ public class ChatRoomAndChatMessage extends BaseTimeEntity {
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     private ChatMessage chatMessage;
+
+    public static ChatRoomAndChatMessage of(ChatRoom chatRoom, ChatMessage chatMessage){
+        return new ChatRoomAndChatMessage(chatRoom, chatMessage);
+    }
 }

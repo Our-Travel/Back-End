@@ -2,6 +2,7 @@ package com.example.ot.app.host.controller;
 
 import com.example.ot.app.host.dto.request.WriteHostInfoRequest;
 import com.example.ot.app.host.dto.response.EditHostResponse;
+import com.example.ot.app.host.dto.response.HostCountResponse;
 import com.example.ot.app.host.dto.response.HostInfoListResponse;
 import com.example.ot.app.host.service.HostService;
 import com.example.ot.base.rsData.RsData;
@@ -68,6 +69,13 @@ public class HostController {
     public ResponseEntity<RsData> showHostListByRegion(@RequestParam("regionCode") Integer regionCode,
                                                        @AuthenticationPrincipal MemberContext memberContext){
         List<HostInfoListResponse> hostInfoListResponse = hostService.getHostListByRegion(regionCode);
+        return Util.spring.responseEntityOf(RsData.success(HOSTS_BY_REGION_FOUND, hostInfoListResponse));
+    }
+
+    @Operation(summary = "각 지역의 호스트 인원 수", security = @SecurityRequirement(name = "bearerAuth"))
+    @GetMapping("/map")
+    public ResponseEntity<RsData> showHostCountByRegion(@AuthenticationPrincipal MemberContext memberContext){
+        List<HostCountResponse> hostInfoListResponse = hostService.getHostCountByRegion();
         return Util.spring.responseEntityOf(RsData.success(HOSTS_BY_REGION_FOUND, hostInfoListResponse));
     }
 

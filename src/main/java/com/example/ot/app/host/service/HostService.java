@@ -4,6 +4,7 @@ import com.example.ot.app.hashtag.entity.HashTag;
 import com.example.ot.app.hashtag.repository.HashTagRepository;
 import com.example.ot.app.host.dto.request.WriteHostInfoRequest;
 import com.example.ot.app.host.dto.response.EditHostResponse;
+import com.example.ot.app.host.dto.response.HostCountResponse;
 import com.example.ot.app.host.dto.response.HostInfoListResponse;
 import com.example.ot.app.host.entity.Host;
 import com.example.ot.app.host.exception.HostException;
@@ -18,6 +19,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -135,5 +137,10 @@ public class HostService {
     private void deleteHashTag(Long hostId) {
         List<HashTag> hostHashTags = hashTagRepository.findByHostId(hostId);
         hashTagRepository.deleteAll(hostHashTags);
+    }
+
+    public List<HostCountResponse> getHostCountByRegion() {
+        List<HostCountResponse> hostCountResponseList = hostRepository.countHostsByRegionCode();
+        return hostCountResponseList;
     }
 }

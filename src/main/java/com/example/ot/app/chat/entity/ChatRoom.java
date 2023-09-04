@@ -29,14 +29,22 @@ public class ChatRoom extends BaseTimeEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     private Host host;
 
-    public ChatRoom(TravelBoard travelBoard){
+    private ChatRoom(TravelBoard travelBoard){
         this.title = travelBoard.getTitle();
         this.travelBoard = travelBoard;
     }
 
-    public ChatRoom(Host host, Member hostMember, Member userMember){
+    private ChatRoom(Host host, Member hostMember, Member userMember){
         this.title = hostMember.getNickName() + "호스트님과 " + userMember.getNickName() + "님의 채팅방";
         this.host = host;
+    }
+
+    public static ChatRoom createChatRoomByBoard(TravelBoard travelBoard){
+        return new ChatRoom(travelBoard);
+    }
+
+    public static ChatRoom createChatRoomByHost(Host host, Member hostMember, Member userMember){
+        return new ChatRoom(host, hostMember, userMember);
     }
 
     public Long getBoardId(){
