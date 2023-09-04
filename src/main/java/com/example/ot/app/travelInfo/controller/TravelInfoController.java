@@ -1,10 +1,26 @@
 package com.example.ot.app.travelInfo.controller;
 
+import com.example.ot.app.chat.dto.response.ShowChatRoomResponse;
+import com.example.ot.app.travelInfo.dto.response.ShowMapDataResponse;
+import com.example.ot.app.travelInfo.service.TravelInfoService;
+import com.example.ot.base.rsData.RsData;
+import com.example.ot.config.security.entity.MemberContext;
+import com.example.ot.util.Util;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
+
+import static com.example.ot.app.chat.code.ChatSuccessCode.CHATROOM_ENTERED;
 
 @Tag(name = "주변 관광지, 숙박")
 @Slf4j
@@ -12,6 +28,17 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @RequestMapping("/local-place")
 public class TravelInfoController {
+
+    private final TravelInfoService travelInfoService;
+
+    @Operation(summary = "지도 데이터", security = @SecurityRequirement(name = "bearerAuth"))
+    @GetMapping("")
+    public ResponseEntity<RsData> showMapData(@AuthenticationPrincipal MemberContext memberContext){
+        List<ShowMapDataResponse> showChatRoomResponse= travelInfoService.getMapData();
+        return Util.spring.responseEntityOf(RsData.success(CHATROOM_ENTERED, showChatRoomResponse));
+    }
+
+
 //
 //    private final LocalPlacesService localPlacesService;
 //    private static final String SPOT_CATEGORY = "AT4";
