@@ -17,7 +17,7 @@ public class KakaoUriBuilderService {
         uriBuilder.queryParam("x", longitude);
         uriBuilder.queryParam("y", latitude);
         uriBuilder.queryParam("radius", 10000);
-        uriBuilder.queryParam("size", 5);
+        uriBuilder.queryParam("size", 10);
         uriBuilder.queryParam("sort", "distance");
 
         URI uri = uriBuilder.build().encode().toUri();
