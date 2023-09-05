@@ -68,7 +68,7 @@ public class HostController {
     @GetMapping("/list")
     public ResponseEntity<RsData> showHostListByRegion(@RequestParam("regionCode") Integer regionCode,
                                                        @AuthenticationPrincipal MemberContext memberContext){
-        List<HostInfoListResponse> hostInfoListResponse = hostService.getHostListByRegion(regionCode);
+        List<HostInfoListResponse> hostInfoListResponse = hostService.getHostListByRegion(regionCode, memberContext.getId());
         return Util.spring.responseEntityOf(RsData.success(HOSTS_BY_REGION_FOUND, hostInfoListResponse));
     }
 
