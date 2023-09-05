@@ -1,5 +1,7 @@
 package com.example.ot.app.host.service;
 
+import com.example.ot.app.chat.repository.ChatRoomAndMemberRepository;
+import com.example.ot.app.chat.repository.ChatRoomRepository;
 import com.example.ot.app.hashtag.entity.HashTag;
 import com.example.ot.app.hashtag.repository.HashTagRepository;
 import com.example.ot.app.host.dto.request.WriteHostInfoRequest;
@@ -19,10 +21,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.example.ot.app.host.exception.ErrorCode.HOST_NOT_EXISTS;
@@ -37,6 +36,8 @@ public class HostService {
     private final KeywordRepository keywordRepository;
     private final HashTagRepository hashTagRepository;
     private final MemberRepository memberRepository;
+    private final ChatRoomAndMemberRepository chatRoomAndMemberRepository;
+    private final ChatRoomRepository chatRoomRepository;
     private final ProfileImageRepository profileImageRepository;
 
     @Transactional
@@ -73,16 +74,34 @@ public class HostService {
         hostRepository.delete(host);
     }
 
-    public List<HostInfoListResponse> getHostListByRegion(Integer regionCode) {
+    public List<HostInfoListResponse> getHostListByRegion(Integer regionCode, Long memberId) {
         List<Host> hostList = hostRepository.findHostByRegionCode(regionCode);
 
         if (hostList.isEmpty()) {
             throw new HostException(HOST_NOT_EXISTS_BY_REGION);
         }
 
-        return hostList.stream()
+        List<HostInfoListResponse> hostInfoListResponseList = hostList.stream()
                 .map(this::mapToHostInfoListResponse)
-                .collect(Collectors.toList());
+                .toList();
+        Long hostId = null;
+        Optional<Host> host = hostRepository.findHostByMember_Id(memberId);
+        if(host.isPresent()){
+            hostId = host.get().getId();
+        }
+        List<Long> chatRoomListByHost = chatRoomAndMemberRepository.findChatRoomIdByHost(memberId);
+        for(HostInfoListResponse hostInfoListResponse : hostInfoListResponseList){
+            List<Long> chatRoomListByRegion = chatRoomRepository.findByHostId(hostInfoListResponse.getHostId());
+            for(Long chatRoomId : chatRoomListByRegion){
+                if(chatRoomListByHost.contains(chatRoomId)){
+                    hostInfoListResponse.updateChatRoomExist();
+                }
+            }
+            if(Objects.equals(hostId, hostInfoListResponse.getHostId())){
+                hostInfoListResponse.updateHostMember();
+            }
+        }
+        return hostInfoListResponseList;
     }
 
     private HostInfoListResponse mapToHostInfoListResponse(Host host) {

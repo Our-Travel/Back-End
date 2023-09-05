@@ -122,6 +122,13 @@ public class ChatRoomService {
         Member hostMember = memberRepository.findByMemberId(hostMemberId);
         Member userMember = memberRepository.findByMemberId(memberId);
         ChatRoom chatRoom = ChatRoom.createChatRoomByHost(host, hostMember, userMember);
+        List<Long> chatRoomListByHostUser = chatRoomAndMemberRepository.findChatRoomIdByHost(memberId);
+        List<Long> chatRoomListByHostHost = chatRoomAndMemberRepository.findChatRoomIdByHost(hostMemberId);
+        for (Long chatRoomId : chatRoomListByHostUser) {
+            if (chatRoomListByHostHost.contains(chatRoomId)) {
+                System.out.println("host");
+            }
+        }
         ChatRoomAndMember chatRoomAndMemberByHost = ChatRoomAndMember.of(chatRoom, hostMember);
         ChatRoomAndMember chatRoomAndMemberByUser = ChatRoomAndMember.of(chatRoom, userMember);
         chatRoomRepository.save(chatRoom);
