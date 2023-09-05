@@ -10,14 +10,8 @@ spring:
       port: '${custom.dev.redis.port}'
 
   jpa:
-    defer-datasource-initialization: true
     hibernate:
       ddl-auto: create
-
-  sql:
-    init:
-      data-locations: classpath:dev_data.sql
-      mode: always
 
   security:
     oauth2:
