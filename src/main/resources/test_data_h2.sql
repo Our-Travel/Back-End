@@ -8,10 +8,6 @@ INSERT INTO MEMBER (username, nick_name, password, host_authority, provider_type
 INSERT INTO MEMBER (username, nick_name, password, host_authority, provider_type_code) VALUES ('user8@example.com', 'user342', '@y2password123', 1, 'OT');
 INSERT INTO MEMBER (username, nick_name, password, host_authority, provider_type_code) VALUES ('user9@example.com', 'user3421', '@y2password123', 1, 'OT');
 INSERT INTO MEMBER (username, nick_name, password, host_authority, provider_type_code) VALUES ('user10@example.com', 'user3631', '@y2password123', 1, 'OT');
-INSERT INTO MEMBER (username, nick_name, password, host_authority, provider_type_code) VALUES ('test1@test.com', 'test1', 'qwe123!!', 0, 'OT');
-INSERT INTO MEMBER (username, nick_name, password, host_authority, provider_type_code) VALUES ('test2@test.com', 'test2', 'qwe123!!', 0, 'OT');
-INSERT INTO MEMBER (username, nick_name, password, host_authority, provider_type_code) VALUES ('test3@test.com', 'test3', 'qwe123!!', 0, 'OT');
-INSERT INTO MEMBER (username, nick_name, password, host_authority, provider_type_code) VALUES ('test4@test.com', 'test4', 'qwe123!!', 0, 'OT');
 
 INSERT INTO HOST (introduction, region_code, member_id) VALUES ('안녕하세요', '11020', 1);
 INSERT INTO HOST (introduction, region_code, member_id) VALUES ('안녕하세요', '11020', 3);
