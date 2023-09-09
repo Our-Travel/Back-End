@@ -15,25 +15,31 @@ import lombok.NoArgsConstructor;
 @JsonNaming(value = PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class ShowMapDataResponse {
 
-    private Long id;
-    private String placeName;
-    private String phone;
-    private String placeUrl;
+    private int contentId;
+    private int contentTypeId;
+    private String title;
     private String address;
-    private String roadAddress;
+    private String tel;
+    private String telName;
     private double longitude;
     private double latitude;
+    private String image;
+    private String homePage;
+    private String overView;
 
     public static ShowMapDataResponse of(TravelInfo travelInfo) {
         return ShowMapDataResponse.builder()
-                .id(travelInfo.getId())
-                .placeName(travelInfo.getPlaceName())
-                .phone(travelInfo.getPhone())
-                .placeUrl(travelInfo.getPlaceUrl())
+                .contentId(travelInfo.getContentId())
+                .contentTypeId(travelInfo.getContentTypeId())
+                .title(travelInfo.getTitle())
                 .address(travelInfo.getAddress())
-                .roadAddress(travelInfo.getRoadAddress())
+                .tel(travelInfo.getTel())
+                .telName(travelInfo.getTelName())
                 .longitude(travelInfo.getLongitude())
                 .latitude(travelInfo.getLatitude())
+                .image(travelInfo.getImage())
+                .homePage(travelInfo.getHomePage())
+                .overView(travelInfo.getOverView())
                 .build();
     }
 }

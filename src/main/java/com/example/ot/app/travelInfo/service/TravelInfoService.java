@@ -2,6 +2,7 @@ package com.example.ot.app.travelInfo.service;
 
 import com.example.ot.app.travelInfo.dto.response.ShowMapDataResponse;
 import com.example.ot.app.travelInfo.entity.TravelInfo;
+import com.example.ot.app.travelInfo.exception.TravelInfoException;
 import com.example.ot.app.travelInfo.repository.TravelInfoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -9,6 +10,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.example.ot.app.travelInfo.exception.ErrorCode.*;
 
 @Service
 @RequiredArgsConstructor
@@ -25,5 +28,10 @@ public class TravelInfoService {
             showMapDataResponseList.add(data);
         }
         return showMapDataResponseList;
+    }
+
+    public ShowMapDataResponse getOneMapData(int contentId) {
+        TravelInfo travelInfo = travelInfoRepository.findByContentId(contentId).orElseThrow(() -> new TravelInfoException(TRAVEL_INFO_NOT_EXISTS));
+        return ShowMapDataResponse.of(travelInfo);
     }
 }

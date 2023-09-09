@@ -1,6 +1,5 @@
 package com.example.ot.app.travelInfo.controller;
 
-import com.example.ot.app.chat.dto.response.ShowChatRoomResponse;
 import com.example.ot.app.travelInfo.dto.response.ShowMapDataResponse;
 import com.example.ot.app.travelInfo.service.TravelInfoService;
 import com.example.ot.base.rsData.RsData;
@@ -17,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-import static com.example.ot.app.chat.code.ChatSuccessCode.CHATROOM_ENTERED;
+import static com.example.ot.app.travelInfo.code.TravelInfoSuccessCode.*;
 
 @Tag(name = "주변 관광지, 숙박")
 @Slf4j
@@ -31,17 +30,17 @@ public class TravelInfoController {
     @Operation(summary = "지도 데이터", security = @SecurityRequirement(name = "bearerAuth"))
     @GetMapping("")
     public ResponseEntity<RsData> showMapData(@AuthenticationPrincipal MemberContext memberContext){
-        List<ShowMapDataResponse> showChatRoomResponse= travelInfoService.getMapData();
-        return Util.spring.responseEntityOf(RsData.success(CHATROOM_ENTERED, showChatRoomResponse));
+        List<ShowMapDataResponse> showAllMapDataResponse= travelInfoService.getMapData();
+        return Util.spring.responseEntityOf(RsData.success(MAP_DATA_FOUND, showAllMapDataResponse));
     }
 
-    @Operation(summary = "test")
-    @GetMapping("/test")
-    public ResponseEntity<RsData> kakaoTest(@RequestParam(value = "x") double x, @RequestParam(value = "y") double y){
-        travelInfoService.fetchKakaoApi(x, y);
-        return Util.spring.responseEntityOf(RsData.success(CHATROOM_ENTERED));
+    @Operation(summary = "하나의 관광지 세부정보", security = @SecurityRequirement(name = "bearerAuth"))
+    @GetMapping("/{contentId}")
+    public ResponseEntity<RsData> showMapData(@PathVariable int contentId,
+                                              @AuthenticationPrincipal MemberContext memberContext){
+        ShowMapDataResponse showMapDataResponse= travelInfoService.getOneMapData(contentId);
+        return Util.spring.responseEntityOf(RsData.success(ONE_MAP_DATA_FOUND, showMapDataResponse));
     }
-
 
 //
 //    private final LocalPlacesService localPlacesService;
