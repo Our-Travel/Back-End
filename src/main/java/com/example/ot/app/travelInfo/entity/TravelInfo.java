@@ -4,14 +4,10 @@ package com.example.ot.app.travelInfo.entity;
 import com.example.ot.base.entity.BaseTimeEntity;
 import jakarta.persistence.Entity;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.experimental.SuperBuilder;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor
-@SuperBuilder
 @Getter
 @Entity
 public class TravelInfo extends BaseTimeEntity {

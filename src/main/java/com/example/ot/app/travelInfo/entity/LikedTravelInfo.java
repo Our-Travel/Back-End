@@ -33,4 +33,8 @@ public class LikedTravelInfo {
         this.travelInfo = travelInfo;
         this.member = member;
     }
+
+    public static LikedTravelInfo of(TravelInfo travelInfo, Member member) {
+        return new LikedTravelInfo(travelInfo, member);
+    }
 }
