@@ -1,5 +1,6 @@
 package com.example.ot.app.travelInfo.controller;
 
+import com.example.ot.app.travelInfo.dto.response.LikedTravelInfoResponse;
 import com.example.ot.app.travelInfo.dto.response.ShowMapDataResponse;
 import com.example.ot.app.travelInfo.service.TravelInfoService;
 import com.example.ot.base.code.Code;
@@ -37,7 +38,7 @@ public class TravelInfoController {
 
     @Operation(summary = "하나의 관광지 세부정보", security = @SecurityRequirement(name = "bearerAuth"))
     @GetMapping("/{contentId}")
-    public ResponseEntity<RsData> showMapData(@PathVariable int contentId,
+    public ResponseEntity<RsData> travelInfoData(@PathVariable int contentId,
                                               @AuthenticationPrincipal MemberContext memberContext){
         ShowMapDataResponse showMapDataResponse= travelInfoService.getOneMapData(contentId);
         return Util.spring.responseEntityOf(RsData.success(ONE_MAP_DATA_FOUND, showMapDataResponse));
@@ -45,9 +46,17 @@ public class TravelInfoController {
 
     @Operation(summary = "관광지 좋아요 및 좋아요 취소", security = @SecurityRequirement(name = "bearerAuth"))
     @PostMapping("/{contentId}")
-    public ResponseEntity<RsData> likeBoard(@PathVariable int contentId,
+    public ResponseEntity<RsData> likeTravelInfo(@PathVariable int contentId,
                                             @AuthenticationPrincipal MemberContext memberContext){
         Code likeTravelInfoResult = travelInfoService.likeTravelInfo(contentId, memberContext.getId());
         return Util.spring.responseEntityOf(RsData.success(likeTravelInfoResult));
+    }
+
+    @Operation(summary = "유저의 관광지 좋아요 리스트", security = @SecurityRequirement(name = "bearerAuth"))
+    @GetMapping("/{memberId}")
+    public ResponseEntity<RsData> likedTravelInfoList(@PathVariable Long memberId,
+                                                      @AuthenticationPrincipal MemberContext memberContext){
+        List<LikedTravelInfoResponse> likedTravelInfoResult = travelInfoService.getLikedTravelInfoList(memberId, memberContext.getId());
+        return Util.spring.responseEntityOf(RsData.success(TRAVEL_INFO_LIKED_LIST, likedTravelInfoResult));
     }
 }
