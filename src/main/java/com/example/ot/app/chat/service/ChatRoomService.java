@@ -24,6 +24,7 @@ import com.example.ot.app.member.entity.Member;
 import com.example.ot.app.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
@@ -49,6 +50,7 @@ public class ChatRoomService {
     private final MemberRepository memberRepository;
     private final HostRepository hostRepository;
     private final ApplicationEventPublisher publisher;
+    PageRequest pageRequest = PageRequest.of(0, 1);
 
     @Transactional
     public void createChatRoomByTravelBoard(TravelBoard travelBoard, Member member) {
@@ -168,10 +170,12 @@ public class ChatRoomService {
         List<ChatRoom> myChatRoomList = chatRoomAndMemberRepository.findByMemberId(memberId);
         List<ShowMyChatRoomsResponse> showMyChatRoomsResponses = new ArrayList<>();
         for(ChatRoom chatRoom : myChatRoomList){
-            ChatMessage chatMessage = chatRoomAndChatMessageRepository
-                    .findLastByChatRoomId(chatRoom.getId()).orElse(null);
-            ShowMyChatRoomsResponse showMyChatRoomsResponse = ShowMyChatRoomsResponse.of(chatRoom, chatMessage);
-            showMyChatRoomsResponses.add(showMyChatRoomsResponse);
+            List<ChatMessage> messages = chatRoomAndChatMessageRepository.findLastByChatRoomId(chatRoom.getId(), pageRequest);
+            if (!messages.isEmpty()) {
+                ChatMessage lastMessage = messages.get(0);
+                ShowMyChatRoomsResponse showMyChatRoomsResponse = ShowMyChatRoomsResponse.of(chatRoom, lastMessage);
+                showMyChatRoomsResponses.add(showMyChatRoomsResponse);
+            }
         }
         return showMyChatRoomsResponses;
     }
