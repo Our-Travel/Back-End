@@ -4,6 +4,7 @@ import com.example.ot.app.board.dto.request.CreateBoardRequest;
 import com.example.ot.app.board.dto.request.EditBoardRequest;
 import com.example.ot.app.board.dto.response.BoardListResponse;
 import com.example.ot.app.board.dto.response.EditBoardResponse;
+import com.example.ot.app.board.dto.response.LikedBoardResponse;
 import com.example.ot.app.board.dto.response.ShowBoardResponse;
 import com.example.ot.app.board.entity.LikeBoard;
 import com.example.ot.app.board.entity.TravelBoard;
@@ -22,6 +23,7 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.SliceImpl;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
@@ -29,6 +31,7 @@ import org.springframework.util.ObjectUtils;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import static com.example.ot.app.board.code.TravelBoardSuccessCode.*;
 import static com.example.ot.app.board.exception.ErrorCode.*;
@@ -156,5 +159,19 @@ public class TravelBoardService {
     public void closeRecruitment(Long boardId, Long memberId) {
         TravelBoard travelBoard = getBoardWithValid(boardId, memberId);
         travelBoard.updateClosingRecruitment();
+    }
+
+    public List<LikedBoardResponse> getLikedBoardList(Long memberId, Long id) {
+        if(!Objects.equals(memberId, id)) {
+            throw new AccessDeniedException("접근권한이 없습니다.");
+        }
+        List<LikeBoard> likeBoardList = likeBoardRepository.findByMemberId(memberId);
+        List<LikedBoardResponse> likedBoardResponses = new ArrayList<>();
+        for(LikeBoard likedBoard : likeBoardList){
+            TravelBoard travelBoard = likedBoard.getTravelBoard();
+            LikedBoardResponse likedBoardResponse = LikedBoardResponse.of(travelBoard);
+            likedBoardResponses.add(likedBoardResponse);
+        }
+        return likedBoardResponses;
     }
 }

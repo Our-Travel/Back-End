@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @Getter
 @JsonNaming(value = PropertyNamingStrategy.SnakeCaseStrategy.class)
-public class ShowMapDataResponse {
+public class LikedTravelInfoResponse {
 
     private int contentId;
     private int contentTypeId;
@@ -27,8 +27,8 @@ public class ShowMapDataResponse {
     private String homePage;
     private String overView;
 
-    public static ShowMapDataResponse of(TravelInfo travelInfo) {
-        return ShowMapDataResponse.builder()
+    public static LikedTravelInfoResponse of(TravelInfo travelInfo) {
+        return LikedTravelInfoResponse.builder()
                 .contentId(travelInfo.getContentId())
                 .contentTypeId(travelInfo.getContentTypeId())
                 .title(travelInfo.getTitle())

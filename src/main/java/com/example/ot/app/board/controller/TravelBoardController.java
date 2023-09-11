@@ -4,8 +4,10 @@ import com.example.ot.app.board.dto.request.CreateBoardRequest;
 import com.example.ot.app.board.dto.request.EditBoardRequest;
 import com.example.ot.app.board.dto.response.BoardListResponse;
 import com.example.ot.app.board.dto.response.EditBoardResponse;
+import com.example.ot.app.board.dto.response.LikedBoardResponse;
 import com.example.ot.app.board.dto.response.ShowBoardResponse;
 import com.example.ot.app.board.service.TravelBoardService;
+import com.example.ot.app.travelInfo.dto.response.LikedTravelInfoResponse;
 import com.example.ot.base.code.Code;
 import com.example.ot.base.rsData.RsData;
 import com.example.ot.config.security.entity.MemberContext;
@@ -21,7 +23,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 import static com.example.ot.app.board.code.TravelBoardSuccessCode.*;
+import static com.example.ot.app.travelInfo.code.TravelInfoSuccessCode.TRAVEL_INFO_LIKED_LIST;
 
 @Tag(name = "동행 게시판")
 @Slf4j
@@ -103,5 +108,13 @@ public class TravelBoardController {
                                                    @AuthenticationPrincipal MemberContext memberContext){
         travelBoardService.closeRecruitment(boardId, memberContext.getId());
         return Util.spring.responseEntityOf(RsData.success(RECRUITMENT_CLOSED));
+    }
+
+    @Operation(summary = "유저의 게시판 좋아요 리스트", security = @SecurityRequirement(name = "bearerAuth"))
+    @GetMapping("/{memberId}")
+    public ResponseEntity<RsData> likedTravelBoardList(@PathVariable Long memberId,
+                                                      @AuthenticationPrincipal MemberContext memberContext){
+        List<LikedBoardResponse> likedBoardResult = travelBoardService.getLikedBoardList(memberId, memberContext.getId());
+        return Util.spring.responseEntityOf(RsData.success(BOARD_LIKED_LIST, likedBoardResult));
     }
 }
