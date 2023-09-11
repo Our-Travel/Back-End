@@ -111,7 +111,7 @@ public class TravelBoardController {
     }
 
     @Operation(summary = "유저의 게시판 좋아요 리스트", security = @SecurityRequirement(name = "bearerAuth"))
-    @GetMapping("/{memberId}")
+    @GetMapping("/list/{memberId}")
     public ResponseEntity<RsData> likedTravelBoardList(@PathVariable Long memberId,
                                                       @AuthenticationPrincipal MemberContext memberContext){
         List<LikedBoardResponse> likedBoardResult = travelBoardService.getLikedBoardList(memberId, memberContext.getId());
