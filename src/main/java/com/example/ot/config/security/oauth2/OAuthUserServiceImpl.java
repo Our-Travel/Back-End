@@ -32,6 +32,7 @@ public class OAuthUserServiceImpl extends DefaultOAuth2UserService {
         String nickName = providerTypeCode + "__%s".formatted(oauthId);
 
         Member member = saveOrGetMember(nickName, providerTypeCode);
+        memberService.genAccessToken(member);
         return new CustomOAuth2User(member.getUsername(), member.getNickName(), member.getAuthorities());
     }
 
