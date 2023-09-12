@@ -2,6 +2,7 @@ package com.example.ot.app.travelInfo.entity;
 
 
 import com.example.ot.base.entity.BaseTimeEntity;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -21,7 +22,11 @@ public class TravelInfo extends BaseTimeEntity {
     private double longitude;
     private double latitude;
     private String image;
+
+    @Column(columnDefinition = "TEXT")
     private String homePage;
+
+    @Column(columnDefinition = "TEXT")
     private String overView;
 
 }
