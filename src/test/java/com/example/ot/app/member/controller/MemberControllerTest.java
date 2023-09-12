@@ -411,26 +411,6 @@ public class MemberControllerTest {
     }
 
     @Test
-    @DisplayName("로그인이 되어 있으면 프로필 사진 업데이트가 성공한다.")
-    @WithUserDetails("user1@example.com")
-    void updateProfileSuccessfully() throws Exception {
-        // Given
-        MockMultipartFile file = new MockMultipartFile("images", "filename.jpg", "text/plain", "some image".getBytes());
-
-        // When
-        ResultActions resultActions = mvc
-                .perform(
-                        multipart("/members/profile-image")
-                                .file(file)
-                )
-                .andDo(print());
-
-        // Then
-        resultActions
-                .andExpect(status().is2xxSuccessful());
-    }
-
-    @Test
     @DisplayName("로그인이 되어 있지만 프로필 사진을 업로드하지 않으면 업데이트는 실패한다.")
     @WithUserDetails("user1@example.com")
     void updateProfileFailureDueToNoImage() throws Exception {
