@@ -464,4 +464,47 @@ public class MemberControllerTest {
         resultActions
                 .andExpect(status().is4xxClientError());
     }
+
+    @Test
+    @DisplayName("올바른 비밀번호를 입력하면 성공한다.")
+    @WithUserDetails("user1@example.com")
+    void shouldValidatePasswordSuccessfully() throws Exception {
+        // When
+        ResultActions resultActions = mvc
+                .perform(
+                        get("/members/validate-password")
+                                .content("""
+                                        {
+                                            "password": "@y2password123"
+                                        }
+                                        """.stripIndent())
+                                .contentType(new MediaType(MediaType.APPLICATION_JSON, StandardCharsets.UTF_8))
+                )
+                .andDo(print());
+
+        // Then
+        resultActions
+                .andExpect(status().is2xxSuccessful());
+    }
+
+    @Test
+    @DisplayName("로그인이 되어 있지 않으면 오류발생")
+    void shouldValidatePasswordFailDueToNotSignIn() throws Exception {
+        // When
+        ResultActions resultActions = mvc
+                .perform(
+                        get("/members/validate-password")
+                                .content("""
+                                        {
+                                            "password": "@y2password123"
+                                        }
+                                        """.stripIndent())
+                                .contentType(new MediaType(MediaType.APPLICATION_JSON, StandardCharsets.UTF_8))
+                )
+                .andDo(print());
+
+        // Then
+        resultActions
+                .andExpect(status().is4xxClientError());
+    }
 }
