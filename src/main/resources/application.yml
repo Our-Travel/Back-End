@@ -19,13 +19,16 @@ spring:
           naver:
             scope:
             client-name: Naver
+            authorization-grant-type: authorization_code
             client-id: '${naver.secret.key}'
             client-secret: '${naver.secret.key}'
           google:
             client-name: Google
-            scope: profile
             client-id: '${google.client.id}'
             client-secret: '${google.secret.key}'
+            scope:
+              - profile
+              - email
         provider:
           kakao:
             authorization-uri: https://kauth.kakao.com/oauth/authorize

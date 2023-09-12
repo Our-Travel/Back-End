@@ -18,6 +18,8 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -415,7 +417,8 @@ public class MemberControllerTest {
     @WithUserDetails("user1@example.com")
     void updateProfileSuccessfully() throws Exception {
         // Given
-        MockMultipartFile file = new MockMultipartFile("images", "filename.jpg", "text/plain", "some image".getBytes());
+        byte[] imageBytes = Files.readAllBytes(Paths.get("src/main/resources/static/profileImage/ot.png"));
+        MockMultipartFile file = new MockMultipartFile("images", "ot.png", "image/jpeg", imageBytes);
 
         // When
         ResultActions resultActions = mvc
