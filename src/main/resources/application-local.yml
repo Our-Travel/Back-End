@@ -24,6 +24,10 @@ spring:
         registration:
           kakao:
             redirect-uri: '${custom.local.kakao-redirect-url}'
+          naver:
+            redirect-uri: '${custom.local.naver-redirect-url}'
+          google:
+            redirect-uri: '${custom.local.google-redirect-url}'
 
 logging:
   level:

@@ -19,6 +19,10 @@ spring:
         registration:
           kakao:
             redirect-uri: '${custom.prod.kakao-redirect-url}'
+          naver:
+            redirect-uri: '${custom.prod.naver-redirect-url}'
+          google:
+            redirect-uri: '${custom.prod.google-redirect-url}'
 
 server:
   servlet:
