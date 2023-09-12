@@ -14,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.io.IOException;
 
@@ -36,14 +37,20 @@ public class OAuth2MemberSuccessHandler extends SimpleUrlAuthenticationSuccessHa
         Member member = memberRepository.findByUsername(username)
                 .orElseThrow(() -> new MemberException(USERNAME_NOT_EXISTS));;
         String accessToken = memberService.genAccessToken(member);
+        String url = makeRedirectUrl(accessToken);
+        getRedirectStrategy().sendRedirect(request, response, url);
 
-        response.addHeader("Authentication", accessToken);
-        RsData<Object> rsData = RsData.success(LOGIN_COMPLETED);
-        response.setContentType("application/json");
-        response.setCharacterEncoding("UTF-8");
-        response.setStatus(HttpServletResponse.SC_OK);
+//        response.addHeader("Authentication", accessToken);
+//        RsData<Object> rsData = RsData.success(LOGIN_COMPLETED);
+//        response.setContentType("application/json");
+//        response.setCharacterEncoding("UTF-8");
+//        response.setStatus(HttpServletResponse.SC_OK);
+//        String jsonResponse = objectMapper.writeValueAsString(rsData);
+//        response.getWriter().write(jsonResponse);
+    }
 
-        String jsonResponse = objectMapper.writeValueAsString(rsData);
-        response.getWriter().write(jsonResponse);
+    private String makeRedirectUrl(String token) {
+        return UriComponentsBuilder.fromUriString("http://localhost:3000/oauth2/redirect/"+token)
+                .build().toUriString();
     }
 }
