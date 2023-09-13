@@ -80,8 +80,7 @@ public class MemberController {
     @GetMapping("/validate-password")
     public ResponseEntity<RsData> verifyPassword(@RequestBody InputPasswordRequest inputPasswordRequest,
                                                  @AuthenticationPrincipal MemberContext memberContext) {
-        Member member = memberService.findByMemberId(memberContext.getId());
-        memberService.verifyPassword(member.getPassword(), inputPasswordRequest.getPassword());
+        memberService.verifyPassword(memberContext.getId(), inputPasswordRequest.getPassword());
         return Util.spring.responseEntityOf(RsData.success(PASSWORD_CORRECTED));
     }
 
