@@ -20,7 +20,7 @@ spring:
             scope:
             client-name: Naver
             authorization-grant-type: authorization_code
-            client-id: '${naver.secret.key}'
+            client-id: '${naver.client.id}'
             client-secret: '${naver.secret.key}'
           google:
             client-name: Google
