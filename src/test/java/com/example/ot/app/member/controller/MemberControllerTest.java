@@ -470,17 +470,17 @@ public class MemberControllerTest {
 
     @Test
     @DisplayName("올바른 비밀번호를 입력하면 비밀번호 검증에 성공한다.")
-    @WithUserDetails("user1@example.com")
+    @WithUserDetails("test1@test.com")
     void shouldValidatePasswordSuccessfully() throws Exception {
         // When
         ResultActions resultActions = mvc
                 .perform(
-                        get("/members/validate-password")
+                        post("/members/validate-password")  // GET 대신 POST 메소드 사용
                                 .content("""
-                                        {
-                                            "password": "@y2password123"
-                                        }
-                                        """.stripIndent())
+                                    {
+                                        "password": "qwe123!!"
+                                    }
+                                    """.stripIndent())
                                 .contentType(new MediaType(MediaType.APPLICATION_JSON, StandardCharsets.UTF_8))
                 )
                 .andDo(print());
