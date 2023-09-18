@@ -36,7 +36,7 @@ public class OAuthUserServiceImpl extends DefaultOAuth2UserService {
         if(providerType.equals("NAVER")){
             Map<String, Object> map = oAuth2User.getAttributes();
             LinkedHashMap<String, String> getNaverId = (LinkedHashMap<String, String>) map.get("response");
-            oauthId = getNaverId.get("id");
+            oauthId = getNaverId.get("id").substring(0, 6);
         }
         else{
             oauthId = oAuth2User.getName().substring(0, 6);
