@@ -77,11 +77,10 @@ public class MemberController {
 
     @Operation(summary = "비밀번호가 올바른지 검증", security = @SecurityRequirement(name = "bearerAuth"))
     @PreAuthorize("isAuthenticated()")
-    @GetMapping("/validate-password")
+    @PostMapping("/validate-password")
     public ResponseEntity<RsData> verifyPassword(@RequestBody InputPasswordRequest inputPasswordRequest,
                                                  @AuthenticationPrincipal MemberContext memberContext) {
-        Member member = memberService.findByMemberId(memberContext.getId());
-        memberService.verifyPassword(member.getPassword(), inputPasswordRequest.getPassword());
+        memberService.verifyPassword(memberContext.getId(), inputPasswordRequest.getPassword());
         return Util.spring.responseEntityOf(RsData.success(PASSWORD_CORRECTED));
     }
 

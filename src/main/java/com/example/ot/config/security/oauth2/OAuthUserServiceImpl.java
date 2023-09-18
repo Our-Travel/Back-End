@@ -27,18 +27,19 @@ public class OAuthUserServiceImpl extends DefaultOAuth2UserService {
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
         OAuth2User oAuth2User = super.loadUser(userRequest);
 
-        String providerTypeCode = userRequest.getClientRegistration().getRegistrationId().toUpperCase();
-        String oauthId = oAuth2User.getName();
-        String nickName = providerTypeCode + "__%s".formatted(oauthId);
+        String providerType = userRequest.getClientRegistration().getRegistrationId().toUpperCase();
+        String providerTypeCode = userRequest.getClientRegistration().getRegistrationId().toUpperCase().split("")[0];
+        String oauthId = oAuth2User.getName().substring(0, 6);
 
-        Member member = saveOrGetMember(nickName, providerTypeCode);
+        Member member = saveOrGetMember(oauthId, providerTypeCode, providerType);
         memberService.genAccessToken(member);
         return new CustomOAuth2User(member.getUsername(), member.getNickName(), member.getAuthorities());
     }
 
-    private Member saveOrGetMember(String nickName, String providerTypeCode) {
-        String username = nickName + "@example.com";
+    private Member saveOrGetMember(String oauthId, String providerTypeCode, String providerType) {
+        String username = oauthId + "@" + providerType.toLowerCase() + ".com";
         if (!memberRepository.existsByUsername(username)) {
+            String nickName = providerTypeCode + "__%s".formatted(oauthId);
             SignUpRequest signUp = new SignUpRequest(username, "", nickName);
             return memberService.createMember(providerTypeCode, signUp);
         }

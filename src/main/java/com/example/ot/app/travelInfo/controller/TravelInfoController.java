@@ -53,7 +53,7 @@ public class TravelInfoController {
     }
 
     @Operation(summary = "유저의 관광지 좋아요 리스트", security = @SecurityRequirement(name = "bearerAuth"))
-    @GetMapping("/{memberId}")
+    @GetMapping("/list/{memberId}")
     public ResponseEntity<RsData> likedTravelInfoList(@PathVariable Long memberId,
                                                       @AuthenticationPrincipal MemberContext memberContext){
         List<LikedTravelInfoResponse> likedTravelInfoResult = travelInfoService.getLikedTravelInfoList(memberId, memberContext.getId());

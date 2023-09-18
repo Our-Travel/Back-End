@@ -86,6 +86,11 @@ public class MemberService {
         }
     }
 
+    public void verifyPassword(Long memberId, String inputPassword) {
+        Member member = findByMemberId(memberId);
+        verifyPassword(member.getPassword(), inputPassword);
+    }
+
     @Transactional
     public String genAccessToken(Member member) {
         String accessToken = member.getAccessToken();
