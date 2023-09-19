@@ -114,8 +114,7 @@ public class MemberController {
     @PatchMapping("/profile")
     public ResponseEntity<RsData> updateProfileInfo(@Valid @RequestBody UpdateMemberRequest updateMemberRequest,
                                                     @AuthenticationPrincipal MemberContext memberContext) {
-        memberService.updatePassword(updateMemberRequest, memberContext.getId());
-        memberService.updateNickName(updateMemberRequest.getNickName(), memberContext.getId());
+        memberService.updateMemberInfo(updateMemberRequest, memberContext.getId());
         return Util.spring.responseEntityOf(RsData.success(PROFILE_UPDATED));
     }
 

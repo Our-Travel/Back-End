@@ -24,6 +24,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.Map;
+import java.util.Objects;
 
 import static com.example.ot.app.member.exception.ErrorCode.*;
 
@@ -166,16 +167,19 @@ public class MemberService {
     }
 
     @Transactional
-    public void updatePassword(UpdateMemberRequest updateMemberRequest, Long memberId) {
-        String newPassword = updateMemberRequest.getPassword();
-        String verifyPassword = updateMemberRequest.getVerifyPassword();
-
-        verifyPasswordsMatch(newPassword, verifyPassword);
-
+    public void updateMemberInfo(UpdateMemberRequest updateMemberRequest, Long memberId) {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new MemberException(MEMBER_NOT_EXISTS));
-        String encodedPassword = passwordEncoder.encode(newPassword);
-        member.updatePassword(encodedPassword);
+        if(Objects.equals(member.getProviderTypeCode(), "OT")) {
+            String newPassword = updateMemberRequest.getPassword();
+            String verifyPassword = updateMemberRequest.getVerifyPassword();
+
+            verifyPasswordsMatch(newPassword, verifyPassword);
+
+            String encodedPassword = passwordEncoder.encode(newPassword);
+            member.updatePassword(encodedPassword);
+        }
+        member.updateNickName(updateMemberRequest.getNickName());
     }
 
     private void verifyPasswordsMatch(String password, String verifyPassword) {
@@ -183,11 +187,4 @@ public class MemberService {
             throw new MemberException(PASSWORD_MISMATCH);
         }
     }
-
-    @Transactional
-    public void updateNickName(String nickName, Long memberId) {
-        Member member = findByMemberId(memberId);
-        member.updateNickName(nickName);
-    }
-
 }
