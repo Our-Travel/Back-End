@@ -9,14 +9,8 @@ import lombok.Getter;
 @Getter
 public class UpdateMemberRequest {
 
-    @NotBlank(message = "비밀번호를 입력해주세요.")
-    @Size(min = 8, max = 16, message = "비밀번호는 8~16자 사이어야 합니다.")
-    @Pattern(regexp = "(?=.*[0-9])(?=.*[a-zA-Z])(?=.*[!@#$%^&*()]).{0,}", message = "비밀번호는 숫자, 영문, 특수문자를 모두 포함해야 합니다.")
     private String password;
 
-    @NotBlank(message = "비밀번호를 입력해주세요.")
-    @Size(min = 8, max = 16, message = "비밀번호는 8~16자 사이어야 합니다.")
-    @Pattern(regexp = "(?=.*[0-9])(?=.*[a-zA-Z])(?=.*[!@#$%^&*()]).{0,}", message = "비밀번호는 숫자, 영문, 특수문자를 모두 포함해야 합니다.")
     @JsonProperty("verify_password")
     private String verifyPassword;
 
