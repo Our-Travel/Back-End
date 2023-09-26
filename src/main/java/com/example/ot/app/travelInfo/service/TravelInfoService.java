@@ -33,8 +33,8 @@ public class TravelInfoService {
     private final MemberRepository memberRepository;
     private final LikedTravelInfoRepository likedTravelInfoRepository;
 
-    public List<ShowMapDataResponse> getMapData(Long memberId) {
-        List<TravelInfo> travelInfoList = travelInfoRepository.findAll();
+    public List<ShowMapDataResponse> getMapData(String contentTypeId, Long memberId) {
+        List<TravelInfo> travelInfoList = travelInfoRepository.findByContentTypeId(contentTypeId);
         List<ShowMapDataResponse> showMapDataResponseList = new ArrayList<>();
         for(TravelInfo travelInfo: travelInfoList){
             ShowMapDataResponse data = ShowMapDataResponse.of(travelInfo);

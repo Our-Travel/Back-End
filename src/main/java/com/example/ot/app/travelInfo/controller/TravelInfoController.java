@@ -31,8 +31,9 @@ public class TravelInfoController {
 
     @Operation(summary = "지도 데이터", security = @SecurityRequirement(name = "bearerAuth"))
     @GetMapping("")
-    public ResponseEntity<RsData> showMapData(@AuthenticationPrincipal MemberContext memberContext){
-        List<ShowMapDataResponse> showAllMapDataResponse = travelInfoService.getMapData(memberContext.getId());
+    public ResponseEntity<RsData> showMapData(@RequestParam(value = "contentTypeId", required = false) String contentTypeId,
+                                              @AuthenticationPrincipal MemberContext memberContext){
+        List<ShowMapDataResponse> showAllMapDataResponse = travelInfoService.getMapData(contentTypeId, memberContext.getId());
         return Util.spring.responseEntityOf(RsData.success(MAP_DATA_FOUND, showAllMapDataResponse));
     }
 
