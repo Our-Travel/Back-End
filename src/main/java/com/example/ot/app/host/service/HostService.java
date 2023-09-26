@@ -158,7 +158,7 @@ public class HostService {
         hashTagRepository.deleteAll(hostHashTags);
     }
 
-    public List<HostCountResponse> getHostCountByRegion() {
+    public List<HostCountResponse> getHostCountByRegion(Long memberId) {
         List<HostCountResponse> hostCountResponseList = hostRepository.countHostsByRegionCode();
         return hostCountResponseList;
     }

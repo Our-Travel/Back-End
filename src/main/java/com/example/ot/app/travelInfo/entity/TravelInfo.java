@@ -13,8 +13,8 @@ import lombok.NoArgsConstructor;
 @Entity
 public class TravelInfo extends BaseTimeEntity {
 
-    private int contentId;
-    private int contentTypeId;
+    private Integer contentId;
+    private Integer contentTypeId;
     private String title;
     private String address;
     private String tel;

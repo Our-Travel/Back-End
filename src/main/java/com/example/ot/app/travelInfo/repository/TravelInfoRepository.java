@@ -8,5 +8,5 @@ import java.util.Optional;
 public interface TravelInfoRepository extends JpaRepository<TravelInfo, Long> {
 
 
-    Optional<TravelInfo> findByContentId(int contentId);
+    Optional<TravelInfo> findByContentId(Integer contentId);
 }

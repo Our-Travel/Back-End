@@ -15,8 +15,8 @@ import lombok.NoArgsConstructor;
 @JsonNaming(value = PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class ShowMapDataResponse {
 
-    private int contentId;
-    private int contentTypeId;
+    private Integer contentId;
+    private Integer contentTypeId;
     private String title;
     private String address;
     private String tel;

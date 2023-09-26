@@ -33,7 +33,7 @@ public class TravelInfoService {
     private final MemberRepository memberRepository;
     private final LikedTravelInfoRepository likedTravelInfoRepository;
 
-    public List<ShowMapDataResponse> getMapData() {
+    public List<ShowMapDataResponse> getMapData(Long memberId) {
         List<TravelInfo> travelInfoList = travelInfoRepository.findAll();
         List<ShowMapDataResponse> showMapDataResponseList = new ArrayList<>();
         for(TravelInfo travelInfo: travelInfoList){
@@ -43,13 +43,13 @@ public class TravelInfoService {
         return showMapDataResponseList;
     }
 
-    public ShowMapDataResponse getOneMapData(int contentId) {
+    public ShowMapDataResponse getOneMapData(Integer contentId, Long memberId) {
         TravelInfo travelInfo = travelInfoRepository.findByContentId(contentId).orElseThrow(() -> new TravelInfoException(TRAVEL_INFO_NOT_EXISTS));
         return ShowMapDataResponse.of(travelInfo);
     }
 
     @Transactional
-    public Code likeTravelInfo(int contentId, Long memberId) {
+    public Code likeTravelInfo(Integer contentId, Long memberId) {
         LikedTravelInfo verifyLikedTravelInfo = likedTravelInfoRepository.findByContentIdAndMember(contentId, memberId).orElse(null);
         if(ObjectUtils.isEmpty(verifyLikedTravelInfo)) {
             TravelInfo travelInfo = travelInfoRepository.findByContentId(contentId).orElseThrow(() -> new TravelInfoException(TRAVEL_INFO_NOT_EXISTS));

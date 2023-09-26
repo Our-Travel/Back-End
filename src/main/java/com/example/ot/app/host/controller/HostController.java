@@ -75,7 +75,7 @@ public class HostController {
     @Operation(summary = "각 지역의 호스트 인원 수", security = @SecurityRequirement(name = "bearerAuth"))
     @GetMapping("/map")
     public ResponseEntity<RsData> showHostCountByRegion(@AuthenticationPrincipal MemberContext memberContext){
-        List<HostCountResponse> hostInfoListResponse = hostService.getHostCountByRegion();
+        List<HostCountResponse> hostInfoListResponse = hostService.getHostCountByRegion(memberContext.getId());
         return Util.spring.responseEntityOf(RsData.success(HOSTS_BY_REGION_FOUND, hostInfoListResponse));
     }
 
