@@ -32,7 +32,7 @@ public class TravelInfoControllerTest {
         // When
         ResultActions resultActions = mvc
                 .perform(
-                        get("/local-place")
+                        get("/local-place?contentTypeId=15")
                 )
                 .andDo(print());
 
