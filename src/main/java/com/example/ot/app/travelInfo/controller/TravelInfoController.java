@@ -31,16 +31,17 @@ public class TravelInfoController {
 
     @Operation(summary = "지도 데이터", security = @SecurityRequirement(name = "bearerAuth"))
     @GetMapping("")
-    public ResponseEntity<RsData> showMapData(@AuthenticationPrincipal MemberContext memberContext){
-        List<ShowMapDataResponse> showAllMapDataResponse= travelInfoService.getMapData();
+    public ResponseEntity<RsData> showMapData(@RequestParam(value = "contentTypeId", required = false) String contentTypeId,
+                                              @AuthenticationPrincipal MemberContext memberContext){
+        List<ShowMapDataResponse> showAllMapDataResponse = travelInfoService.getMapData(contentTypeId, memberContext.getId());
         return Util.spring.responseEntityOf(RsData.success(MAP_DATA_FOUND, showAllMapDataResponse));
     }
 
     @Operation(summary = "하나의 관광지 세부정보", security = @SecurityRequirement(name = "bearerAuth"))
     @GetMapping("/{contentId}")
-    public ResponseEntity<RsData> travelInfoData(@PathVariable int contentId,
+    public ResponseEntity<RsData> travelInfoData(@PathVariable Integer contentId,
                                               @AuthenticationPrincipal MemberContext memberContext){
-        ShowMapDataResponse showMapDataResponse= travelInfoService.getOneMapData(contentId);
+        ShowMapDataResponse showMapDataResponse= travelInfoService.getOneMapData(contentId, memberContext.getId());
         return Util.spring.responseEntityOf(RsData.success(ONE_MAP_DATA_FOUND, showMapDataResponse));
     }
 

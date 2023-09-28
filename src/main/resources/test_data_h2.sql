@@ -35,3 +35,8 @@ INSERT INTO TRAVEL_BOARD(title, content, region_code, number_of_travelers, recru
                          journey_period_start, journey_period_end, recruitment_status, member_id) VALUES ('제목입니다.', '내용입니다.', '11020', 3, '2023-08-01', '2024-08-10', '2024-08-15', '2024-08-20', 'OPEN', 1);
 
 INSERT INTO LIKE_BOARD(travel_board_id, member_id) VALUES (1, 2);
+
+INSERT INTO TRAVEL_INFO(content_id, content_type_id, title, address, tel, tel_name, longitude, latitude, image, home_page, over_view) VALUES(1000, 15, '제목', '주소', '전화번호', '전화번호 출처', '100000.3', '100000.3', '이미지', '홈페이지', '내용');
+INSERT INTO TRAVEL_INFO(content_id, content_type_id, title, address, tel, tel_name, longitude, latitude, image, home_page, over_view) VALUES(2000, 15, '제목', '주소', '전화번호', '전화번호 출처', '100000.2', '1000000.2', '이미지', '홈페이지', '내용');
+
+INSERT INTO LIKED_TRAVEL_INFO(travel_info_id, member_id) VALUES (1, 2);

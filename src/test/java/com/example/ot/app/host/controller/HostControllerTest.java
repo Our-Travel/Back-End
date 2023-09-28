@@ -366,6 +366,30 @@ public class HostControllerTest {
                 .andExpect(status().is4xxClientError());
     }
 
+    @Test
+    @DisplayName("로그인이 되어 있지 않으면 각 지역의 호스트 인원 수를 불러옵니다.")
+    @WithUserDetails("user2@example.com")
+    void shouldGetHostsByRegionNumberOfPeopleSuccessfully() throws Exception {
+        ResultActions resultActions = mvc
+                .perform(
+                        get("/hosts/map"))
+                .andDo(print());
 
+        // Then
+        resultActions
+                .andExpect(status().is2xxSuccessful());
+    }
 
+    @Test
+    @DisplayName("로그인이 되어 있지 않으면 각 지역의 호스트 인원 수를 불러오지 못합니다.")
+    void shouldGetHostsByRegionNumberOfPeopleFailDueToWithoutLogin() throws Exception {
+        ResultActions resultActions = mvc
+                .perform(
+                        get("/hosts/map"))
+                .andDo(print());
+
+        // Then
+        resultActions
+                .andExpect(status().is4xxClientError());
+    }
 }
