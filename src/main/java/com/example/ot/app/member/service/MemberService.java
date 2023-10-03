@@ -10,11 +10,9 @@ import com.example.ot.app.member.exception.MemberException;
 import com.example.ot.app.member.repository.MemberRepository;
 import com.example.ot.app.member.repository.ProfileImageRepository;
 import com.example.ot.base.s3.S3ProfileUploader;
-import com.example.ot.config.AppConfig;
 import com.example.ot.config.security.jwt.JwtUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CachePut;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,7 +21,6 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.Map;
 import java.util.Objects;
 
 import static com.example.ot.app.member.exception.ErrorCode.*;
@@ -38,7 +35,12 @@ public class MemberService {
     private final JwtUtils jwtUtils;
     private final ProfileImageRepository profileImageRepository;
     private final S3ProfileUploader profileUploader;
-    private final MemberRedisService memberRedisService;
+//    private final MemberRedisService memberRedisService;
+
+    public Member findByMemberId(Long memberId) {
+        return memberRepository.findById(memberId)
+                .orElseThrow(() -> new MemberException(MEMBER_NOT_EXISTS));
+    }
 
     @Transactional
     public void createMember(SignUpRequest signUpRequest){
@@ -85,7 +87,7 @@ public class MemberService {
     }
 
     public void verifyPassword(Long memberId, String inputPassword) {
-        Member member = memberRedisService.findByMemberId(memberId);
+        Member member = findByMemberId(memberId);
         verifyPassword(member.getPassword(), inputPassword);
     }
 
@@ -106,7 +108,7 @@ public class MemberService {
     }
 
     public MyPageResponse getMemberInfo(Long memberId) {
-        Member member = memberRedisService.findByMemberId(memberId);
+        Member member = findByMemberId(memberId);
         ProfileImage profileImage = getMemberProfileImage(memberId);
         return MyPageResponse.fromMember(member, profileImage);
     }
@@ -125,7 +127,7 @@ public class MemberService {
         }
         else{
             ProfileImage profileImage = profileUploader.uploadFile(file);
-            Member member = memberRedisService.findByMemberId(memberId);
+            Member member = findByMemberId(memberId);
             profileImage.setMember(member);
             profileImageRepository.save(profileImage);
         }
@@ -143,7 +145,7 @@ public class MemberService {
     @Transactional
     @CachePut(value = "members", key = "#memberId")
     public void updateMemberInfo(UpdateMemberRequest updateMemberRequest, Long memberId) {
-        Member member = memberRedisService.findByMemberId(memberId);
+        Member member = findByMemberId(memberId);
         if(Objects.equals(member.getProviderTypeCode(), "OT")) {
             String newPassword = updateMemberRequest.getPassword();
             String verifyPassword = updateMemberRequest.getVerifyPassword();
