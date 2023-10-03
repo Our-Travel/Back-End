@@ -18,6 +18,8 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -415,7 +417,8 @@ public class MemberControllerTest {
     @WithUserDetails("user1@example.com")
     void updateProfileSuccessfully() throws Exception {
         // Given
-        MockMultipartFile file = new MockMultipartFile("images", "filename.jpg", "text/plain", "some image".getBytes());
+        byte[] imageBytes = Files.readAllBytes(Paths.get("src/main/resources/static/profileImage/ot.png"));
+        MockMultipartFile file = new MockMultipartFile("images", "ot.png", "image/jpeg", imageBytes);
 
         // When
         ResultActions resultActions = mvc
@@ -457,6 +460,49 @@ public class MemberControllerTest {
                 .perform(
                         multipart("/members/profile")
                                 .file(file)
+                )
+                .andDo(print());
+
+        // Then
+        resultActions
+                .andExpect(status().is4xxClientError());
+    }
+
+    @Test
+    @DisplayName("올바른 비밀번호를 입력하면 비밀번호 검증에 성공한다.")
+    @WithUserDetails("test1@test.com")
+    void shouldValidatePasswordSuccessfully() throws Exception {
+        // When
+        ResultActions resultActions = mvc
+                .perform(
+                        post("/members/validate-password")  // GET 대신 POST 메소드 사용
+                                .content("""
+                                    {
+                                        "password": "qwe123!!"
+                                    }
+                                    """.stripIndent())
+                                .contentType(new MediaType(MediaType.APPLICATION_JSON, StandardCharsets.UTF_8))
+                )
+                .andDo(print());
+
+        // Then
+        resultActions
+                .andExpect(status().is2xxSuccessful());
+    }
+
+    @Test
+    @DisplayName("비밀번호 검증에서 로그인이 되어 있지 않으면 오류발생")
+    void shouldValidatePasswordFailDueToNotSignIn() throws Exception {
+        // When
+        ResultActions resultActions = mvc
+                .perform(
+                        get("/members/validate-password")
+                                .content("""
+                                        {
+                                            "password": "@y2password123"
+                                        }
+                                        """.stripIndent())
+                                .contentType(new MediaType(MediaType.APPLICATION_JSON, StandardCharsets.UTF_8))
                 )
                 .andDo(print());
 

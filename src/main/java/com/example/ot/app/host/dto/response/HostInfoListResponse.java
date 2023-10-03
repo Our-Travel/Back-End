@@ -12,21 +12,33 @@ import lombok.Getter;
 @JsonNaming(value = PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class HostInfoListResponse {
 
-    Long memberId;
-    String hostProfileImage;
-    String nickName;
-    String introduction;
-    String hashTag;
+    private Long memberId;
+    private Long hostId;
+    private String hostProfileImage;
+    private String nickName;
+    private String introduction;
+    private String hashTag;
+    private Long chatRoomId;
+    private boolean hostMember;
 
     public static HostInfoListResponse fromHost(Host host, String hashTag, ProfileImage hostProfileImage){
         String hostProfileImageUrl = (hostProfileImage != null) ? hostProfileImage.getFullPath() : null;
 
         return HostInfoListResponse.builder()
                 .memberId(host.getMember().getId())
+                .hostId(host.getId())
                 .hashTag(hashTag)
                 .nickName(host.getMember().getNickName())
                 .introduction(host.getIntroduction())
                 .hostProfileImage(hostProfileImageUrl)
                 .build();
+    }
+
+    public void updateChatRoom(Long chatRoomId){
+        this.chatRoomId = chatRoomId;
+    }
+
+    public void updateHostMember(){
+        this.hostMember = true;
     }
 }

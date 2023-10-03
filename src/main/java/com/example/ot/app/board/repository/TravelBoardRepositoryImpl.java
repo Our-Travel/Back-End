@@ -1,6 +1,7 @@
 package com.example.ot.app.board.repository;
 
 import com.example.ot.app.board.dto.response.BoardListResponse;
+import com.example.ot.app.board.entity.RecruitmentStatus;
 import com.example.ot.app.board.entity.TravelBoard;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -36,9 +37,10 @@ public class TravelBoardRepositoryImpl implements TravelBoardRepositoryCustom {
     public Slice<TravelBoard> findBoardsByRegionWithKeysetPaging(Integer regionCode, Long lastBoardId, Pageable pageable) {
         BooleanExpression boardByRegionCodeEq = regionCode != null ? travelBoard.regionCode.eq(regionCode) : null;
         BooleanExpression boardIdLt = lastBoardId != null ? travelBoard.id.lt(lastBoardId) : null;
+        BooleanExpression recruitmentStatusCondition = travelBoard.recruitmentStatus.in(RecruitmentStatus.UPCOMING, RecruitmentStatus.OPEN);
 
         List<TravelBoard> results = jpaQueryFactory.selectFrom(travelBoard)
-                .where(boardIdLt, boardByRegionCodeEq)
+                .where(boardIdLt, boardByRegionCodeEq, recruitmentStatusCondition)
                 .orderBy(travelBoard.id.desc())
                 .limit(pageable.getPageSize() + 1)
                 .fetch();

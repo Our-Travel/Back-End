@@ -24,6 +24,7 @@ import com.example.ot.app.member.entity.Member;
 import com.example.ot.app.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
@@ -49,12 +50,13 @@ public class ChatRoomService {
     private final MemberRepository memberRepository;
     private final HostRepository hostRepository;
     private final ApplicationEventPublisher publisher;
+    PageRequest pageRequest = PageRequest.of(0, 1);
 
     @Transactional
     public void createChatRoomByTravelBoard(TravelBoard travelBoard, Member member) {
-        ChatRoom chatRoomByBoard = new ChatRoom(travelBoard);
+        ChatRoom chatRoomByBoard = ChatRoom.createChatRoomByBoard(travelBoard);
         chatRoomRepository.save(chatRoomByBoard);
-        ChatRoomAndMember chatRoomAndMember = new ChatRoomAndMember(chatRoomByBoard, member);
+        ChatRoomAndMember chatRoomAndMember = ChatRoomAndMember.of(chatRoomByBoard, member);
         chatRoomAndMemberRepository.save(chatRoomAndMember);
     }
 
@@ -96,7 +98,7 @@ public class ChatRoomService {
 
     public void enterChatRoom(ChatRoom chatRoom, Long memberId){
         Member member = memberRepository.findByMemberId(memberId);
-        ChatRoomAndMember chatRoomAndMember = new ChatRoomAndMember(chatRoom, member);
+        ChatRoomAndMember chatRoomAndMember = ChatRoomAndMember.of(chatRoom, member);
         chatRoomAndMemberRepository.save(chatRoomAndMember);
         publisher.publishEvent(new SendEnterMessageEvent(chatRoom.getId(), member.getNickName()));
     }
@@ -121,13 +123,20 @@ public class ChatRoomService {
                 .orElseThrow(() -> new HostException(HOST_NOT_EXISTS));;
         Member hostMember = memberRepository.findByMemberId(hostMemberId);
         Member userMember = memberRepository.findByMemberId(memberId);
-        ChatRoom chatRoom = new ChatRoom(host, hostMember, userMember);
-        ChatRoomAndMember chatRoomAndMemberByHost = new ChatRoomAndMember(chatRoom, hostMember);
-        ChatRoomAndMember chatRoomAndMemberByUser = new ChatRoomAndMember(chatRoom, userMember);
+        ChatRoom chatRoom = ChatRoom.createChatRoomByHost(host, hostMember, userMember);
+        List<Long> chatRoomListByHostUser = chatRoomAndMemberRepository.findChatRoomIdByHost(memberId);
+        List<Long> chatRoomListByHostHost = chatRoomAndMemberRepository.findChatRoomIdByHost(hostMemberId);
+        for (Long chatRoomId : chatRoomListByHostUser) {
+            if (chatRoomListByHostHost.contains(chatRoomId)) {
+                System.out.println("host");
+            }
+        }
+        ChatRoomAndMember chatRoomAndMemberByHost = ChatRoomAndMember.of(chatRoom, hostMember);
+        ChatRoomAndMember chatRoomAndMemberByUser = ChatRoomAndMember.of(chatRoom, userMember);
         chatRoomRepository.save(chatRoom);
         chatRoomAndMemberRepository.save(chatRoomAndMemberByHost);
         chatRoomAndMemberRepository.save(chatRoomAndMemberByUser);
-        return new ChatRoomIdResponse(chatRoom.getId());
+        return ChatRoomIdResponse.from(chatRoom.getId());
     }
 
     @Transactional
@@ -145,6 +154,7 @@ public class ChatRoomService {
         if(chatMembersCount == 1){
             chatRoomAndChatMessageRepository.deleteAllByChatRoomId(roomId);
             chatRoomRepository.delete(chatRoom);
+            return;
         }
         publisher.publishEvent(new SendExitMessageEvent(roomId, member.getNickName()));
     }
@@ -160,10 +170,12 @@ public class ChatRoomService {
         List<ChatRoom> myChatRoomList = chatRoomAndMemberRepository.findByMemberId(memberId);
         List<ShowMyChatRoomsResponse> showMyChatRoomsResponses = new ArrayList<>();
         for(ChatRoom chatRoom : myChatRoomList){
-            ChatMessage chatMessage = chatRoomAndChatMessageRepository
-                    .findLastByChatRoomId(chatRoom.getId()).orElse(null);
-            ShowMyChatRoomsResponse showMyChatRoomsResponse = ShowMyChatRoomsResponse.of(chatRoom, chatMessage);
-            showMyChatRoomsResponses.add(showMyChatRoomsResponse);
+            List<ChatMessage> messages = chatRoomAndChatMessageRepository.findLastByChatRoomId(chatRoom.getId(), pageRequest);
+            if (!messages.isEmpty()) {
+                ChatMessage lastMessage = messages.get(0);
+                ShowMyChatRoomsResponse showMyChatRoomsResponse = ShowMyChatRoomsResponse.of(chatRoom, lastMessage);
+                showMyChatRoomsResponses.add(showMyChatRoomsResponse);
+            }
         }
         return showMyChatRoomsResponses;
     }

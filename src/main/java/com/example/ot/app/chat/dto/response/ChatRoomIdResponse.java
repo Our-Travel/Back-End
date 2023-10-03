@@ -14,4 +14,8 @@ import lombok.NoArgsConstructor;
 public class ChatRoomIdResponse {
 
     private Long chatRoomId;
+
+    public static ChatRoomIdResponse from(Long chatRoomId){
+        return new ChatRoomIdResponse(chatRoomId);
+    }
 }

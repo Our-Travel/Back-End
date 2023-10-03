@@ -4,6 +4,7 @@ import com.example.ot.app.board.dto.request.CreateBoardRequest;
 import com.example.ot.app.board.dto.request.EditBoardRequest;
 import com.example.ot.app.board.dto.response.BoardListResponse;
 import com.example.ot.app.board.dto.response.EditBoardResponse;
+import com.example.ot.app.board.dto.response.LikedBoardResponse;
 import com.example.ot.app.board.dto.response.ShowBoardResponse;
 import com.example.ot.app.board.entity.LikeBoard;
 import com.example.ot.app.board.entity.TravelBoard;
@@ -12,9 +13,12 @@ import com.example.ot.app.board.exception.TravelBoardException;
 import com.example.ot.app.board.repository.LikeBoardRepository;
 import com.example.ot.app.board.repository.TravelBoardRepository;
 import com.example.ot.app.chat.event.CreateChatRoomEvent;
+import com.example.ot.app.chat.repository.ChatRoomAndMemberRepository;
 import com.example.ot.app.chat.repository.ChatRoomRepository;
 import com.example.ot.app.member.entity.Member;
+import com.example.ot.app.member.entity.ProfileImage;
 import com.example.ot.app.member.repository.MemberRepository;
+import com.example.ot.app.member.repository.ProfileImageRepository;
 import com.example.ot.base.code.Code;
 import com.example.ot.config.security.entity.MemberContext;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +26,7 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.SliceImpl;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
@@ -29,6 +34,7 @@ import org.springframework.util.ObjectUtils;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import static com.example.ot.app.board.code.TravelBoardSuccessCode.*;
 import static com.example.ot.app.board.exception.ErrorCode.*;
@@ -42,6 +48,8 @@ public class TravelBoardService {
     private final TravelBoardRepository travelBoardRepository;
     private final LikeBoardRepository likeBoardRepository;
     private final ChatRoomRepository chatRoomRepository;
+    private final ProfileImageRepository profileImageRepository;
+    private final ChatRoomAndMemberRepository chatRoomAndMemberRepository;
     private final ApplicationEventPublisher publisher;
     private final static int pageOfSize = 10;
 
@@ -147,7 +155,10 @@ public class TravelBoardService {
         for(TravelBoard travelBoard : travelBoardList.getContent()){
             boolean likeBoardStatus = !ObjectUtils.isEmpty(getLikeBoardStatusByMember(travelBoard.getId(), memberId));
             long likeCounts = getLikeBoardCounts(travelBoard.getId());
-            boardListResponses.add(BoardListResponse.fromTravelBoard(travelBoard, memberId, likeBoardStatus, likeCounts));
+            Long boardMemberId = travelBoard.getMemberId();
+            ProfileImage profileImage = profileImageRepository.findProfileImageByMemberId(boardMemberId).orElse(null);
+            Integer headCount = chatRoomAndMemberRepository.countByRoomId(travelBoard.getId());
+            boardListResponses.add(BoardListResponse.fromTravelBoard(travelBoard, memberId, likeBoardStatus, likeCounts, profileImage, headCount));
         }
         return new SliceImpl<>(boardListResponses, travelBoardList.getPageable(), travelBoardList.hasNext());
     }
@@ -156,5 +167,19 @@ public class TravelBoardService {
     public void closeRecruitment(Long boardId, Long memberId) {
         TravelBoard travelBoard = getBoardWithValid(boardId, memberId);
         travelBoard.updateClosingRecruitment();
+    }
+
+    public List<LikedBoardResponse> getLikedBoardList(Long memberId, Long id) {
+        if(!Objects.equals(memberId, id)) {
+            throw new AccessDeniedException("접근권한이 없습니다.");
+        }
+        List<LikeBoard> likeBoardList = likeBoardRepository.findByMemberId(memberId);
+        List<LikedBoardResponse> likedBoardResponses = new ArrayList<>();
+        for(LikeBoard likedBoard : likeBoardList){
+            TravelBoard travelBoard = likedBoard.getTravelBoard();
+            LikedBoardResponse likedBoardResponse = LikedBoardResponse.of(travelBoard);
+            likedBoardResponses.add(likedBoardResponse);
+        }
+        return likedBoardResponses;
     }
 }

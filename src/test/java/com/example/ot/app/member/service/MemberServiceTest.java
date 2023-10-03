@@ -5,6 +5,7 @@ import com.example.ot.app.member.dto.response.MyPageResponse;
 import com.example.ot.app.member.entity.Member;
 import com.example.ot.app.member.entity.ProfileImage;
 import com.example.ot.app.member.exception.MemberException;
+import com.example.ot.app.member.repository.MemberRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,9 @@ public class MemberServiceTest {
 
     @Autowired
     private MemberService memberService;
+
+    @Autowired
+    private MemberRepository memberRepository;
 
     @Test
     @DisplayName("아이디 중복체크 성공.")
@@ -91,7 +95,7 @@ public class MemberServiceTest {
         Long memberId = 1L;
 
         // Then
-        assertDoesNotThrow(() -> memberService.findByMemberId(memberId));
+        assertDoesNotThrow(() -> memberRepository.findByMemberId(memberId));
     }
 
     @Test
@@ -101,14 +105,14 @@ public class MemberServiceTest {
         Long memberId = 50L;
 
         // Then
-        assertThrows(MemberException.class, () -> memberService.findByMemberId(memberId));
+        assertThrows(MemberException.class, () -> memberRepository.findByMemberId(memberId));
     }
 
     @Test
     @DisplayName("비밀번호가 일치하지 않다면 실패.")
     void shouldVerifyPasswordFailNotMatchesPassword() throws Exception {
         // Given
-        String password = memberService.findByMemberId(1L).getPassword();
+        String password = memberRepository.findByMemberId(1L).getPassword();
         String inputWrongPassword = "password123";
 
         // Then
@@ -119,7 +123,7 @@ public class MemberServiceTest {
     @DisplayName("Member가 존재하면 토큰을 얻습니다.")
     void shouldGetAccessTokenSuccessfully() throws Exception {
         // Given
-        Member member = memberService.findByMemberId(1L);
+        Member member = memberRepository.findByMemberId(1L);
 
         // When
         String accessToken = memberService.genAccessToken(member);
@@ -132,7 +136,7 @@ public class MemberServiceTest {
     @DisplayName("Member가 WhiteList인지 검증합니다.")
     void shouldVerifyWithWhiteListSuccessfully() throws Exception {
         // Given
-        Member member = memberService.findByMemberId(1L);
+        Member member = memberRepository.findByMemberId(1L);
         String token = memberService.genAccessToken(member);
 
         // Then

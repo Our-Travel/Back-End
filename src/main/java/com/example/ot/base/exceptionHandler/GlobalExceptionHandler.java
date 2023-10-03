@@ -4,6 +4,7 @@ import com.example.ot.app.board.exception.TravelBoardException;
 import com.example.ot.app.chat.exception.ChatException;
 import com.example.ot.app.host.exception.HostException;
 import com.example.ot.app.member.exception.MemberException;
+import com.example.ot.app.travelInfo.exception.TravelInfoException;
 import com.example.ot.base.rsData.RsData;
 import com.example.ot.base.s3.exception.ProfileUploadException;
 import com.example.ot.util.Util;
@@ -58,7 +59,8 @@ public class GlobalExceptionHandler {
             MemberException.class,
             HostException.class,
             TravelBoardException.class,
-            ChatException.class
+            ChatException.class,
+            TravelInfoException.class
     })
     public ResponseEntity<RsData> handleNoSuchData(final RuntimeException e) {
         return Util.spring.responseEntityOf(RsData.fail(e.getMessage()));

@@ -142,7 +142,7 @@ public class HostServiceTest {
         Integer regionCode = 11020;
 
         // When
-        List<HostInfoListResponse> hostInfoListResponseList = hostService.getHostListByRegion(regionCode);
+        List<HostInfoListResponse> hostInfoListResponseList = hostService.getHostListByRegion(regionCode, 1L);
 
         // Then
         assertThat(hostInfoListResponseList).isNotNull();
@@ -155,7 +155,7 @@ public class HostServiceTest {
         Integer regionCode = 11333;
 
         // Then
-        assertThrows(HostException.class, () -> hostService.getHostListByRegion(regionCode));
+        assertThrows(HostException.class, () -> hostService.getHostListByRegion(regionCode, 1L));
     }
 
 }

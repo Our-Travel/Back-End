@@ -1,5 +1,6 @@
 package com.example.ot.app.host.repository;
 
+import com.example.ot.app.host.dto.response.HostCountResponse;
 import com.example.ot.app.host.entity.Host;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -13,4 +14,7 @@ public interface HostRepository extends JpaRepository<Host, Long> {
 
     @Query("select h from Host h where h.regionCode = :regionCode")
     List<Host> findHostByRegionCode(@Param("regionCode")Integer regionCode);
+
+    @Query("select new com.example.ot.app.host.dto.response.HostCountResponse(h.regionCode, count(h)) from Host h group by h.regionCode")
+    List<HostCountResponse> countHostsByRegionCode();
 }

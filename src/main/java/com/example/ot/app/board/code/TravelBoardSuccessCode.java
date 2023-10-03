@@ -16,7 +16,8 @@ public enum TravelBoardSuccessCode implements Code {
     BOARD_DELETED("게시판이 삭제되었습니다."),
     BOARD_LIST_BY_MEMBER("작성한 게시글들 불러옵니다."),
     BOARD_LIST("게시글들 불러옵니다."),
-    RECRUITMENT_CLOSED("모집을 마감했습니다.");
+    RECRUITMENT_CLOSED("모집을 마감했습니다."),
+    BOARD_LIKED_LIST("게시판 좋아요 리스트를 불러옵니다.");
 
     private String message;
 }

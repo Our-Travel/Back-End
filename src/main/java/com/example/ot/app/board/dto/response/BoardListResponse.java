@@ -3,12 +3,14 @@ package com.example.ot.app.board.dto.response;
 import com.example.ot.app.board.entity.RecruitmentStatus;
 import com.example.ot.app.board.entity.TravelBoard;
 import com.example.ot.app.member.entity.Member;
+import com.example.ot.app.member.entity.ProfileImage;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.util.ObjectUtils;
 
 import java.util.Objects;
 
@@ -33,10 +35,16 @@ public class BoardListResponse {
     private boolean validWriter;
     private boolean likeBoardStatus;
     private long likeCounts;
+    private String profileImageFullPath;
+    private Integer headCount;
 
-    public static BoardListResponse fromTravelBoard(TravelBoard travelBoard, Long memberId, boolean likeBoardStatus, long likeCounts){
+    public static BoardListResponse fromTravelBoard(TravelBoard travelBoard, Long memberId, boolean likeBoardStatus, long likeCounts, ProfileImage profileImage, Integer headCount){
         Member writer = travelBoard.getMember();
         boolean validWriter = Objects.equals(writer.getId(), memberId);
+        String profileImageFullPath = null;
+        if(!ObjectUtils.isEmpty(profileImage)){
+            profileImageFullPath = profileImage.getFullPath();
+        }
         return BoardListResponse.builder()
                 .boardId(travelBoard.getId())
                 .title(travelBoard.getTitle())
@@ -52,6 +60,8 @@ public class BoardListResponse {
                 .validWriter(validWriter)
                 .likeBoardStatus(likeBoardStatus)
                 .likeCounts(likeCounts)
+                .profileImageFullPath(profileImageFullPath)
+                .headCount(headCount)
                 .build();
     }
 }

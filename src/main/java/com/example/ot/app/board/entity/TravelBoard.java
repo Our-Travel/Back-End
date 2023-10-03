@@ -10,6 +10,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 import java.time.LocalDate;
 
@@ -18,6 +20,8 @@ import java.time.LocalDate;
 @SuperBuilder
 @Entity
 @Getter
+@SQLDelete(sql = "UPDATE travel_board SET deleted_date = NOW() where id = ?")
+@Where(clause = "deleted_date is NULL")
 public class TravelBoard extends BaseTimeEntity {
 
     private String title;

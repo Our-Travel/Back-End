@@ -542,4 +542,98 @@ public class TravelTravelBoardControllerTest {
         resultActions
                 .andExpect(status().is4xxClientError());
     }
+
+    @Test
+    @DisplayName("동행 게시판 모집 마감")
+    @WithUserDetails("user1@example.com")
+    void shouldCloseRecruitmentBoardSuccessfully() throws Exception {
+        // When
+        ResultActions resultActions = mvc
+                .perform(
+                        patch("/boards/{boardId}", 1)
+                )
+                .andDo(print());
+
+        // Then
+        resultActions
+                .andExpect(status().is2xxSuccessful());
+    }
+
+    @Test
+    @DisplayName("자신이 작성한 게시판이 아니면 모집 마감 실패")
+    @WithUserDetails("user2@example.com")
+    void shouldCloseRecruitmentBoardFailDueToNotOwner() throws Exception {
+        // When
+        ResultActions resultActions = mvc
+                .perform(
+                        patch("/boards/{boardId}", 1)
+                )
+                .andDo(print());
+
+        // Then
+        resultActions
+                .andExpect(status().is4xxClientError());
+    }
+
+    @Test
+    @DisplayName("로그인을 하지 않으면 모집 마감 실패")
+    void shouldCloseRecruitmentBoardFailDueToWithoutLogin() throws Exception {
+        // When
+        ResultActions resultActions = mvc
+                .perform(
+                        patch("/boards/{boardId}", 1)
+                )
+                .andDo(print());
+
+        // Then
+        resultActions
+                .andExpect(status().is4xxClientError());
+    }
+
+    @Test
+    @DisplayName("존재하지 않는 게시판은 모집 마감을 할수없다.")
+    @WithUserDetails("user1@example.com")
+    void shouldCloseRecruitmentBoardFailDueToNotExistsBoard() throws Exception {
+        // When
+        ResultActions resultActions = mvc
+                .perform(
+                        patch("/boards/{boardId}", 1000)
+                )
+                .andDo(print());
+
+        // Then
+        resultActions
+                .andExpect(status().is4xxClientError());
+    }
+
+    @Test
+    @DisplayName("유저의 게시판 좋아요 리스트")
+    @WithUserDetails("user1@example.com")
+    void shouldShowLikedBoardListSuccessfully() throws Exception {
+        // When
+        ResultActions resultActions = mvc
+                .perform(
+                        get("/boards/list/{memberId}", 1)
+                )
+                .andDo(print());
+
+        // Then
+        resultActions
+                .andExpect(status().is2xxSuccessful());
+    }
+
+    @Test
+    @DisplayName("로그인을 하지 않으면 게시판 좋아요 리스트를 볼 수 없다.")
+    void shouldShowLikedBoardListFailDueToWithoutLogin() throws Exception {
+        // When
+        ResultActions resultActions = mvc
+                .perform(
+                        get("/boards/list/{memberId}", 1)
+                )
+                .andDo(print());
+
+        // Then
+        resultActions
+                .andExpect(status().is4xxClientError());
+    }
 }
