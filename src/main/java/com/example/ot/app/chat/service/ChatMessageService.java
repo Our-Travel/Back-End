@@ -34,14 +34,14 @@ public class ChatMessageService {
         ChatMessage chatMessage = ChatMessage.exitMessage(exitMemberNickname);
         saveMessage(chatMessage, roomId);
         MessageRequest noticeMessage = MessageRequest.CreateExitMessage(roomId, chatMessage.getMessage());
-        messagingTemplate.convertAndSend("/sub/room/%d".formatted(roomId), noticeMessage);
+        messagingTemplate.convertAndSend("/sub/message/%d".formatted(roomId), noticeMessage);
     }
 
     public void sendEnterMessage(Long roomId, String enterMemberNickname) {
         ChatMessage chatMessage = ChatMessage.enterMessage(enterMemberNickname);
         saveMessage(chatMessage, roomId);
         MessageRequest noticeMessage = MessageRequest.CreateEnterMessage(roomId, chatMessage.getMessage());
-        messagingTemplate.convertAndSend("/sub/room/%d".formatted(roomId), noticeMessage);
+        messagingTemplate.convertAndSend("/sub/message/%d".formatted(roomId), noticeMessage);
     }
 
     public void saveMessage(ChatMessage chatMessage, Long roomId){
