@@ -172,11 +172,8 @@ public class ChatRoomService {
         List<ShowMyChatRoomsResponse> showMyChatRoomsResponses = new ArrayList<>();
         for(ChatRoom chatRoom : myChatRoomList){
             List<ChatMessage> messages = chatRoomAndChatMessageRepository.findLastByChatRoomId(chatRoom.getId(), pageRequest);
-            if (!messages.isEmpty()) {
-                ChatMessage lastMessage = messages.get(0);
-                ShowMyChatRoomsResponse showMyChatRoomsResponse = ShowMyChatRoomsResponse.of(chatRoom, lastMessage);
-                showMyChatRoomsResponses.add(showMyChatRoomsResponse);
-            }
+            ShowMyChatRoomsResponse showMyChatRoomsResponse = ShowMyChatRoomsResponse.of(chatRoom, messages);
+            showMyChatRoomsResponses.add(showMyChatRoomsResponse);
         }
         return showMyChatRoomsResponses;
     }

@@ -28,14 +28,15 @@ public class ShowMyChatRoomsResponse {
     private String latestMessageTime;
     private boolean readAt;
 
-    public static ShowMyChatRoomsResponse of(ChatRoom chatRoom, ChatMessage chatMessage) {
-        if(ObjectUtils.isEmpty(chatMessage)){
+    public static ShowMyChatRoomsResponse of(ChatRoom chatRoom, List<ChatMessage> messages) {
+        if(ObjectUtils.isEmpty(messages)){
             return ShowMyChatRoomsResponse.builder()
                     .roomId(chatRoom.getId())
                     .roomTitle(chatRoom.getTitle())
                     .latestMessage("새로운 채팅방이 생성되었습니다.")
                     .build();
         }
+        ChatMessage chatMessage = messages.get(0);
         return ShowMyChatRoomsResponse.builder()
                 .roomId(chatRoom.getId())
                 .roomTitle(chatRoom.getTitle())
