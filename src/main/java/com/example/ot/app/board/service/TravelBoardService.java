@@ -13,9 +13,12 @@ import com.example.ot.app.board.exception.TravelBoardException;
 import com.example.ot.app.board.repository.LikeBoardRepository;
 import com.example.ot.app.board.repository.TravelBoardRepository;
 import com.example.ot.app.chat.event.CreateChatRoomEvent;
+import com.example.ot.app.chat.repository.ChatRoomAndMemberRepository;
 import com.example.ot.app.chat.repository.ChatRoomRepository;
 import com.example.ot.app.member.entity.Member;
+import com.example.ot.app.member.entity.ProfileImage;
 import com.example.ot.app.member.repository.MemberRepository;
+import com.example.ot.app.member.repository.ProfileImageRepository;
 import com.example.ot.base.code.Code;
 import com.example.ot.config.security.entity.MemberContext;
 import lombok.RequiredArgsConstructor;
@@ -45,6 +48,8 @@ public class TravelBoardService {
     private final TravelBoardRepository travelBoardRepository;
     private final LikeBoardRepository likeBoardRepository;
     private final ChatRoomRepository chatRoomRepository;
+    private final ProfileImageRepository profileImageRepository;
+    private final ChatRoomAndMemberRepository chatRoomAndMemberRepository;
     private final ApplicationEventPublisher publisher;
     private final static int pageOfSize = 10;
 
@@ -150,7 +155,10 @@ public class TravelBoardService {
         for(TravelBoard travelBoard : travelBoardList.getContent()){
             boolean likeBoardStatus = !ObjectUtils.isEmpty(getLikeBoardStatusByMember(travelBoard.getId(), memberId));
             long likeCounts = getLikeBoardCounts(travelBoard.getId());
-            boardListResponses.add(BoardListResponse.fromTravelBoard(travelBoard, memberId, likeBoardStatus, likeCounts));
+            Long boardMemberId = travelBoard.getMemberId();
+            ProfileImage profileImage = profileImageRepository.findProfileImageByMemberId(boardMemberId).orElse(null);
+            Integer headCount = chatRoomAndMemberRepository.countByRoomId(travelBoard.getId());
+            boardListResponses.add(BoardListResponse.fromTravelBoard(travelBoard, memberId, likeBoardStatus, likeCounts, profileImage, headCount));
         }
         return new SliceImpl<>(boardListResponses, travelBoardList.getPageable(), travelBoardList.hasNext());
     }

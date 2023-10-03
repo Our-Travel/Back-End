@@ -94,7 +94,7 @@ public class HostService {
             List<Long> chatRoomListByRegion = chatRoomRepository.findByHostId(hostInfoListResponse.getHostId());
             for(Long chatRoomId : chatRoomListByRegion){
                 if(chatRoomListByHost.contains(chatRoomId)){
-                    hostInfoListResponse.updateChatRoomExist();
+                    hostInfoListResponse.updateChatRoom(chatRoomId);
                 }
             }
             if(Objects.equals(hostId, hostInfoListResponse.getHostId())){

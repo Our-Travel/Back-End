@@ -78,24 +78,6 @@ public class Member extends BaseTimeEntity {
         );
     }
 
-    public Map<String, Object> toMap() {
-        return Util.mapOf(
-                "id", getId(),
-                "createdDate", getCreatedDate(),
-                "modifiedDate", getModifiedDate(),
-                "username", getUsername(),
-                "nickName", getNickName(),
-                "accessToken", getAccessToken(),
-                "authorities", getAuthorities(),
-                "providerTypeCode", getProviderTypeCode(),
-                "hostAuthority", isHostAuthority()
-        );
-    }
-
-    public static Member fromMap(Map<String, Object> map) {
-        return fromJwtClaims(map);
-    }
-
     public static Member fromJwtClaims(Map<String, Object> jwtClaims) {
         long id = 0;
 
