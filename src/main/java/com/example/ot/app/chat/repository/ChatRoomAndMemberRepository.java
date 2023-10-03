@@ -16,7 +16,7 @@ public interface ChatRoomAndMemberRepository extends JpaRepository<ChatRoomAndMe
     @Query("select count(c.id) from ChatRoomAndMember c join c.chatRoom r where r.id = :roomId")
     int countByRoomId(@Param("roomId") Long roomId);
 
-    @Query("select c.chatRoom from ChatRoomAndMember c where c.member.id = :memberId")
+    @Query("select c.chatRoom from ChatRoomAndMember c join c.member m where m.id = :memberId")
     List<ChatRoom> findByMemberId(@Param("memberId")Long memberId);
 
     @Query("select c from ChatRoomAndMember c where c.chatRoom.id = :roomId and c.member.id = :memberId")
