@@ -38,6 +38,7 @@ public class MemberService {
     private final JwtUtils jwtUtils;
     private final ProfileImageRepository profileImageRepository;
     private final S3ProfileUploader profileUploader;
+    private final MemberRedisService memberRedisService;
 
     @Transactional
     public void createMember(SignUpRequest signUpRequest){
@@ -77,10 +78,6 @@ public class MemberService {
         checkNickName(signUpRequest.getNickName());
     }
 
-    public Member findByMemberId(Long memberId){
-        return memberRepository.findById(memberId).orElseThrow(() -> new MemberException(MEMBER_NOT_EXISTS));
-    }
-
     public void verifyPassword(String password, String inputPassword) {
         if (!passwordEncoder.matches(inputPassword, password)) {
             throw new MemberException(PASSWORD_MISMATCH);
@@ -88,7 +85,7 @@ public class MemberService {
     }
 
     public void verifyPassword(Long memberId, String inputPassword) {
-        Member member = findByMemberId(memberId);
+        Member member = memberRedisService.findByMemberId(memberId);
         verifyPassword(member.getPassword(), inputPassword);
     }
 
@@ -108,30 +105,8 @@ public class MemberService {
         return member.getAccessToken().equals(token);
     }
 
-    public Member getByMemberId__cached(Long id) {
-        MemberService thisObj = (MemberService) AppConfig.getContext().getBean("memberService");
-        Map<String, Object> memberMap = thisObj.getMemberMapByMemberId__cached(id);
-
-        return Member.fromMap(memberMap);
-    }
-
-    @Cacheable("member")
-    public Map<String, Object> getMemberMapByMemberId__cached(Long memberId) {
-        Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new MemberException(MEMBER_NOT_EXISTS));
-        return member.toMap();
-    }
-
-    @CachePut("member")
-    public Map<String, Object> putMemberMapByUsername__cached(Long memberId) {
-        Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new MemberException(MEMBER_NOT_EXISTS));
-        return member.toMap();
-    }
-
     public MyPageResponse getMemberInfo(Long memberId) {
-        Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new MemberException(MEMBER_NOT_EXISTS));
+        Member member = memberRedisService.findByMemberId(memberId);
         ProfileImage profileImage = getMemberProfileImage(memberId);
         return MyPageResponse.fromMember(member, profileImage);
     }
@@ -150,8 +125,7 @@ public class MemberService {
         }
         else{
             ProfileImage profileImage = profileUploader.uploadFile(file);
-            Member member = memberRepository.findById(memberId)
-                    .orElseThrow(() -> new MemberException(MEMBER_NOT_EXISTS));
+            Member member = memberRedisService.findByMemberId(memberId);
             profileImage.setMember(member);
             profileImageRepository.save(profileImage);
         }
@@ -167,9 +141,9 @@ public class MemberService {
     }
 
     @Transactional
+    @CachePut(value = "members", key = "#memberId")
     public void updateMemberInfo(UpdateMemberRequest updateMemberRequest, Long memberId) {
-        Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new MemberException(MEMBER_NOT_EXISTS));
+        Member member = memberRedisService.findByMemberId(memberId);
         if(Objects.equals(member.getProviderTypeCode(), "OT")) {
             String newPassword = updateMemberRequest.getPassword();
             String verifyPassword = updateMemberRequest.getVerifyPassword();

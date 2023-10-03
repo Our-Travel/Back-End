@@ -18,7 +18,7 @@ public class HostInfoListResponse {
     private String nickName;
     private String introduction;
     private String hashTag;
-    private boolean chatRoomExist;
+    private Long chatRoomId;
     private boolean hostMember;
 
     public static HostInfoListResponse fromHost(Host host, String hashTag, ProfileImage hostProfileImage){
@@ -34,8 +34,8 @@ public class HostInfoListResponse {
                 .build();
     }
 
-    public void updateChatRoomExist(){
-        this.chatRoomExist = true;
+    public void updateChatRoom(Long chatRoomId){
+        this.chatRoomId = chatRoomId;
     }
 
     public void updateHostMember(){

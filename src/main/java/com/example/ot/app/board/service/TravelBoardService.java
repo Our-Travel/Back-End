@@ -13,6 +13,7 @@ import com.example.ot.app.board.exception.TravelBoardException;
 import com.example.ot.app.board.repository.LikeBoardRepository;
 import com.example.ot.app.board.repository.TravelBoardRepository;
 import com.example.ot.app.chat.event.CreateChatRoomEvent;
+import com.example.ot.app.chat.repository.ChatRoomAndMemberRepository;
 import com.example.ot.app.chat.repository.ChatRoomRepository;
 import com.example.ot.app.member.entity.Member;
 import com.example.ot.app.member.entity.ProfileImage;
@@ -48,6 +49,7 @@ public class TravelBoardService {
     private final LikeBoardRepository likeBoardRepository;
     private final ChatRoomRepository chatRoomRepository;
     private final ProfileImageRepository profileImageRepository;
+    private final ChatRoomAndMemberRepository chatRoomAndMemberRepository;
     private final ApplicationEventPublisher publisher;
     private final static int pageOfSize = 10;
 
@@ -155,7 +157,8 @@ public class TravelBoardService {
             long likeCounts = getLikeBoardCounts(travelBoard.getId());
             Long boardMemberId = travelBoard.getMemberId();
             ProfileImage profileImage = profileImageRepository.findProfileImageByMemberId(boardMemberId).orElse(null);
-            boardListResponses.add(BoardListResponse.fromTravelBoard(travelBoard, memberId, likeBoardStatus, likeCounts, profileImage));
+            Integer headCount = chatRoomAndMemberRepository.countByRoomId(travelBoard.getId());
+            boardListResponses.add(BoardListResponse.fromTravelBoard(travelBoard, memberId, likeBoardStatus, likeCounts, profileImage, headCount));
         }
         return new SliceImpl<>(boardListResponses, travelBoardList.getPageable(), travelBoardList.hasNext());
     }

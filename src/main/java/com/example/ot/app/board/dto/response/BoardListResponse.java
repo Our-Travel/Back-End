@@ -36,8 +36,9 @@ public class BoardListResponse {
     private boolean likeBoardStatus;
     private long likeCounts;
     private String profileImageFullPath;
+    private Integer headCount;
 
-    public static BoardListResponse fromTravelBoard(TravelBoard travelBoard, Long memberId, boolean likeBoardStatus, long likeCounts, ProfileImage profileImage){
+    public static BoardListResponse fromTravelBoard(TravelBoard travelBoard, Long memberId, boolean likeBoardStatus, long likeCounts, ProfileImage profileImage, Integer headCount){
         Member writer = travelBoard.getMember();
         boolean validWriter = Objects.equals(writer.getId(), memberId);
         String profileImageFullPath = null;
@@ -60,6 +61,7 @@ public class BoardListResponse {
                 .likeBoardStatus(likeBoardStatus)
                 .likeCounts(likeCounts)
                 .profileImageFullPath(profileImageFullPath)
+                .headCount(headCount)
                 .build();
     }
 }

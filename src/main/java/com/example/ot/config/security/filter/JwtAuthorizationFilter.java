@@ -1,6 +1,8 @@
 package com.example.ot.config.security.filter;
 
 import com.example.ot.app.member.entity.Member;
+import com.example.ot.app.member.repository.MemberRepository;
+import com.example.ot.app.member.service.MemberRedisService;
 import com.example.ot.app.member.service.MemberService;
 import com.example.ot.config.security.entity.MemberContext;
 import com.example.ot.config.security.jwt.JwtUtils;
@@ -25,6 +27,8 @@ import java.util.Map;
 public class JwtAuthorizationFilter extends OncePerRequestFilter {
     private final JwtUtils jwtUtils;
     private final MemberService memberService;
+    private final MemberRepository memberRepository;
+    private final MemberRedisService memberRedisService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -36,9 +40,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
             if (jwtUtils.verify(token)) {
                 Map<String, Object> claims = jwtUtils.getClaims(token);
                 long id = (int) claims.get("id");
-                // todo: 캐시(레디스) 사용
-//                Member member = memberService.getByMemberId__cached(id);
-                Member member = memberService.findByMemberId(id);
+                Member member = memberRepository.findById(id).orElse(null);
                 if(memberService.verifyWithWhiteList(member, token)){
                     forceAuthentication(member);
                 }
