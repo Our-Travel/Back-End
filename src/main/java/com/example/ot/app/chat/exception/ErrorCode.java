@@ -9,7 +9,8 @@ public enum ErrorCode {
     CHATROOM_FULL("채팅방 인원이 가득 찼습니다."),
     CHATROOM_ENTRY_PERIOD_EXPIRED("채팅방 입장 기간이 아닙니다."),
     CHATROOM_HOST_CANNOT_CREATE_OWN("호스트는 자신의 채팅방을 생성할 수 없습니다."),
-    CHATROOM_CANNOT_EXISTED("작성자는 남은인원이 있으면 채팅방에 나갈 수 없습니다.");
+    CHATROOM_CANNOT_EXISTED("작성자는 남은인원이 있으면 채팅방에 나갈 수 없습니다."),
+    CHATROOM_EXISTS("이미 해당 호스트와는 채팅방이 존재합니다.");
 
     ErrorCode(String msg){
         this.msg = msg;

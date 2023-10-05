@@ -157,7 +157,8 @@ public class TravelBoardService {
             long likeCounts = getLikeBoardCounts(travelBoard.getId());
             Long boardMemberId = travelBoard.getMemberId();
             ProfileImage profileImage = profileImageRepository.findProfileImageByMemberId(boardMemberId).orElse(null);
-            Integer headCount = chatRoomAndMemberRepository.countByRoomId(travelBoard.getId());
+            Long roomId = chatRoomRepository.findChatRoomByBoardId(travelBoard.getId()).orElse(null);
+            Integer headCount = chatRoomAndMemberRepository.countByRoomId(roomId);
             boardListResponses.add(BoardListResponse.fromTravelBoard(travelBoard, memberId, likeBoardStatus, likeCounts, profileImage, headCount));
         }
         return new SliceImpl<>(boardListResponses, travelBoardList.getPageable(), travelBoardList.hasNext());
