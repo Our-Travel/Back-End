@@ -29,20 +29,24 @@ public class ShowMyChatRoomsResponse {
     private boolean readAt;
 
     public static ShowMyChatRoomsResponse of(ChatRoom chatRoom, List<ChatMessage> messages) {
-        if(ObjectUtils.isEmpty(messages)){
-            return ShowMyChatRoomsResponse.builder()
-                    .roomId(chatRoom.getId())
-                    .roomTitle(chatRoom.getTitle())
-                    .latestMessage("새로운 채팅방이 생성되었습니다.")
-                    .build();
+        String latestMessage;
+        String writer;
+
+        if (ObjectUtils.isEmpty(messages)) {
+            latestMessage = "새로운 채팅방이 생성되었습니다.";
+            writer = "[알림]";
+        } else {
+            ChatMessage chatMessage = messages.get(0);
+            latestMessage = chatMessage.getMessage();
+            writer = (chatMessage.getWriter() == null) ? "[알림]" : chatMessage.getWriter().getNickName();
         }
-        ChatMessage chatMessage = messages.get(0);
+
         return ShowMyChatRoomsResponse.builder()
                 .roomId(chatRoom.getId())
                 .roomTitle(chatRoom.getTitle())
-                .writer(chatMessage.getWriter().getNickName())
-                .latestMessage(chatMessage.getMessage())
-                .latestMessageTime(String.valueOf(chatMessage.getCreatedDate()))
+                .writer(writer)
+                .latestMessage(latestMessage)
+                .latestMessageTime(ObjectUtils.isEmpty(messages) ? null : String.valueOf(messages.get(0).getCreatedDate()))
                 .build();
     }
 }
