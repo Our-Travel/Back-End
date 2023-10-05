@@ -26,6 +26,7 @@ public class ChatEventListenerHandler {
         chatMessageService.sendExitMessage(event.getRoomId(), event.getExitMemberNickname());
     }
 
+    @EventListener
     public void SendEnterMessageEventListener(SendEnterMessageEvent event){
         chatMessageService.sendEnterMessage(event.getRoomId(), event.getEnterMemberNickname());
     }
