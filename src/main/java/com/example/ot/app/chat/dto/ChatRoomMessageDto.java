@@ -1,12 +1,14 @@
 package com.example.ot.app.chat.dto;
 
 import com.example.ot.app.chat.entity.ChatMessage;
+import com.example.ot.app.member.entity.Member;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.util.ObjectUtils;
 
 import java.time.LocalDateTime;
 
@@ -23,9 +25,12 @@ public class ChatRoomMessageDto {
     private String createdDate;
 
     public static ChatRoomMessageDto fromChatMessage(ChatMessage chatMessage) {
+        Long memberId = (chatMessage.getWriter() == null) ? null : chatMessage.getWriter().getId();
+        String nickname = (chatMessage.getWriter() == null) ? "admin" : chatMessage.getWriter().getNickName();
+
         return ChatRoomMessageDto.builder()
-                .memberId(chatMessage.getWriter().getId())
-                .nickname(chatMessage.getWriter().getNickName())
+                .memberId(memberId)
+                .nickname(nickname)
                 .message(chatMessage.getMessage())
                 .createdDate(String.valueOf(chatMessage.getCreatedDate()))
                 .build();
