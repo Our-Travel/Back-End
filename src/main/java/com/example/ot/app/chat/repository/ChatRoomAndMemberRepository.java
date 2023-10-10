@@ -24,4 +24,7 @@ public interface ChatRoomAndMemberRepository extends JpaRepository<ChatRoomAndMe
 
     @Query("select c.chatRoom.id from ChatRoomAndMember c where c.member.id = :memberId and c.chatRoom.travelBoard = null")
     List<Long> findChatRoomIdByHost(@Param("memberId")Long memberId);
+
+    @Query("select c.member.id from ChatRoomAndMember c where c.chatRoom.id = :roomId and c.member.id != :memberId")
+    Long findByOtherMemberId(@Param("memberId")Long memberId, @Param("roomId")Long roomId);
 }
