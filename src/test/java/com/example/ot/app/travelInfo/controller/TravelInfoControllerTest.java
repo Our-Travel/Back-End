@@ -159,7 +159,7 @@ public class TravelInfoControllerTest {
         // When
         ResultActions resultActions = mvc
                 .perform(
-                        get("/local-place/list/{memberId}", 1)
+                        get("/local-place/list?contentTypeId=12")
                 )
                 .andDo(print());
 
