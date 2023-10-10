@@ -17,4 +17,8 @@ public interface LikedTravelInfoRepository extends JpaRepository<LikedTravelInfo
     @Query("select l from LikedTravelInfo  l join l.member m join fetch l.travelInfo " +
             "where m.id = :memberId")
     List<LikedTravelInfo> findByMemberId(@Param("memberId")Long memberId);
+
+    @Query("select l from LikedTravelInfo  l join l.member m join fetch l.travelInfo t " +
+            "where m.id = :memberId and t.contentTypeId = :contentTypeId")
+    List<LikedTravelInfo> findByMemberIdAndContentTypeId(@Param("memberId")Long memberId, @Param("contentTypeId")String contentTypeId);
 }
