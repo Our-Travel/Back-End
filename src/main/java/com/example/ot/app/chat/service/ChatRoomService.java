@@ -180,8 +180,8 @@ public class ChatRoomService {
                 if(!Objects.equals(memberId, chatRoom.getHost().getMemberId())){
                     profileImage = profileImageRepository.findProfileImageByMemberId(memberId).orElse(null);
                 } else{
-                    Long otherMemberId = chatRoomAndMemberRepository.findByOtherMemberId(memberId, chatRoom.getId());
-                    profileImage = profileImageRepository.findProfileImageByMemberId(otherMemberId).orElse(null);
+                    Long hostMemberId = chatRoom.getHost().getMemberId();
+                    profileImage = profileImageRepository.findProfileImageByMemberId(hostMemberId).orElse(null);
                 }
             }
             ShowMyChatRoomsResponse showMyChatRoomsResponse = ShowMyChatRoomsResponse.of(chatRoom, messages, profileImage);
