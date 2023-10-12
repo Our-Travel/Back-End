@@ -67,6 +67,13 @@ public class MemberController {
         );
     }
 
+    @Operation(summary = "로그아웃", security = @SecurityRequirement(name = "bearerAuth"))
+    @DeleteMapping("/logout")
+    public ResponseEntity<RsData> logout(@AuthenticationPrincipal MemberContext memberContext){
+        memberService.logout(memberContext.getId());
+        return Util.spring.responseEntityOf(RsData.success(LOGOUT_COMPLETED));
+    }
+
     @Operation(summary = "마이페이지", security = @SecurityRequirement(name = "bearerAuth"))
     @PreAuthorize("isAuthenticated()")
     @GetMapping
