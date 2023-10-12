@@ -62,11 +62,8 @@ public class TravelInfoService {
         return TRAVEL_INFO_LIKED_CANCELED;
     }
 
-    public List<LikedTravelInfoResponse> getLikedTravelInfoList(Long memberId, Long id) {
-        if(!Objects.equals(memberId, id)) {
-            throw new AccessDeniedException("접근권한이 없습니다.");
-        }
-        List<LikedTravelInfo> likedTravelInfoList = likedTravelInfoRepository.findByMemberId(memberId);
+    public List<LikedTravelInfoResponse> getLikedTravelInfoList(Long memberId, String contentTypeId) {
+        List<LikedTravelInfo> likedTravelInfoList = likedTravelInfoRepository.findByMemberIdAndContentTypeId(memberId, contentTypeId);
         List<LikedTravelInfoResponse> likedTravelInfoResponses = new ArrayList<>();
         for(LikedTravelInfo likedTravelInfo : likedTravelInfoList) {
             TravelInfo travelInfo = likedTravelInfo.getTravelInfo();

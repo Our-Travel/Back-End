@@ -143,8 +143,7 @@ public class MemberService {
     }
 
     @Transactional
-    @CachePut(value = "members", key = "#memberId")
-    public void updateMemberInfo(UpdateMemberRequest updateMemberRequest, Long memberId) {
+    public String updateMemberInfo(UpdateMemberRequest updateMemberRequest, Long memberId) {
         Member member = findByMemberId(memberId);
         if(Objects.equals(member.getProviderTypeCode(), "OT")) {
             String newPassword = updateMemberRequest.getPassword();
@@ -156,11 +155,20 @@ public class MemberService {
             member.updatePassword(encodedPassword);
         }
         member.updateNickName(updateMemberRequest.getNickName());
+        String accessToken = jwtUtils.generateAccessToken(member.getAccessTokenClaims());
+        member.generateAccessToken(accessToken);
+        return accessToken;
     }
 
     private void verifyPasswordsMatch(String password, String verifyPassword) {
         if (!password.equals(verifyPassword)) {
             throw new MemberException(PASSWORD_MISMATCH);
         }
+    }
+
+    @Transactional
+    public void logout(Long memberId) {
+        Member member = findByMemberId(memberId);
+        member.removeAccessToken();
     }
 }

@@ -136,4 +136,8 @@ public class Member extends BaseTimeEntity {
     public void generateAccessToken(String accessToken){
         this.accessToken = accessToken;
     }
+
+    public void removeAccessToken() {
+        this.accessToken = null;
+    }
 }

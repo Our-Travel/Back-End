@@ -54,10 +54,10 @@ public class TravelInfoController {
     }
 
     @Operation(summary = "유저의 관광지 좋아요 리스트", security = @SecurityRequirement(name = "bearerAuth"))
-    @GetMapping("/list/{memberId}")
-    public ResponseEntity<RsData> likedTravelInfoList(@PathVariable Long memberId,
+    @GetMapping("/list")
+    public ResponseEntity<RsData> likedTravelInfoList(@RequestParam(value = "contentTypeId", defaultValue = "12") String contentTypeId,
                                                       @AuthenticationPrincipal MemberContext memberContext){
-        List<LikedTravelInfoResponse> likedTravelInfoResult = travelInfoService.getLikedTravelInfoList(memberId, memberContext.getId());
+        List<LikedTravelInfoResponse> likedTravelInfoResult = travelInfoService.getLikedTravelInfoList(memberContext.getId(), contentTypeId);
         return Util.spring.responseEntityOf(RsData.success(TRAVEL_INFO_LIKED_LIST, likedTravelInfoResult));
     }
 }
