@@ -181,7 +181,8 @@ public class ChatRoomService {
                     Long hostMemberId = chatRoom.getHost().getMemberId();
                     profileImage = profileImageRepository.findProfileImageByMemberId(hostMemberId).orElse(null);
                 } else{
-                    profileImage = profileImageRepository.findProfileImageByMemberId(memberId).orElse(null);
+                    Long otherMemberId = chatRoomAndMemberRepository.findByOtherMemberId(memberId, chatRoom.getId());
+                    profileImage = profileImageRepository.findProfileImageByMemberId(otherMemberId).orElse(null);
                 }
             }
             ShowMyChatRoomsResponse showMyChatRoomsResponse = ShowMyChatRoomsResponse.of(chatRoom, messages, profileImage);
