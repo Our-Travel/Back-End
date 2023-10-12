@@ -6,6 +6,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -16,12 +18,13 @@ public class MessageRequest {
     private Long roomId;
     private String message;
     private String writerNickname;
+    private String createdDate;
 
     public static MessageRequest CreateEnterMessage(Long roomId, String noticeMessage){
-        return new MessageRequest(roomId, noticeMessage, "admin");
+        return new MessageRequest(roomId, noticeMessage, "admin", String.valueOf(LocalDateTime.now()));
     }
 
     public static MessageRequest CreateExitMessage(Long roomId, String noticeMessage){
-        return new MessageRequest(roomId, noticeMessage, "admin");
+        return new MessageRequest(roomId, noticeMessage, "admin", String.valueOf(LocalDateTime.now()));
     }
 }
