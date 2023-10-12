@@ -178,10 +178,10 @@ public class ChatRoomService {
             ProfileImage profileImage = null;
             if(!ObjectUtils.isEmpty(chatRoom.getHost())) {
                 if(!Objects.equals(memberId, chatRoom.getHost().getMemberId())){
-                    profileImage = profileImageRepository.findProfileImageByMemberId(memberId).orElse(null);
-                } else{
                     Long hostMemberId = chatRoom.getHost().getMemberId();
                     profileImage = profileImageRepository.findProfileImageByMemberId(hostMemberId).orElse(null);
+                } else{
+                    profileImage = profileImageRepository.findProfileImageByMemberId(memberId).orElse(null);
                 }
             }
             ShowMyChatRoomsResponse showMyChatRoomsResponse = ShowMyChatRoomsResponse.of(chatRoom, messages, profileImage);
