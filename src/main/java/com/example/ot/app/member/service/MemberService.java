@@ -143,7 +143,6 @@ public class MemberService {
     }
 
     @Transactional
-    @CachePut(value = "members", key = "#memberId")
     public void updateMemberInfo(UpdateMemberRequest updateMemberRequest, Long memberId) {
         Member member = findByMemberId(memberId);
         if(Objects.equals(member.getProviderTypeCode(), "OT")) {
