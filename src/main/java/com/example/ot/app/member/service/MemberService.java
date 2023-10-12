@@ -165,4 +165,10 @@ public class MemberService {
             throw new MemberException(PASSWORD_MISMATCH);
         }
     }
+
+    @Transactional
+    public void logout(Long memberId) {
+        Member member = findByMemberId(memberId);
+        member.removeAccessToken();
+    }
 }

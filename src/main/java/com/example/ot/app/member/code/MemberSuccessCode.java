@@ -11,6 +11,7 @@ public enum MemberSuccessCode implements Code {
     EMAIL_AVAILABLE("%s는 사용가능한 이메일입니다."),
     NICKNAME_AVAILABLE("%s는 사용가능한 닉네임입니다."),
     LOGIN_COMPLETED("로그인 되었습니다."),
+    LOGOUT_COMPLETED("로그아웃 되었습니다."),
     MY_PAGE("마이페이지입니다."),
     PROFILE_EDIT_PAGE("프로필 편집페이지입니다."),
     PROFILE_IMAGE_UPDATED("프로필사진이 수정되었습니다."),
