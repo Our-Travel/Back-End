@@ -37,7 +37,7 @@ public class TravelInfoService {
         List<TravelInfo> travelInfoList = travelInfoRepository.findByContentTypeId(contentTypeId);
         List<ShowMapDataResponse> showMapDataResponseList = new ArrayList<>();
         for(TravelInfo travelInfo: travelInfoList){
-            ShowMapDataResponse data = ShowMapDataResponse.of(travelInfo);
+            ShowMapDataResponse data = ShowMapDataResponse.of(travelInfo, false);
             showMapDataResponseList.add(data);
         }
         return showMapDataResponseList;
@@ -45,7 +45,8 @@ public class TravelInfoService {
 
     public ShowMapDataResponse getOneMapData(Integer contentId, Long memberId) {
         TravelInfo travelInfo = travelInfoRepository.findByContentId(contentId).orElseThrow(() -> new TravelInfoException(TRAVEL_INFO_NOT_EXISTS));
-        return ShowMapDataResponse.of(travelInfo);
+        boolean likedTravelInfo = likedTravelInfoRepository.existsByMemberIdAndContentId(memberId, contentId);
+        return ShowMapDataResponse.of(travelInfo, likedTravelInfo);
     }
 
     @Transactional

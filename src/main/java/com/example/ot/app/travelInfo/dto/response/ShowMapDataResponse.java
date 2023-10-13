@@ -26,8 +26,9 @@ public class ShowMapDataResponse {
     private String image;
     private String homePage;
     private String overView;
+    private boolean likedTravelInfo;
 
-    public static ShowMapDataResponse of(TravelInfo travelInfo) {
+    public static ShowMapDataResponse of(TravelInfo travelInfo, boolean likedTravelInfo) {
         return ShowMapDataResponse.builder()
                 .contentId(travelInfo.getContentId())
                 .contentTypeId(travelInfo.getContentTypeId())
@@ -40,6 +41,7 @@ public class ShowMapDataResponse {
                 .image(travelInfo.getImage())
                 .homePage(travelInfo.getHomePage())
                 .overView(travelInfo.getOverView())
+                .likedTravelInfo(likedTravelInfo)
                 .build();
     }
 }
