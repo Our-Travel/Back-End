@@ -21,4 +21,9 @@ public interface LikedTravelInfoRepository extends JpaRepository<LikedTravelInfo
     @Query("select l from LikedTravelInfo  l join l.member m join fetch l.travelInfo t " +
             "where m.id = :memberId and t.contentTypeId = :contentTypeId")
     List<LikedTravelInfo> findByMemberIdAndContentTypeId(@Param("memberId")Long memberId, @Param("contentTypeId")String contentTypeId);
+
+    @Query("select case when count(l) > 0 then true else false end " +
+            "from LikedTravelInfo l join l.member m join l.travelInfo t " +
+            "where m.id = :memberId and t.contentId = :contentId")
+    boolean existsByMemberIdAndContentId(@Param("memberId") Long memberId, @Param("contentId") Integer contentId);
 }
