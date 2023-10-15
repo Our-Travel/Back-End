@@ -37,7 +37,8 @@ public class OAuth2MemberSuccessHandler extends SimpleUrlAuthenticationSuccessHa
         Member member = memberRepository.findByUsername(username)
                 .orElseThrow(() -> new MemberException(USERNAME_NOT_EXISTS));;
         String accessToken = memberService.genAccessToken(member);
-        String url = makeRedirectUrl(accessToken);
+        String requestURI = request.getRequestURI();
+        String url = makeRedirectUrl(requestURI, accessToken);
         getRedirectStrategy().sendRedirect(request, response, url);
 
 //        response.addHeader("Authentication", accessToken);
@@ -49,8 +50,8 @@ public class OAuth2MemberSuccessHandler extends SimpleUrlAuthenticationSuccessHa
 //        response.getWriter().write(jsonResponse);
     }
 
-    private String makeRedirectUrl(String token) {
-        return UriComponentsBuilder.fromUriString("https://ourtravel.site/oauth2/redirect/"+token)
+    private String makeRedirectUrl(String requestURI, String token) {
+        return UriComponentsBuilder.fromUriString(requestURI + "/oauth2/redirect/" + token)
                 .build().toUriString();
     }
 }
