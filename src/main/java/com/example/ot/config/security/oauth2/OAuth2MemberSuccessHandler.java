@@ -51,7 +51,8 @@ public class OAuth2MemberSuccessHandler extends SimpleUrlAuthenticationSuccessHa
     }
 
     private String makeRedirectUrl(String requestURI, String token) {
-        return UriComponentsBuilder.fromUriString(requestURI + "/oauth2/redirect/" + token)
+        String url = requestURI.substring(0, requestURI.length() - "/api/prod".length());
+        return UriComponentsBuilder.fromUriString(url + "/oauth2/redirect/" + token)
                 .build().toUriString();
     }
 }
