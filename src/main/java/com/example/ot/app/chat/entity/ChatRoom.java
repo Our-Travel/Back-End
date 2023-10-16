@@ -54,4 +54,8 @@ public class ChatRoom extends BaseTimeEntity {
     public Member getBoardWriter(){
         return travelBoard.getMember();
     }
+
+    public void updateRoomTitle(String title) {
+        this.title = title;
+    }
 }
