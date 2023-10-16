@@ -51,11 +51,11 @@ public class OAuth2MemberSuccessHandler extends SimpleUrlAuthenticationSuccessHa
     }
 
     private String makeRedirectUrl(String requestURI, String token) {
-        int index = requestURI.indexOf("/api/prod");
-        String firstPart = requestURI.substring(0, index);
-        String secondPart = requestURI.substring(index + "/api/prod".length());
-        String url = firstPart + secondPart;
-        return UriComponentsBuilder.fromUriString(url + "/oauth2/redirect/" + token)
+//        int index = requestURI.indexOf("/api/prod");
+//        String firstPart = requestURI.substring(0, index);
+//        String secondPart = requestURI.substring(index + "/api/prod".length());
+//        String url = firstPart + secondPart;
+        return UriComponentsBuilder.fromUriString(requestURI + "/oauth2/redirect/" + token)
                 .build().toUriString();
     }
 }

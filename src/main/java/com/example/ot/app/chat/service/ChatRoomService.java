@@ -79,7 +79,17 @@ public class ChatRoomService {
         }
         List<Long> chatMessageIdList = chatRoomAndChatMessageRepository.findAllChatMessageIdByChatRoomId(roomId);
         List<ChatRoomMessageDto> messageDtoList = convertToMessageDtoList(chatMessageIdList);
-        return new ShowChatRoomResponse(memberId, roomId, messageDtoList);
+        ChatRoom chatRoom = findByChatRoomId(roomId);
+        Integer regionCode = null;
+        String roomManager = null;
+        String roomTitle = chatRoom.getTitle();
+        if(!ObjectUtils.isEmpty(chatRoom.getHost())) {
+            regionCode = chatRoom.getHost().getRegionCode();
+        } else {
+            regionCode = chatRoom.getTravelBoard().getRegionCode();
+            roomManager = chatRoom.getBoardWriter().getNickName();
+        }
+        return new ShowChatRoomResponse(memberId, roomId, regionCode, roomManager, roomTitle, messageDtoList);
     }
 
     private void verifyEnterChatRoom(Long roomId, Long memberId){
