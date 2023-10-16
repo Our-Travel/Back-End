@@ -18,5 +18,8 @@ public class ShowChatRoomResponse {
 
     private Long myMemberId;
     private Long chatRoomId;
+    private Integer regionCode;
+    private String roomManager;
+    private String roomTitle;
     private List<ChatRoomMessageDto> chatRoomMessageDtoList;
 }
