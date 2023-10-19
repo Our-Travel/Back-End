@@ -12,7 +12,6 @@ import com.example.ot.app.member.repository.ProfileImageRepository;
 import com.example.ot.base.s3.S3ProfileUploader;
 import com.example.ot.config.security.jwt.JwtUtils;
 import lombok.RequiredArgsConstructor;
-import org.springframework.cache.annotation.CachePut;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -120,15 +119,16 @@ public class MemberService {
     @Transactional
     public void updateProfileImage(Long memberId, MultipartFile file) throws IOException {
         ProfileImage findProfileImage = getMemberProfileImage(memberId);
-
+        Member member = findByMemberId(memberId);
         if(!ObjectUtils.isEmpty(findProfileImage)){
             ProfileImage changeProfile = profileUploader.updateFile(findProfileImage.getStoredFileName(), file);
+            member.updateProfileImage(changeProfile);
             findProfileImage.updateProfile(changeProfile);
         }
         else{
             ProfileImage profileImage = profileUploader.uploadFile(file);
-            Member member = findByMemberId(memberId);
             profileImage.setMember(member);
+            member.updateProfileImage(profileImage);
             profileImageRepository.save(profileImage);
         }
     }
