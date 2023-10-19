@@ -47,7 +47,7 @@ public class Member extends BaseTimeEntity {
 
     private boolean hostAuthority = false;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.EAGER)
     ProfileImage profileImage;
 
     // 현재 회원이 가지고 있는 권한들을 List<GrantedAuthority> 형태로 리턴
@@ -144,5 +144,9 @@ public class Member extends BaseTimeEntity {
 
     public void removeAccessToken() {
         this.accessToken = null;
+    }
+
+    public void updateProfileImage(ProfileImage changeProfile) {
+        this.profileImage = changeProfile;
     }
 }
