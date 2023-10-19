@@ -12,6 +12,7 @@ import com.example.ot.app.board.exception.ErrorCode;
 import com.example.ot.app.board.exception.TravelBoardException;
 import com.example.ot.app.board.repository.LikeBoardRepository;
 import com.example.ot.app.board.repository.TravelBoardRepository;
+import com.example.ot.app.chat.entity.ChatRoom;
 import com.example.ot.app.chat.event.CreateChatRoomEvent;
 import com.example.ot.app.chat.repository.ChatRoomAndMemberRepository;
 import com.example.ot.app.chat.repository.ChatRoomRepository;
@@ -86,7 +87,7 @@ public class TravelBoardService {
     public ShowBoardResponse getBoardInfo(Long boardId, Long memberId) {
         TravelBoard travelBoard = findByBoardId(boardId);
         boolean likeBoardStatusByMember = !ObjectUtils.isEmpty(getLikeBoardStatusByMember(boardId, memberId));
-        Long roomId = chatRoomRepository.findChatRoomByBoardId(boardId).orElse(null);
+        Long roomId = chatRoomRepository.findByBoardId(boardId).orElse(null);
         return ShowBoardResponse.fromTravelBoard(travelBoard, likeBoardStatusByMember, memberId, roomId);
     }
 
@@ -157,7 +158,7 @@ public class TravelBoardService {
             long likeCounts = getLikeBoardCounts(travelBoard.getId());
             Long boardMemberId = travelBoard.getMemberId();
             ProfileImage profileImage = profileImageRepository.findProfileImageByMemberId(boardMemberId).orElse(null);
-            Long roomId = chatRoomRepository.findChatRoomByBoardId(travelBoard.getId()).orElse(null);
+            Long roomId = chatRoomRepository.findByBoardId(travelBoard.getId()).orElse(null);
             Integer headCount = chatRoomAndMemberRepository.countByRoomId(roomId);
             boardListResponses.add(BoardListResponse.fromTravelBoard(travelBoard, memberId, likeBoardStatus, likeCounts, profileImage, headCount));
         }

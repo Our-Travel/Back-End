@@ -27,16 +27,14 @@ public class ShowMyChatRoomsResponse {
     private Integer regionCode;
     private String roomTitle;
     private String writer;
-    private String image;
     private String latestMessage;
     private String latestMessageTime;
     private String roomManager;
     private boolean readAt;
 
-    public static ShowMyChatRoomsResponse of(ChatRoom chatRoom, List<ChatMessage> messages, ProfileImage profileImage) {
+    public static ShowMyChatRoomsResponse of(ChatRoom chatRoom, List<ChatMessage> messages) {
         String latestMessage;
         String writer = null;
-        String image = null;
         Integer regionCode = null;
         String roomManager = null;
 
@@ -47,17 +45,16 @@ public class ShowMyChatRoomsResponse {
             latestMessage = chatMessage.getMessage();
             writer = (chatMessage.getWriter() == null) ? "[알림]" : chatMessage.getWriter().getNickName();
         }
-        if(!ObjectUtils.isEmpty(chatRoom.getHost()) && !ObjectUtils.isEmpty(profileImage)) {
-            image = profileImage.getFullPath();
-        } else if(!ObjectUtils.isEmpty(chatRoom.getTravelBoard())){
+        if(!ObjectUtils.isEmpty(chatRoom.getTravelBoard())){
             regionCode = chatRoom.getTravelBoard().getRegionCode();
             roomManager = chatRoom.getTravelBoard().getMember().getNickName();
+        } else {
+            regionCode = chatRoom.getHost().getRegionCode();
         }
         return ShowMyChatRoomsResponse.builder()
                 .roomId(chatRoom.getId())
                 .roomTitle(chatRoom.getTitle())
                 .writer(writer)
-                .image(image)
                 .roomManager(roomManager)
                 .regionCode(regionCode)
                 .latestMessage(latestMessage)
