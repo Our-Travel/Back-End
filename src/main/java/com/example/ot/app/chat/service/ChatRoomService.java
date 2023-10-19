@@ -51,7 +51,6 @@ public class ChatRoomService {
     private final TravelBoardRepository travelBoardRepository;
     private final MemberRepository memberRepository;
     private final HostRepository hostRepository;
-    private final ProfileImageRepository profileImageRepository;
     private final ApplicationEventPublisher publisher;
     PageRequest pageRequest = PageRequest.of(0, 1);
 
@@ -185,17 +184,7 @@ public class ChatRoomService {
         List<ShowMyChatRoomsResponse> showMyChatRoomsResponses = new ArrayList<>();
         for(ChatRoom chatRoom : myChatRoomList){
             List<ChatMessage> messages = chatRoomAndChatMessageRepository.findLastByChatRoomId(chatRoom.getId(), pageRequest);
-            ProfileImage profileImage = null;
-            if(!ObjectUtils.isEmpty(chatRoom.getHost())) {
-                if(!Objects.equals(memberId, chatRoom.getHost().getMemberId())){
-                    Long hostMemberId = chatRoom.getHost().getMemberId();
-                    profileImage = profileImageRepository.findProfileImageByMemberId(hostMemberId).orElse(null);
-                } else{
-                    Long otherMemberId = chatRoomAndMemberRepository.findByOtherMemberId(memberId, chatRoom.getId());
-                    profileImage = profileImageRepository.findProfileImageByMemberId(otherMemberId).orElse(null);
-                }
-            }
-            ShowMyChatRoomsResponse showMyChatRoomsResponse = ShowMyChatRoomsResponse.of(chatRoom, messages, profileImage);
+            ShowMyChatRoomsResponse showMyChatRoomsResponse = ShowMyChatRoomsResponse.of(chatRoom, messages);
             showMyChatRoomsResponses.add(showMyChatRoomsResponse);
         }
         return showMyChatRoomsResponses;

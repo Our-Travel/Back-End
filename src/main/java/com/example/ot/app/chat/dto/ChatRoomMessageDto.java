@@ -23,15 +23,18 @@ public class ChatRoomMessageDto {
     private String nickname;
     private String message;
     private String createdDate;
+    private String profileImage;
 
     public static ChatRoomMessageDto fromChatMessage(ChatMessage chatMessage) {
-        Long memberId = (chatMessage.getWriter() == null) ? null : chatMessage.getWriter().getId();
-        String nickname = (chatMessage.getWriter() == null) ? "admin" : chatMessage.getWriter().getNickName();
-
+        Member member = chatMessage.getWriter();
+        Long memberId = (member == null) ? null : member.getId();
+        String nickname = (member == null) ? "admin" : member.getNickName();
+        String profileImage = (member.getProfileImage() == null) ? null : member.getProfileImage().getFullPath();
         return ChatRoomMessageDto.builder()
                 .memberId(memberId)
                 .nickname(nickname)
                 .message(chatMessage.getMessage())
+                .profileImage(profileImage)
                 .createdDate(String.valueOf(chatMessage.getCreatedDate()))
                 .build();
     }
