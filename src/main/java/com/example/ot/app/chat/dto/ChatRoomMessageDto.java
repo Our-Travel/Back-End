@@ -27,9 +27,12 @@ public class ChatRoomMessageDto {
 
     public static ChatRoomMessageDto fromChatMessage(ChatMessage chatMessage) {
         Member member = chatMessage.getWriter();
+        String profileImage = null;
+        if(!ObjectUtils.isEmpty(member)) {
+            profileImage = (member.getProfileImage() == null) ? null : member.getProfileImage().getFullPath();
+        }
         Long memberId = (member == null) ? null : member.getId();
         String nickname = (member == null) ? "admin" : member.getNickName();
-        String profileImage = (member.getProfileImage() == null) ? null : member.getProfileImage().getFullPath();
         return ChatRoomMessageDto.builder()
                 .memberId(memberId)
                 .nickname(nickname)
