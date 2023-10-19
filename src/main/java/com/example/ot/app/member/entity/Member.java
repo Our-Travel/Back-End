@@ -47,7 +47,7 @@ public class Member extends BaseTimeEntity {
 
     private boolean hostAuthority = false;
 
-    @OneToOne(fetch = FetchType.EAGER)
+    @OneToOne(fetch = FetchType.LAZY)
     ProfileImage profileImage;
 
     // 현재 회원이 가지고 있는 권한들을 List<GrantedAuthority> 형태로 리턴
