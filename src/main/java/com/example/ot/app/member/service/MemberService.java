@@ -1,7 +1,5 @@
 package com.example.ot.app.member.service;
 
-import com.example.ot.app.chat.entity.ChatRoom;
-import com.example.ot.app.chat.repository.ChatRoomAndMemberRepository;
 import com.example.ot.app.member.dto.request.SignInRequest;
 import com.example.ot.app.member.dto.request.SignUpRequest;
 import com.example.ot.app.member.dto.request.UpdateMemberRequest;
@@ -14,7 +12,6 @@ import com.example.ot.app.member.repository.ProfileImageRepository;
 import com.example.ot.base.s3.S3ProfileUploader;
 import com.example.ot.config.security.jwt.JwtUtils;
 import lombok.RequiredArgsConstructor;
-import org.springframework.cache.annotation.CachePut;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,7 +20,6 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.List;
 import java.util.Objects;
 
 import static com.example.ot.app.member.exception.ErrorCode.*;
@@ -38,7 +34,6 @@ public class MemberService {
     private final JwtUtils jwtUtils;
     private final ProfileImageRepository profileImageRepository;
     private final S3ProfileUploader profileUploader;
-    private final ChatRoomAndMemberRepository chatRoomAndMemberRepository;
 //    private final MemberRedisService memberRedisService;
 
     public Member findByMemberId(Long memberId) {
@@ -124,15 +119,16 @@ public class MemberService {
     @Transactional
     public void updateProfileImage(Long memberId, MultipartFile file) throws IOException {
         ProfileImage findProfileImage = getMemberProfileImage(memberId);
-
+        Member member = findByMemberId(memberId);
         if(!ObjectUtils.isEmpty(findProfileImage)){
             ProfileImage changeProfile = profileUploader.updateFile(findProfileImage.getStoredFileName(), file);
+            member.updateProfileImage(changeProfile);
             findProfileImage.updateProfile(changeProfile);
         }
         else{
             ProfileImage profileImage = profileUploader.uploadFile(file);
-            Member member = findByMemberId(memberId);
             profileImage.setMember(member);
+            member.updateProfileImage(profileImage);
             profileImageRepository.save(profileImage);
         }
     }
@@ -149,7 +145,6 @@ public class MemberService {
     @Transactional
     public String updateMemberInfo(UpdateMemberRequest updateMemberRequest, Long memberId) {
         Member member = findByMemberId(memberId);
-        String nickname = member.getNickName();
         if(Objects.equals(member.getProviderTypeCode(), "OT")) {
             String newPassword = updateMemberRequest.getPassword();
             String verifyPassword = updateMemberRequest.getVerifyPassword();
@@ -162,21 +157,12 @@ public class MemberService {
         member.updateNickName(updateMemberRequest.getNickName());
         String accessToken = jwtUtils.generateAccessToken(member.getAccessTokenClaims());
         member.generateAccessToken(accessToken);
-        changeChatRoomName(memberId, nickname, member.getNickName());
         return accessToken;
     }
 
     private void verifyPasswordsMatch(String password, String verifyPassword) {
         if (!password.equals(verifyPassword)) {
             throw new MemberException(PASSWORD_MISMATCH);
-        }
-    }
-
-    private void changeChatRoomName(Long memberId, String beforeNickname, String afterNickname) {
-        List<ChatRoom> hostChatRoomList = chatRoomAndMemberRepository.findHostRoomByMemberId(memberId);
-        for(ChatRoom chatRoom : hostChatRoomList) {
-            String title = chatRoom.getTitle().replace(beforeNickname, afterNickname);
-            chatRoom.updateRoomTitle(title);
         }
     }
 

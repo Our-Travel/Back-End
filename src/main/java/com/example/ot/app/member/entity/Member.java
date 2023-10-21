@@ -6,6 +6,8 @@ import com.example.ot.util.Util;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.OneToOne;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.SQLDelete;
@@ -44,6 +46,9 @@ public class Member extends BaseTimeEntity {
     private String providerTypeCode;
 
     private boolean hostAuthority = false;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    ProfileImage profileImage;
 
     // 현재 회원이 가지고 있는 권한들을 List<GrantedAuthority> 형태로 리턴
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -139,5 +144,9 @@ public class Member extends BaseTimeEntity {
 
     public void removeAccessToken() {
         this.accessToken = null;
+    }
+
+    public void updateProfileImage(ProfileImage changeProfile) {
+        this.profileImage = changeProfile;
     }
 }
