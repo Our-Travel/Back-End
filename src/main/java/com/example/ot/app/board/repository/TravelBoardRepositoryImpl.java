@@ -9,6 +9,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.SliceImpl;
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 
 import static com.example.ot.app.board.entity.QTravelBoard.travelBoard;
 
@@ -18,6 +21,8 @@ import java.util.List;
 public class TravelBoardRepositoryImpl implements TravelBoardRepositoryCustom {
 
     private final JPAQueryFactory jpaQueryFactory;
+    private static final String TABLE = "travel_board";
+    private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
     @Override
     public Slice<TravelBoard> findMyBoardsWithKeysetPaging(Long lastBoardId, Long memberId, Pageable pageable) {
@@ -57,5 +62,18 @@ public class TravelBoardRepositoryImpl implements TravelBoardRepositoryCustom {
         }
 
         return new SliceImpl<>(results, pageable, hasNext);
+    }
+
+    public void bulkInsert(List<TravelBoard> boards) {
+        var sql = String.format("""
+                INSERT INTO `%s` (title, content)
+                VALUES (:title, :content)
+                """, TABLE);
+
+        SqlParameterSource[] params = boards
+                .stream()
+                .map(BeanPropertySqlParameterSource::new)
+                .toArray(SqlParameterSource[]::new);
+        namedParameterJdbcTemplate.batchUpdate(sql, params);
     }
 }

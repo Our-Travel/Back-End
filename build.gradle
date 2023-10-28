@@ -29,6 +29,7 @@ dependencies {
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.jeasy:easy-random-core:5.0.0'
 
     // DB관련
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
