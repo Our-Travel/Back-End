@@ -8,6 +8,8 @@ spring:
     redis:
       host: '${custom.dev.redis.host}'
       port: '${custom.dev.redis.port}'
+  mongodb:
+    uri: '${custom.dev.mongo.url}'
 
   jpa:
     hibernate:
